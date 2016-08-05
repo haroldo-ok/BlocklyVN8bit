@@ -124,7 +124,7 @@ Blockly.Arduino.finish = function(code) {
   // Indent every line.
   code = '  ' + code.replace(/\n/g, '\n  ');
   code = code.replace(/\n\s+$/, '\n');
-  code = 'void blah_test() \n{\n' + code + '\n}';
+  code = 'void *vn_start() \n{\n' + code + '\n\n  return vn_start;\n}';
 
   // Convert the definitions dictionary into a list.
   var imports = [ '#include "script.h"' ];
