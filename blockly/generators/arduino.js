@@ -127,7 +127,7 @@ Blockly.Arduino.finish = function(code) {
   code = 'void blah_test() \n{\n' + code + '\n}';
 
   // Convert the definitions dictionary into a list.
-  var imports = [];
+  var imports = [ '#include "script.h"' ];
   var definitions = [];
   for (var name in Blockly.Arduino.definitions_) {
     var def = Blockly.Arduino.definitions_[name];
