@@ -110,9 +110,20 @@ Blockly.Arduino.init = function(workspace) {
 	for (var x = 0; x < variables.length; x++) {
 		defvars[x] = 'int ' +
 				Blockly.Arduino.variableDB_.getName(variables[x],
-				Blockly.Variables.NAME_TYPE) + ';\n';
+				Blockly.Variables.NAME_TYPE) + ';';
 	}
-	Blockly.Arduino.definitions_['variables'] = defvars.join('\n');
+	Blockly.Arduino.definitions_['variables'] = defvars.length ? defvars.join('\n') + '\n' : '';
+	
+	var defprocs = []
+	var procs = Blockly.Procedures.allProcedures(workspace);
+	for (var x = 0; x < procs.length; x++) {
+		var procs2 = procs[x];
+		for (var y = 0; y < procs2.length; y++) {
+			var procName = 'vn_' + Blockly.Arduino.variableDB_.getName(procs2[y][0],Blockly.Procedures.NAME_TYPE);
+			defprocs.push('extern void *' + procName + '();');
+		}
+	}
+	Blockly.Arduino.definitions_['procs'] = defprocs.length ? defprocs.join('\n') + '\n' : '';
 };
 
 /**
@@ -143,7 +154,7 @@ Blockly.Arduino.finish = function(code) {
   for (var name in Blockly.Arduino.setups_) {
     setups.push(Blockly.Arduino.setups_[name]);
   }
-
+  
   var allDefs = imports.join('\n') + '\n\n' + definitions.join('\n') + '\nvoid setup() \n{\n  '+setups.join('\n  ') + '\n}'+ '\n\n';
   return allDefs.replace(/\n\n+/g, '\n\n').replace(/\n*$/, '\n\n\n') + code;
 };
