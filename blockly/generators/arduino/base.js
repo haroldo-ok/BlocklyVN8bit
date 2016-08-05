@@ -148,3 +148,21 @@ Blockly.Arduino.vn_say = function() {
   var code = 'vnText(' + content + ');\n';
   return code;
 };
+
+Blockly.Arduino.vn_label = function() {
+  var funcName = 'vn_' + Blockly.Arduino.variableDB_.getName(this.getFieldValue('NAME'),
+      Blockly.Procedures.NAME_TYPE);
+  var branch = Blockly.Arduino.statementToCode(this, 'STACK');
+  if (Blockly.Arduino.INFINITE_LOOP_TRAP) {
+    branch = Blockly.Arduino.INFINITE_LOOP_TRAP.replace(/%1/g,
+        '\'' + this.id + '\'') + branch;
+  }
+  
+  var code = 'void *' + funcName + '() {\n' +
+      branch + 
+	  '\n\n  return vn_start;\n}\n';
+  code = Blockly.Arduino.scrub_(this, code);
+  Blockly.Arduino.definitions_[funcName] = code;
+  
+  return null;
+};
