@@ -30,7 +30,7 @@ goog.require('Blockly.Arduino');
 
 Blockly.Arduino.procedures_defreturn = function() {
   // Define a procedure with a return value.
-  var funcName = Blockly.Arduino.variableDB_.getName(this.getFieldValue('NAME'),
+  var funcName = 'vn_' + Blockly.Arduino.variableDB_.getName(this.getFieldValue('NAME'),
       Blockly.Procedures.NAME_TYPE);
   var branch = Blockly.Arduino.statementToCode(this, 'STACK');
   if (Blockly.Arduino.INFINITE_LOOP_TRAP) {
