@@ -149,6 +149,12 @@ Blockly.Arduino.vn_say = function() {
   return code;
 };
 
+Blockly.Arduino.vn_jump = function() {
+  var funcName = 'vn_' + Blockly.Arduino.variableDB_.getName(this.getInputTargetBlock('TARGET').getFieldValue('NAME'),Blockly.Procedures.NAME_TYPE);
+  var code = 'return ' + funcName + ';\n';
+  return code;
+};
+
 Blockly.Arduino.vn_label = function() {
   var funcName = 'vn_' + Blockly.Arduino.variableDB_.getName(this.getFieldValue('NAME'),
       Blockly.Procedures.NAME_TYPE);

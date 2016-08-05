@@ -276,3 +276,15 @@ Blockly.Blocks['vn_say'] = {
     this.setTooltip('Says something.');
   }
 };
+
+Blockly.Blocks['vn_jump'] = {
+  //helpUrl: 'http://www.arduino.cc/en/Serial/Print',
+  init: function() {
+    this.setColour(230);
+    this.appendValueInput("TARGET", 'String')
+        .appendField("Jump to");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setTooltip('Says something.');
+  }
+};
