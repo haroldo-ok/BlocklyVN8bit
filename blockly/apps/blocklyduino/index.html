@@ -318,14 +318,13 @@ function init() {
             <td class="tabmin">&nbsp;</td>
             <td id="tab_python" class="taboff" onclick="tabClick(this.id)">Python</td>
             <td class="tabmin">&nbsp;</td-->
-            <td id="tab_arduino" class="taboff" onclick="tabClick('arduino')">Arduino</td>
+            <td id="tab_arduino" class="taboff" onclick="tabClick('arduino')">C</td>
             <td class="tabmin">&nbsp;</td>
             <td id="tab_xml" class="taboff" onclick="tabClick('xml')">XML</td>
             <td class="tabmax">
-              <button type="button" onclick="uploadClick()">Upload</button>
               <button type="button" onclick="resetClick()">Reset</button>
               <button onclick="discard()">Discard</button>
-              <button onclick="saveCode()">Save Arduino Code</button>
+              <button onclick="saveCode()">Save C Code</button>
               <button onclick="save()">Save XML</button>
               <button id="fakeload">Load XML</button>
               <input type="file" id="load" style="display: none;"/>
@@ -390,18 +389,7 @@ function init() {
     <category name="Variables" custom="VARIABLE"></category>
     <category name="Functions" custom="PROCEDURE"></category>
     <sep></sep>
-    <category name="Input/Output">
-      <block type="inout_highlow"></block>
-      <block type="inout_digital_write"></block>
-      <block type="inout_digital_read"></block>
-      <block type="inout_analog_write">
-        <value name="NUM">
-          <block type="math_number">
-            <field name="NUM">0</field>
-          </block>
-        </value>
-      </block>
-      <block type="inout_analog_read"></block>
+    <category name="Visual Novel">
       <block type="vn_label"></block>
       <block type="vn_jump"></block>
       <block type="vn_say">
@@ -411,66 +399,6 @@ function init() {
           </block>
         </value>
       </block>
-      <block type="inout_tone">
-        <value name="NUM">
-          <block type="math_number">
-            <field name="NUM">440</field>
-          </block>
-        </value>
-      </block>
-      <block type="inout_notone"></block>
-      <block type="inout_buildin_led"></block>
-    </category>
-    <category name="Servo">
-      <block type="servo_move">
-        <value name="DEGREE">
-          <block type="math_number">
-            <field name="NUM">0</field>
-          </block>
-        </value>
-      </block>
-      <block type="servo_read_degrees"></block>
-    </category>
-    <category name="Grove Analog">
-      <block type="grove_rotary_angle"></block>
-      <block type="grove_temporature_sensor"></block>
-      <block type="grove_sound_sensor"></block>
-      <block type="grove_thumb_joystick"></block>
-    </category>
-    <category name="Grove">
-      <block type="grove_led"></block>
-      <block type="grove_button"></block>
-      <block type="grove_relay"></block>
-      <block type="grove_tilt_switch"></block>
-      <block type="grove_piezo_buzzer"></block>
-      <block type="grove_pir_motion_sensor"></block>
-      <block type="grove_line_finder"></block>
-      <block type="grove_rgb_led"></block>
-      <block type="grove_ultrasonic_ranger"></block>
-    </category>
-    <category name="Grove LCD">
-      <block type="grove_serial_lcd_print">
-        <value name="TEXT">
-          <block type="text">
-            <field name="TEXT"></field>
-          </block>
-        </value>
-        <value name="TEXT2">
-          <block type="text">
-            <field name="TEXT"></field>
-          </block>
-        </value>
-        <value name="DELAY_TIME">
-          <block type="math_number">
-            <field name="NUM">1000</field>
-          </block>
-        </value>
-      </block>
-      <block type="grove_serial_lcd_power"></block>
-      <block type="grove_serial_lcd_effect"></block>
-    </category>
-    <category name="Grove Motor">
-      <block type="grove_motor_shield"></block>
     </category>
   </xml>
 </body>
