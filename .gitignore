@@ -13,3 +13,4 @@ ino_project
 # Python byte-compiled / optimized
 __pycache__/
 *.py[cod]
+/node_modules

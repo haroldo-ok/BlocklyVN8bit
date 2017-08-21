@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/haroldo-ok/BlocklyVN32X/issues"
   },
-  "homepage": "https://github.com/haroldo-ok/BlocklyVN32X"
+  "homepage": "https://github.com/haroldo-ok/BlocklyVN32X",
+  "devDependencies": {
+    "electron": "1.7.5"
+  }
 }
