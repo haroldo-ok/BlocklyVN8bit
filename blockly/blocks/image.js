@@ -10,7 +10,7 @@ Blockly.Blocks['demo_image'] = {
 		
 		const fs = require('fs');
 		const path = require('path');
-		const config = require('../../config');
+		const config = require('./config');
 		
 		var dir = config.dir('projects');
 		var options = fs.readdirSync(dir).reduce((list, name) => {

@@ -44,7 +44,7 @@ function saveCode() {
   }
   */  
 	var fs = require('fs');
-	var config = require('../../config');
+	var config = require('./config');
 
 	fs.writeFile(config.fileName('vn32x', 'generated/generated_script.c'), Blockly.Arduino.workspaceToCode(), function(err) {
 		if(err) {
@@ -66,7 +66,7 @@ function save() {
 	var data = Blockly.Xml.domToPrettyText(xml);
   
 	var fs = require('fs');
-	var config = require('../../config');
+	var config = require('./config');
 
 	fs.writeFile(config.fileName('projects', 'project.xml'), data, function(err) {
 		if(err) {
@@ -82,7 +82,7 @@ function save() {
  */
 function load() {
 	var fs = require('fs');
-	var config = require('../../config');
+	var config = require('./config');
 
 	fs.readFile(config.fileName('projects', 'project.xml'), "utf8", function(err, data) {
 		if (err) {
