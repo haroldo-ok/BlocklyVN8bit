@@ -6,21 +6,10 @@ Blockly.Blocks['demo_image'] = {
 	* @this Blockly.Block
 	*/
 	init: function() {
-		console.log(__dirname);
+		const project = require('./project');
 		
-		const fs = require('fs');
-		const path = require('path');
-		const config = require('./config');
-		
-		var dir = config.dir('projects');
-		var options = fs.readdirSync(dir).reduce((list, name) => {
-			let extName = path.extname(name);
-			if (/^\.(png|jpg|jpeg)$/.test(extName)) {
-				var onlyFName = path.basename(name, extName);
-				list.push([onlyFName, path.resolve(dir, name)]);
-			}
-			return list;
-		}, []);
+		var options = project.backgrounds.map(o => [o.name, o.fullPath]);
+		options = options.length ? options : [['no_image', '']];
 		
 		var dropdown = new Blockly.FieldDropdown(options,
 		function(newOp) {
