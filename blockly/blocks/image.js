@@ -6,6 +6,8 @@ Blockly.Blocks['demo_image'] = {
 	* @this Blockly.Block
 	*/
 	init: function() {
+		//var config = require('./config');
+		
 		var options = [
 			['no', 'https://neil.fraser.name/common/no.gif'],
 			['yes', 'https://neil.fraser.name/common/yes.gif']
