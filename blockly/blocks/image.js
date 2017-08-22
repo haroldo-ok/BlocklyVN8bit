@@ -9,6 +9,7 @@ Blockly.Blocks['demo_image'] = {
 		const project = require('./project');
 		
 		var options = project.backgrounds.map(o => [o.name, o.fullPath]);
+		options = options.length ? options : [['no_image', '']];
 		
 		var dropdown = new Blockly.FieldDropdown(options,
 		function(newOp) {
