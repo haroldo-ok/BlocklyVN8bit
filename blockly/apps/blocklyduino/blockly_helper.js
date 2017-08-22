@@ -43,7 +43,6 @@ function saveCode() {
     saveAs(blob, fileName + '.ino');
   }
   */  
-	var path = require('path');
 	var fs = require('fs');
 	var config = require('./config');
 
@@ -63,8 +62,20 @@ function saveCode() {
  * better include Blob and FileSaver for browser compatibility
  */
 function save() {
-  var xml = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
-  var data = Blockly.Xml.domToText(xml);
+	var xml = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
+	var data = Blockly.Xml.domToText(xml);
+  
+	var fs = require('fs');
+	var config = require('./config');
+
+	fs.writeFile(config.fileName('projects', 'project.xml'), data, function(err) {
+		if(err) {
+			return console.log(err);
+		}
+
+		console.log("The file was saved!");
+	}); 
+  /*
   var fileName = window.prompt('What would you like to name your file?', 'BlocklyDuino');
   // Store data in blob.
   // var builder = new BlobBuilder();
@@ -74,6 +85,7 @@ function save() {
     var blob = new Blob([data], {type: 'text/xml'});
     saveAs(blob, fileName + ".xml");
   } 
+  */
 }
 
 /**

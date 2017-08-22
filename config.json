@@ -1,5 +1,6 @@
 {
 	"dirs": {
-		"vn32x": "C:/Users/Haroldo/Projetos/32x/vn32x"
+		"vn32x": "C:/Users/Haroldo/Projetos/32x/vn32x",
+		"projects": "./projects"
 	}
 }

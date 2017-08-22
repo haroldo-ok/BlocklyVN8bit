@@ -14,4 +14,9 @@ const api = {
 	fileName: (dirName, fileName) => path.join(api.dir(dirName), fileName)
 };
 
+const projectsPath = api.dir('projects');
+if (!fs.existsSync(projectsPath)){
+	fs.mkdirSync(projectsPath);
+}
+
 module.exports = api;
