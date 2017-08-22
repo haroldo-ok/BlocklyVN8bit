@@ -63,7 +63,7 @@ function saveCode() {
  */
 function save() {
 	var xml = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
-	var data = Blockly.Xml.domToText(xml);
+	var data = Blockly.Xml.domToPrettyText(xml);
   
 	var fs = require('fs');
 	var config = require('./config');
