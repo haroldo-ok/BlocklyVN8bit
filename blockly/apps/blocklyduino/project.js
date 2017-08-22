@@ -10,8 +10,8 @@ function projectPath(subDir) {
 	return path.resolve(config.dir('projects'), selectedProjectName, subDir || '');
 }
 
-function listImages() {
-	var dir = projectPath('bg');
+function listImages(subDir) {
+	var dir = projectPath(subDir);
 	var images = fs.readdirSync(dir).reduce((list, name) => {
 		let extName = path.extname(name);
 		if (/^\.(png|jpg|jpeg)$/.test(extName)) {
@@ -29,6 +29,10 @@ function listImages() {
 
 module.exports = {
 	get backgrounds() {
-		return listImages();
+		return listImages('bg');
+	},
+	
+	get portraits() {
+		return listImages('portrait');
 	}
 };
