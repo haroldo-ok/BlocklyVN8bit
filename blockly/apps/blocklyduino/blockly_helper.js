@@ -43,9 +43,11 @@ function saveCode() {
     saveAs(blob, fileName + '.ino');
   }
   */  
+	var path = require('path');
 	var fs = require('fs');
+	var config = require('./config');
 
-	fs.writeFile("C:/temp/x.c", Blockly.Arduino.workspaceToCode(), function(err) {
+	fs.writeFile(config.fileName('vn32x', 'generated/generated_script.c'), Blockly.Arduino.workspaceToCode(), function(err) {
 		if(err) {
 			return console.log(err);
 		}
