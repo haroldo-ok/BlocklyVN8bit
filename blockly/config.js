@@ -3,7 +3,7 @@
 const path = require('path');
 const fs = require('fs');
 
-const BASE_PATH = path.resolve(__dirname, '../../../');
+const BASE_PATH = path.resolve(__dirname, '../');
 const CONFIG_PATH = path.join(BASE_PATH, 'config.json');
 
 let config = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf8"));
