@@ -35,12 +35,26 @@ function restore_blocks() {
 * Save Arduino generated code to local file.
 */
 function saveCode() {
+	/*
   var fileName = window.prompt('What would you like to name your file?', 'BlocklyDuino')
   //doesn't save if the user quits the save prompt
   if(fileName){
     var blob = new Blob([Blockly.Arduino.workspaceToCode()], {type: 'text/plain;charset=utf-8'});
     saveAs(blob, fileName + '.ino');
   }
+  */  
+	var fs = require('fs');
+	var config = require('./config');
+
+	fs.writeFile(config.fileName('vn32x', 'generated/generated_script.c'), Blockly.Arduino.workspaceToCode(), function(err) {
+		if(err) {
+			return console.log(err);
+		}
+
+		console.log("The file was saved!");
+	}); 
+
+	alert('OK');
 }
 
 /**
@@ -48,23 +62,45 @@ function saveCode() {
  * better include Blob and FileSaver for browser compatibility
  */
 function save() {
-  var xml = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
-  var data = Blockly.Xml.domToText(xml);
-  var fileName = window.prompt('What would you like to name your file?', 'BlocklyDuino');
-  // Store data in blob.
-  // var builder = new BlobBuilder();
-  // builder.append(data);
-  // saveAs(builder.getBlob('text/plain;charset=utf-8'), 'blockduino.xml');
-  if(fileName){
-    var blob = new Blob([data], {type: 'text/xml'});
-    saveAs(blob, fileName + ".xml");
-  } 
+	var xml = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
+	var data = Blockly.Xml.domToText(xml);
+  
+	var fs = require('fs');
+	var config = require('./config');
+
+	fs.writeFile(config.fileName('projects', 'project.xml'), data, function(err) {
+		if(err) {
+			return console.log(err);
+		}
+
+		console.log("The file was saved!");
+	}); 
 }
 
 /**
  * Load blocks from local file.
  */
-function load(event) {
+function load() {
+	var fs = require('fs');
+	var config = require('./config');
+
+	fs.readFile(config.fileName('projects', 'project.xml'), "utf8", function(err, data) {
+		if (err) {
+			return console.log(err);
+		}
+
+		console.log("The file was loaded!");
+		try {
+			var xml = Blockly.Xml.textToDom(data);
+		} catch (e) {
+			console.error('Error parsing XML', e);
+			return;
+		}
+
+		Blockly.mainWorkspace.clear();
+		Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, xml);
+	}); 
+	/*
   var files = event.target.files;
   // Only allow uploading one file.
   if (files.length != 1) {
@@ -94,6 +130,9 @@ function load(event) {
     document.getElementById('load').value = '';
   };
   reader.readAsText(files[0]);
+  */
+	var fs = require('fs');
+	var config = require('./config');
 }
 
 /**
@@ -119,11 +158,13 @@ function auto_save_and_restore_blocks() {
   tabClick(selected);
 
   // Init load event.
+  /*
   var loadInput = document.getElementById('load');
   loadInput.addEventListener('change', load, false);
   document.getElementById('fakeload').onclick = function() {
     loadInput.click();
   };
+  */
 }
 
 /**
