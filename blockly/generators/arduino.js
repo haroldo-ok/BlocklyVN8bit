@@ -97,6 +97,8 @@ Blockly.Arduino.init = function(workspace) {
   Blockly.Arduino.definitions_ = Object.create(null);
   // Create a dictionary of setups to be printed before the code.
   Blockly.Arduino.setups_ = Object.create(null);
+  // Create a dictionary of image declarations to be printed before the code.
+  Blockly.Arduino.images_ = Object.create(null);
 
 	if (!Blockly.Arduino.variableDB_) {
 		Blockly.Arduino.variableDB_ =
@@ -154,8 +156,20 @@ Blockly.Arduino.finish = function(code) {
   for (var name in Blockly.Arduino.setups_) {
     setups.push(Blockly.Arduino.setups_[name]);
   }
+
+  // Convert the images dict into a list.
+  var vgs = [];
+  var vis = [];
+  for (var name in Blockly.Arduino.images_) {
+	  var img = Blockly.Arduino.images_[name];
+	  vgs.push(img.vgDecl);
+	  vis.push(img.viDecl);
+  }
   
-  var allDefs = imports.join('\n') + '\n\n' + definitions.join('\n') + '\n\n';
+  var allDefs = imports.join('\n') + '\n\n' + 
+		vgs.join('\n') + '\n\n' +
+		vis.join('\n') + '\n\n' +
+		definitions.join('\n') + '\n\n';
   return allDefs.replace(/\n\n+/g, '\n\n').replace(/\n*$/, '\n\n\n') + code;
 };
 
