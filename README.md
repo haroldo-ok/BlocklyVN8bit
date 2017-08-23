@@ -4,6 +4,8 @@ This tool allows anyone to make a [visual novel][] for the [Sega 32X][] using [B
 
 ![blockly][Blockly image]
 
+[![YouTube Video](http://img.youtube.com/vi/dh5M_RHXBfg/0.jpg)](http://www.youtube.com/watch?v=dh5M_RHXBfg "BlocklyVN32X version 0.0.2 pre-alpha demonstration. ")
+
 Right now, it's a work in progress.
 
 Based on [BlocklyDuino][].
