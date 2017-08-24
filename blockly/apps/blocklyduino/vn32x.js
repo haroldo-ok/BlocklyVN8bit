@@ -1,6 +1,9 @@
+const fs = require('fs');
 const cmd = require('node-cmd');
 
 const config = require('./config');
+
+const BINARY_NAME = 'generated.32x';
 
 function exec(commandLine) {
 	return new Promise((resolve, reject) => {
@@ -21,6 +24,43 @@ function exec(commandLine) {
 	});	
 }
 
+function binaryFileName() {
+	return config.fileName('vn32x', BINARY_NAME);
+}
+
+function binaryExists() {
+	return new Promise((resolve, reject) => {
+		fs.stat(binaryFileName(), function(err, stat) {
+			if (err) {
+				if (err.code != 'ENOENT') {
+					console.error('Unexpected error while checking for the existance of the binary', err);
+				}
+				reject(err);
+			} else {
+				resolve();
+			}
+		});
+	});
+}
+
+function deleteBinary() {
+	return new Promise((resolve, reject) => {
+		fs.unlink(binaryFileName(), function(err, stat) {
+			if (err) {
+				if (err.code == 'ENOENT') {
+					// File already absent
+					resolve();
+				} else {
+					// Actual error
+					reject(err);
+				}
+			} else {
+				resolve();
+			}
+		});
+	});
+}
+
 module.exports = {
-	make: () => exec('make')
+	make: () => deleteBinary().then(() => exec('make')).then(binaryExists)
 }
