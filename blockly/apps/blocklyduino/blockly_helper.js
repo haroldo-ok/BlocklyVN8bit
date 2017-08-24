@@ -45,16 +45,28 @@ function saveCode() {
   */  
 	var fs = require('fs');
 	var config = require('./config');
+	
+	function writeGeneratedFile(fileName, content) {
+		return new Promise((resolve, reject) => {
+			fs.writeFile(config.fileName('vn32x', 'generated/' + fileName), content, function(err) {
+				if(err) {
+					console.log('Error writing ' + fileName, err);
+					reject(err);
+					return;
+				}
 
-	fs.writeFile(config.fileName('vn32x', 'generated/generated_script.c'), Blockly.Arduino.workspaceToCode(), function(err) {
-		if(err) {
-			return console.log(err);
-		}
+				console.log("The file was saved: " + fileName);
+				resolve(fileName);
+			}); 		
+		});
+	}
+	
+	writeGeneratedFile('generated_script.c', Blockly.Arduino.workspaceToCode())
+		.then(function(){
+			console.info('All done!');
+			alert('All done!');
+		});
 
-		console.log("The file was saved!");
-	}); 
-
-	alert('OK');
 }
 
 /**
