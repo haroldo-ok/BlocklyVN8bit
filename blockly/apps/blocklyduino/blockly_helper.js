@@ -54,18 +54,31 @@ function saveCode() {
 					reject(err);
 					return;
 				}
-
+				
 				console.log("The file was saved: " + fileName);
 				resolve(fileName);
 			}); 		
 		});
 	}
 	
-	writeGeneratedFile('generated_script.c', Blockly.Arduino.workspaceToCode())
+	let generatedFiles = [{
+		name: 'generated_script.c',
+		content: Blockly.Arduino.workspaceToCode()
+	}];
+	
+	for (var name in Blockly.Arduino.otherSources) {
+		generatedFiles.push({
+			name: name,
+			content: Blockly.Arduino.otherSources[name]
+		});
+	}
+	
+	Promise.all(generatedFiles.map(o => writeGeneratedFile(o.name, o.content)))
 		.then(function(){
 			console.info('All done!');
 			alert('All done!');
-		});
+		})
+		.catch(err => console.error('Failed!'));
 
 }
 
