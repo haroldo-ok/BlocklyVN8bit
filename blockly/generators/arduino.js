@@ -170,6 +170,7 @@ Blockly.Arduino.finish = function(code) {
   }
   
   Blockly.Arduino.genIncludeMk_();
+  Blockly.Arduino.genImages_();
   
   var allDefs = imports.join('\n') + '\n\n' + 
 		vgs.join('\n') + '\n\n' +
@@ -251,4 +252,23 @@ Blockly.Arduino.genIncludeMk_ = function() {
 	}
 	
 	Blockly.Arduino.otherSources['include.mk'] = 'IMGS := $(addprefix $(OBJDIR)/, ' + images.join(' ') + ')';
+}
+
+Blockly.Arduino.genImages_ = function() {
+	var images = [];
+	var globls = [];
+	var incbins = [];
+	for (var name in Blockly.Arduino.images_) {
+		images.push(name + '.apg');
+		globls.push('.globl _vg_' + name);
+		incbins.push(
+			'_vg_' + name + ':\n' +
+			'.incbin "build/' + name + '.apg"\n'
+		);
+	}
+	
+	Blockly.Arduino.otherSources['generated_images.s'] = 
+		'\n.text\n\n' +
+		globls.join('\n') + '\n\n' +
+		incbins.join('\n') + '\n';
 }
