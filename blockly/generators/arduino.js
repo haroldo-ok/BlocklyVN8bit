@@ -93,12 +93,15 @@ profile["default"] = profile["arduino"];
  * @param {!Blockly.Workspace} workspace Workspace to generate code from.
  */
 Blockly.Arduino.init = function(workspace) {
-  // Create a dictionary of definitions to be printed before setups.
-  Blockly.Arduino.definitions_ = Object.create(null);
-  // Create a dictionary of setups to be printed before the code.
-  Blockly.Arduino.setups_ = Object.create(null);
-  // Create a dictionary of image declarations to be printed before the code.
-  Blockly.Arduino.images_ = Object.create(null);
+	// Create a dictionary of definitions to be printed before setups.
+	Blockly.Arduino.definitions_ = Object.create(null);
+	// Create a dictionary of setups to be printed before the code.
+	Blockly.Arduino.setups_ = Object.create(null);
+	// Create a dictionary of image declarations to be printed before the code.
+	Blockly.Arduino.images_ = Object.create(null);
+
+	// Auxiliary source codes
+	Blockly.Arduino.otherSources = Object.create(null);
 
 	if (!Blockly.Arduino.variableDB_) {
 		Blockly.Arduino.variableDB_ =
@@ -163,8 +166,11 @@ Blockly.Arduino.finish = function(code) {
   for (var name in Blockly.Arduino.images_) {
 	  var img = Blockly.Arduino.images_[name];
 	  vgs.push(img.vgDecl);
-	  vis.push(img.viDecl);
+	  vis.push(img.viDecl);	  
   }
+  
+  Blockly.Arduino.genIncludeMk_();
+  Blockly.Arduino.genImages_();
   
   var allDefs = imports.join('\n') + '\n\n' + 
 		vgs.join('\n') + '\n\n' +
@@ -238,3 +244,31 @@ Blockly.Arduino.scrub_ = function(block, code) {
   var nextCode = Blockly.Arduino.blockToCode(nextBlock);
   return commentCode + code + nextCode;
 };
+
+Blockly.Arduino.genIncludeMk_ = function() {
+	var images = [];
+	for (var name in Blockly.Arduino.images_) {
+		images.push(name + '.apg');
+	}
+	
+	Blockly.Arduino.otherSources['include.mk'] = 'IMGS := $(addprefix $(OBJDIR)/, ' + images.join(' ') + ')';
+}
+
+Blockly.Arduino.genImages_ = function() {
+	var images = [];
+	var globls = [];
+	var incbins = [];
+	for (var name in Blockly.Arduino.images_) {
+		images.push(name + '.apg');
+		globls.push('.globl _vg_' + name);
+		incbins.push(
+			'_vg_' + name + ':\n' +
+			'.incbin "build/' + name + '.apg"\n'
+		);
+	}
+	
+	Blockly.Arduino.otherSources['generated_images.s'] = 
+		'\n.text\n\n' +
+		globls.join('\n') + '\n\n' +
+		incbins.join('\n') + '\n';
+}
