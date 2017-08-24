@@ -61,6 +61,11 @@ function deleteBinary() {
 	});
 }
 
+function build() {
+	return deleteBinary().then(() => exec('make')).then(binaryExists);
+}
+
 module.exports = {
-	make: () => deleteBinary().then(() => exec('make')).then(binaryExists)
+	build: build,
+	rebuild: () => exec('make clean').then(build)
 }
