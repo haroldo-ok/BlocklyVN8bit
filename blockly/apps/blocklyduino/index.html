@@ -299,13 +299,20 @@ function init() {
     button:hover {
       box-shadow: 2px 2px 5px #888;
     }
+	
+	#console_area > ul {
+		height: 5em;
+		overflow: auto;
+		list-style-type: none;
+		padding: 2px;
+	}
   </style>
 </head>
 <body onload="init()">
   <table height="100%" width="100%">
     <tr>
       <td>
-        <h1><a href="https://github.com/haroldo-ok/BlocklyVN32X">BlocklyVN32X</a> &gt; web-based visual programming editor for VN32X</h1>
+        <h1><a href="https://github.com/haroldo-ok/BlocklyVN32X">BlocklyVN32X</a> &gt; visual programming editor for VN32X</h1>
       </td>
     </tr>
     <tr>
@@ -337,6 +344,19 @@ function init() {
     <tr>
       <td height="99%" id="content_area"></td>
     </tr>
+	<tr>
+      <td id="console_area">
+		<ul>
+			<li>1!!!</li>
+			<li>2!!!</li>
+			<li>3!!!</li>
+			<li>4!!!</li>
+			<li>5!!!</li>
+			<li>6!!!</li>
+			<li>7!!!</li>
+		</ul>
+	  </td>
+	</tr>
   </table>
   <div id="content_blocks" class="content"></div>
   <textarea id="content_arduino" class="content" readonly wrap="off"></textarea>
