@@ -35,14 +35,18 @@ function restore_blocks() {
 * Save Arduino generated code to local file.
 */
 function saveCode() {
-	/*
-  var fileName = window.prompt('What would you like to name your file?', 'BlocklyDuino')
-  //doesn't save if the user quits the save prompt
-  if(fileName){
-    var blob = new Blob([Blockly.Arduino.workspaceToCode()], {type: 'text/plain;charset=utf-8'});
-    saveAs(blob, fileName + '.ino');
-  }
-  */  
+	printToConsole('-----------------------');
+	printToConsole('Starting compilation...');
+	
+	generateCode()
+		.then(function(){
+			printToConsole('All done!');
+		})
+		.catch(err => printToConsole('Failed!'));
+
+}
+
+function generateCode() {
 	var fs = require('fs');
 	var config = require('./config');
 	
@@ -55,7 +59,7 @@ function saveCode() {
 					return;
 				}
 				
-				console.log("The file was saved: " + fileName);
+				printToConsole("The file was saved: " + fileName);
 				resolve(fileName);
 			}); 		
 		});
@@ -73,13 +77,7 @@ function saveCode() {
 		});
 	}
 	
-	Promise.all(generatedFiles.map(o => writeGeneratedFile(o.name, o.content)))
-		.then(function(){
-			console.info('All done!');
-			alert('All done!');
-		})
-		.catch(err => console.error('Failed!'));
-
+	return Promise.all(generatedFiles.map(o => writeGeneratedFile(o.name, o.content)));
 }
 
 /**
@@ -304,14 +302,17 @@ function resetClick() {
     });
 }
 
+function printToConsole(msg) {
+	const $ = require('jquery');
+	const $console = printToConsole.$console;
+	$('<li>').text(msg).appendTo($console);
+	$console.scrollTop($console.prop('scrollHeight'));	
+}
+
 function initConsole() {
 	(function($){
-		const vn32x = require('./vn32x');
-		
-		const $console = $('#console_area > ul');
-		vn32x.subscribe(msg => {
-			$('<li>').text(msg).appendTo($console);
-			$console.scrollTop($console.prop('scrollHeight'));
-		});
+		const vn32x = require('./vn32x');		
+		printToConsole.$console = $('#console_area > ul');
+		vn32x.subscribe(printToConsole);
 	})(require('jquery'));
 }
