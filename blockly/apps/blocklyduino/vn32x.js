@@ -15,15 +15,15 @@ function exec(commandLine) {
 		
 		// listen to the terminal output
 		let data_line = '';
-		processRef.stdout.on(
-			'data',
-			function(data) {
-				data_line += data;
-				if (data_line[data_line.length-1] == '\n') {
-					consoleListener.next(data_line);
-				}
+		function dataCallback(data) {
+			data_line += data;
+			if (data_line[data_line.length-1] == '\n') {
+				consoleListener.next(data_line);
 			}
-		);
+		}
+		
+		processRef.stdout.on('data', dataCallback);
+		processRef.stderr.on('data', dataCallback);
 	});	
 }
 
@@ -71,5 +71,6 @@ function compile() {
 module.exports = {
 	compile: compile,
 	clean: () => exec('make clean'),
+	exec: exec,
 	subscribe: listener => consoleListener.subscribe({next: listener})
 }
