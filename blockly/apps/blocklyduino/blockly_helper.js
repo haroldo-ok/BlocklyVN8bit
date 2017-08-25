@@ -31,14 +31,30 @@ function restore_blocks() {
   }
 }
 
+function compile() {
+	const vn32x = require('./vn32x');
+	
+	printToConsole('-----------------------');
+	printToConsole('Starting compilation...');
+	
+	generateCode()		
+		.then(vn32x.compile)
+		.then(function(){
+			printToConsole('All done!');
+		})
+		.catch(err => printToConsole('Failed!'));
+}
+
 /**
 * Save Arduino generated code to local file.
 */
 function saveCode() {
-	printToConsole('-----------------------');
-	printToConsole('Starting compilation...');
+	const vn32x = require('./vn32x');
 	
-	generateCode()
+	printToConsole('-----------------------');
+	printToConsole('Generating files...');
+	
+	generateCode()		
 		.then(function(){
 			printToConsole('All done!');
 		})

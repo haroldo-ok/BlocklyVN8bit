@@ -19,6 +19,7 @@ function exec(commandLine) {
 			data_line += data;
 			if (data_line[data_line.length-1] == '\n') {
 				consoleListener.next(data_line);
+				data_line = '';
 			}
 		}
 		
