@@ -6,7 +6,7 @@
   <script type="text/javascript" src="../../blockly_compressed.js"></script>
   <script type="text/javascript" src="../../blocks_compressed.js"></script>
   <script type="text/javascript" src="../../arduino_compressed.js"></script>
-  -->
+  -->  
 	<script type="text/javascript" src="../../blockly_uncompressed.js"></script>
 	
 	<script type="text/javascript" src="../../blocks/loops.js"></script>
@@ -199,6 +199,8 @@ function init() {
   if(dest){
     load_by_url(dest);
   }
+
+  initConsole();
 }
   </script>
   <style>
@@ -300,17 +302,28 @@ function init() {
       box-shadow: 2px 2px 5px #888;
     }
 	
+	#console_area {
+		position: relative;
+		height: 6em;
+	}
+	
 	#console_area > ul {
 		font-family: monospace;
 		font-weight: bold;
 		color: #000;
 		background: #eee;
-		
-		height: 6em;
+
+		position: absolute;
+		width: 100%;
+		height: 100%;
 		overflow: auto;
 		list-style-type: none;
-		padding: 2px;
-		margin: 0.2em;
+		padding: 0;
+		margin: 0;
+	}
+	
+	#console_area > ul > li {
+		white-space: nowrap;
 	}
   </style>
 </head>
@@ -353,13 +366,6 @@ function init() {
 	<tr>
       <td id="console_area">
 		<ul>
-			<li>1!!!</li>
-			<li>2!!!</li>
-			<li>3!!!</li>
-			<li>4!!!</li>
-			<li>5!!!</li>
-			<li>6!!!</li>
-			<li>7!!!</li>
 		</ul>
 	  </td>
 	</tr>

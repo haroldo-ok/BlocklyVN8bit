@@ -1,9 +1,12 @@
 const fs = require('fs');
 const cmd = require('node-cmd');
+const rx = require('rxjs');
 
 const config = require('./config');
 
 const BINARY_NAME = 'generated.32x';
+
+const consoleListener = new rx.Subject();
 
 function exec(commandLine) {
 	return new Promise((resolve, reject) => {
@@ -17,7 +20,7 @@ function exec(commandLine) {
 			function(data) {
 				data_line += data;
 				if (data_line[data_line.length-1] == '\n') {
-					console.log(data_line);
+					consoleListener.next(data_line);
 				}
 			}
 		);
@@ -61,11 +64,12 @@ function deleteBinary() {
 	});
 }
 
-function build() {
+function compile() {
 	return deleteBinary().then(() => exec('make')).then(binaryExists);
 }
 
 module.exports = {
-	build: build,
-	rebuild: () => exec('make clean').then(build)
+	compile: compile,
+	clean: () => exec('make clean'),
+	subscribe: listener => consoleListener.subscribe({next: listener})
 }

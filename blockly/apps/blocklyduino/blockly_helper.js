@@ -303,3 +303,15 @@ function resetClick() {
         }
     });
 }
+
+function initConsole() {
+	(function($){
+		const vn32x = require('./vn32x');
+		
+		const $console = $('#console_area > ul');
+		vn32x.subscribe(msg => {
+			$('<li>').text(msg).appendTo($console);
+			$console.scrollTop($console.prop('scrollHeight'));
+		});
+	})(require('jquery'));
+}
