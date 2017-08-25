@@ -31,18 +31,38 @@ function restore_blocks() {
   }
 }
 
+function compile() {
+	const vn32x = require('./vn32x');
+	
+	printToConsole('-----------------------');
+	printToConsole('Starting compilation...');
+	
+	generateCode()		
+		.then(vn32x.compile)
+		.then(function(){
+			printToConsole('All done!');
+		})
+		.catch(err => printToConsole('Failed!'));
+}
+
 /**
 * Save Arduino generated code to local file.
 */
 function saveCode() {
-	/*
-  var fileName = window.prompt('What would you like to name your file?', 'BlocklyDuino')
-  //doesn't save if the user quits the save prompt
-  if(fileName){
-    var blob = new Blob([Blockly.Arduino.workspaceToCode()], {type: 'text/plain;charset=utf-8'});
-    saveAs(blob, fileName + '.ino');
-  }
-  */  
+	const vn32x = require('./vn32x');
+	
+	printToConsole('-----------------------');
+	printToConsole('Generating files...');
+	
+	generateCode()		
+		.then(function(){
+			printToConsole('All done!');
+		})
+		.catch(err => printToConsole('Failed!'));
+
+}
+
+function generateCode() {
 	var fs = require('fs');
 	var config = require('./config');
 	
@@ -55,7 +75,7 @@ function saveCode() {
 					return;
 				}
 				
-				console.log("The file was saved: " + fileName);
+				printToConsole("The file was saved: " + fileName);
 				resolve(fileName);
 			}); 		
 		});
@@ -73,13 +93,7 @@ function saveCode() {
 		});
 	}
 	
-	Promise.all(generatedFiles.map(o => writeGeneratedFile(o.name, o.content)))
-		.then(function(){
-			console.info('All done!');
-			alert('All done!');
-		})
-		.catch(err => console.error('Failed!'));
-
+	return Promise.all(generatedFiles.map(o => writeGeneratedFile(o.name, o.content)));
 }
 
 /**
@@ -302,4 +316,19 @@ function resetClick() {
             alert("Error resetting program: " + errorInfo);
         }
     });
+}
+
+function printToConsole(msg) {
+	const $ = require('jquery');
+	const $console = printToConsole.$console;
+	$('<li>').text(msg).appendTo($console);
+	$console.scrollTop($console.prop('scrollHeight'));	
+}
+
+function initConsole() {
+	(function($){
+		const vn32x = require('./vn32x');		
+		printToConsole.$console = $('#console_area > ul');
+		vn32x.subscribe(printToConsole);
+	})(require('jquery'));
 }

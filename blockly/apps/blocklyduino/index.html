@@ -6,7 +6,7 @@
   <script type="text/javascript" src="../../blockly_compressed.js"></script>
   <script type="text/javascript" src="../../blocks_compressed.js"></script>
   <script type="text/javascript" src="../../arduino_compressed.js"></script>
-  -->
+  -->  
 	<script type="text/javascript" src="../../blockly_uncompressed.js"></script>
 	
 	<script type="text/javascript" src="../../blocks/loops.js"></script>
@@ -199,6 +199,8 @@ function init() {
   if(dest){
     load_by_url(dest);
   }
+
+  initConsole();
 }
   </script>
   <style>
@@ -299,13 +301,37 @@ function init() {
     button:hover {
       box-shadow: 2px 2px 5px #888;
     }
+	
+	#console_area {
+		position: relative;
+		height: 6em;
+	}
+	
+	#console_area > ul {
+		font-family: monospace;
+		font-weight: bold;
+		color: #000;
+		background: #eee;
+
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		overflow: auto;
+		list-style-type: none;
+		padding: 0;
+		margin: 0;
+	}
+	
+	#console_area > ul > li {
+		white-space: nowrap;
+	}
   </style>
 </head>
 <body onload="init()">
   <table height="100%" width="100%">
     <tr>
       <td>
-        <h1><a href="https://github.com/haroldo-ok/BlocklyVN32X">BlocklyVN32X</a> &gt; web-based visual programming editor for VN32X</h1>
+        <h1><a href="https://github.com/haroldo-ok/BlocklyVN32X">BlocklyVN32X</a> &gt; visual programming editor for VN32X</h1>
       </td>
     </tr>
     <tr>
@@ -326,6 +352,7 @@ function init() {
             <td class="tabmax">
               <button type="button" onclick="resetClick()">Reset</button>
               <button onclick="discard()">Discard</button>
+              <button onclick="compile()">Compile</button>
               <button onclick="saveCode()">Save C Code</button>
               <button onclick="save()">Save XML</button>
               <button onclick="load()">Load XML</button>
@@ -337,6 +364,12 @@ function init() {
     <tr>
       <td height="99%" id="content_area"></td>
     </tr>
+	<tr>
+      <td id="console_area">
+		<ul>
+		</ul>
+	  </td>
+	</tr>
   </table>
   <div id="content_blocks" class="content"></div>
   <textarea id="content_arduino" class="content" readonly wrap="off"></textarea>
