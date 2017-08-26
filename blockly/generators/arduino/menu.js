@@ -35,6 +35,7 @@ Blockly.Arduino.menu = function() {
 	
 	return '{\n' + 
 		'  int ' + variables.join(', ') + ';\n\n' +
+		'  initMenu();\n\n' +
 		internalCode + '\n' +
 		'  ' + varName + ' = vnMenu();\n\n' +
 		Blockly.Arduino.prefixLines(optionBodies.join('\n\n'), Blockly.Arduino.INDENT) + 
