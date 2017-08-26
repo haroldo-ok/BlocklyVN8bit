@@ -6,7 +6,10 @@ goog.provide('Blockly.Blocks.menu');
 
 goog.require('Blockly.Blocks');	
 
+// TODO: Move those constants to the proper Blockly object.
 const MENU_HUE = 190;
+const MSG_MENU = 'Menu';
+const MSG_MENU_OPTION = 'Option';
 
 Blockly.Blocks['menu'] = {
   /**
@@ -17,31 +20,10 @@ Blockly.Blocks['menu'] = {
 //    this.setHelpUrl(Blockly.Msg.CONTROLS_IF_HELPURL);
     this.setColour(MENU_HUE);
     this.appendDummyInput()
-	      .appendField("Menu");
-    this.appendValueInput('IF0')
-        .setCheck('Boolean')
-        .appendField(Blockly.Msg.CONTROLS_IF_MSG_IF);
-    this.appendStatementInput('DO0')
-        .appendField(Blockly.Msg.CONTROLS_IF_MSG_THEN);
+	      .appendField(MSG_MENU);
     this.setPreviousStatement(true);
-    this.setNextStatement(true);
+    this.setNextStatement(false);
     this.setMutator(new Blockly.Mutator(['controls_menu_option']));
-	/*
-    // Assign 'this' to a variable for use in the tooltip closure below.
-    var thisBlock = this;
-    this.setTooltip(function() {
-      if (!thisBlock.elseifCount_ && !thisBlock.elseCount_) {
-        return Blockly.Msg.CONTROLS_IF_TOOLTIP_1;
-      } else if (!thisBlock.elseifCount_ && thisBlock.elseCount_) {
-        return Blockly.Msg.CONTROLS_IF_TOOLTIP_2;
-      } else if (thisBlock.elseifCount_ && !thisBlock.elseCount_) {
-        return Blockly.Msg.CONTROLS_IF_TOOLTIP_3;
-      } else if (thisBlock.elseifCount_ && thisBlock.elseCount_) {
-        return Blockly.Msg.CONTROLS_IF_TOOLTIP_4;
-      }
-      return '';
-    });
-	*/
     this.optionCount_ = 0;
   },
   /**
@@ -69,7 +51,7 @@ Blockly.Blocks['menu'] = {
     for (var i = 1; i <= this.optionCount_; i++) {
       this.appendValueInput('IF' + i)
           .setCheck('Boolean')
-          .appendField(Blockly.Msg.CONTROLS_IF_MSG_ELSEIF);
+          .appendField(MSG_MENU_OPTION);
       this.appendStatementInput('DO' + i)
           .appendField(Blockly.Msg.CONTROLS_IF_MSG_THEN);
     }
