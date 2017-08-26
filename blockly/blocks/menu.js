@@ -6,7 +6,7 @@ goog.provide('Blockly.Blocks.menu');
 
 goog.require('Blockly.Blocks');	
 
-Blockly.Blocks.menu.HUE = 190;
+const MENU_HUE = 190;
 
 Blockly.Blocks['menu'] = {
   /**
@@ -15,7 +15,7 @@ Blockly.Blocks['menu'] = {
    */
   init: function() {
 //    this.setHelpUrl(Blockly.Msg.CONTROLS_IF_HELPURL);
-    this.setColour(Blockly.Blocks.menu.HUE);
+    this.setColour(MENU_HUE);
     this.appendDummyInput()
 	      .appendField("Menu");
     this.appendValueInput('IF0')
@@ -103,7 +103,7 @@ Blockly.Blocks['menu'] = {
       this.removeInput('IF' + i);
       this.removeInput('DO' + i);
     }
-    this.elseifCount_ = 0;
+    this.optionCount_ = 0;
     // Rebuild the block's optional inputs.
     var clauseBlock = containerBlock.getInputTargetBlock('STACK');
     while (clauseBlock) {
