@@ -86,13 +86,8 @@ Blockly.Blocks['menu'] = {
   compose: function(containerBlock) {
     // Disconnect all the elseif input blocks and remove the inputs.
     for (var i = this.optionCount_; i > 0; i--) {
-		try {
-		  this.removeInput('IF' + i);
-		  this.removeInput('DO' + i);
-		  this.removeInput('TEXT' + i);			
-		} catch (e) {
-			console.error(e);
-		}
+      this.removeInput('IF' + i);
+      this.removeInput('DO' + i);
     }
     this.optionCount_ = 0;
     // Rebuild the block's optional inputs.
