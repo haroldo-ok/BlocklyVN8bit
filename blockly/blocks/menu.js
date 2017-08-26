@@ -31,10 +31,10 @@ Blockly.Blocks['menu_option'] = {
 	init: function() {
 		this.setColour(MENU_HUE);
 		
-		this.appendDummyInput()
+		this.appendDummyInput("OPTION")
 			.appendField(MSG_MENU_OPTION)
 			.appendField(newQuote(true))
-			.appendField(new Blockly.FieldTextInput(''), 'TEXT' + this.optionCount_)
+			.appendField(new Blockly.FieldTextInput(''), 'TEXT')
 			.appendField(newQuote(false));
 			
 		this.appendStatementInput('DO');
@@ -52,7 +52,7 @@ Blockly.Blocks['menu_option_if'] = {
 			.setCheck('Boolean')
 			.appendField(MSG_MENU_OPTION)
 			.appendField(newQuote(true))
-			.appendField(new Blockly.FieldTextInput(''), 'TEXT' + this.optionCount_)
+			.appendField(new Blockly.FieldTextInput(''), 'TEXT')
 			.appendField(newQuote(false))
 			.appendField(MSG_MENU_IF);
 			

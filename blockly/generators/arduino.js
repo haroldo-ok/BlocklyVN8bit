@@ -99,6 +99,9 @@ Blockly.Arduino.init = function(workspace) {
 	Blockly.Arduino.setups_ = Object.create(null);
 	// Create a dictionary of image declarations to be printed before the code.
 	Blockly.Arduino.images_ = Object.create(null);
+	
+	// Context for the menus
+	Blockly.Arduino.menuContexts_ = Object.create(null);
 
 	// Auxiliary source codes
 	Blockly.Arduino.otherSources = Object.create(null);
