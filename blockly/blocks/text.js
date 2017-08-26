@@ -44,7 +44,7 @@ Blockly.Blocks['text'] = {
     this.setColour(Blockly.Blocks.texts.HUE);
     this.appendDummyInput()
         .appendField(this.newQuote_(true))
-        .appendField(new Blockly.FieldTextInput(''), 'TEXT')
+        .appendField(new Blockly.FieldTextInput('TEXT'), 'TEXT')
         .appendField(this.newQuote_(false));
     this.setOutput(true, 'String');
     this.setTooltip(Blockly.Msg.TEXT_TEXT_TOOLTIP);

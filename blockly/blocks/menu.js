@@ -9,6 +9,7 @@ goog.require('Blockly.Blocks');
 // TODO: Move those constants to the proper Blockly object.
 const MENU_HUE = 190;
 const MSG_MENU = 'Menu';
+const MSG_MENU_IF = 'if';
 const MSG_MENU_OPTION = 'Option';
 
 Blockly.Blocks['menu'] = {
@@ -51,9 +52,12 @@ Blockly.Blocks['menu'] = {
     for (var i = 1; i <= this.optionCount_; i++) {
       this.appendValueInput('IF' + i)
           .setCheck('Boolean')
-          .appendField(MSG_MENU_OPTION);
-      this.appendStatementInput('DO' + i)
-          .appendField(Blockly.Msg.CONTROLS_IF_MSG_THEN);
+          .appendField(MSG_MENU_OPTION)
+		  .appendField(this.newQuote_(true))
+		  .appendField(new Blockly.FieldTextInput(''), 'TEXT' + i)
+		  .appendField(this.newQuote_(false))
+          .appendField(MSG_MENU_IF);
+      this.appendStatementInput('DO' + i);
     }
   },
   /**
@@ -82,8 +86,13 @@ Blockly.Blocks['menu'] = {
   compose: function(containerBlock) {
     // Disconnect all the elseif input blocks and remove the inputs.
     for (var i = this.optionCount_; i > 0; i--) {
-      this.removeInput('IF' + i);
-      this.removeInput('DO' + i);
+		try {
+		  this.removeInput('IF' + i);
+		  this.removeInput('DO' + i);
+		  this.removeInput('TEXT' + i);			
+		} catch (e) {
+			console.error(e);
+		}
     }
     this.optionCount_ = 0;
     // Rebuild the block's optional inputs.
@@ -94,7 +103,11 @@ Blockly.Blocks['menu'] = {
           this.optionCount_++;
           var optionInput = this.appendValueInput('IF' + this.optionCount_)
               .setCheck('Boolean')
-              .appendField(Blockly.Msg.CONTROLS_IF_MSG_ELSEIF);
+              .appendField(MSG_MENU_OPTION)
+              .appendField(this.newQuote_(true))
+              .appendField(new Blockly.FieldTextInput(''), 'TEXT' + this.optionCount_)
+              .appendField(this.newQuote_(false))
+              .appendField(MSG_MENU_IF);
           var doInput = this.appendStatementInput('DO' + this.optionCount_);
           doInput.appendField(Blockly.Msg.CONTROLS_IF_MSG_THEN);
           // Reconnect any child blocks.
@@ -137,6 +150,22 @@ Blockly.Blocks['menu'] = {
       clauseBlock = clauseBlock.nextConnection &&
           clauseBlock.nextConnection.targetBlock();
     }
+  },
+  
+  /**
+   * Create an image of an open or closed quote.
+   * @param {boolean} open True if open quote, false if closed.
+   * @return {!Blockly.FieldImage} The field image of the quote.
+   * @this Blockly.Block
+   * @private
+   */
+  newQuote_: function(open) {
+    if (open == this.RTL) {
+      var file = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAKCAQAAAAqJXdxAAAAqUlEQVQI1z3KvUpCcRiA8ef9E4JNHhI0aFEacm1o0BsI0Slx8wa8gLauoDnoBhq7DcfWhggONDmJJgqCPA7neJ7p934EOOKOnM8Q7PDElo/4x4lFb2DmuUjcUzS3URnGib9qaPNbuXvBO3sGPHJDRG6fGVdMSeWDP2q99FQdFrz26Gu5Tq7dFMzUvbXy8KXeAj57cOklgA+u1B5AoslLtGIHQMaCVnwDnADZIFIrXsoXrgAAAABJRU5ErkJggg==';
+    } else {
+      var file = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAKCAQAAAAqJXdxAAAAn0lEQVQI1z3OMa5BURSF4f/cQhAKjUQhuQmFNwGJEUi0RKN5rU7FHKhpjEH3TEMtkdBSCY1EIv8r7nFX9e29V7EBAOvu7RPjwmWGH/VuF8CyN9/OAdvqIXYLvtRaNjx9mMTDyo+NjAN1HNcl9ZQ5oQMM3dgDUqDo1l8DzvwmtZN7mnD+PkmLa+4mhrxVA9fRowBWmVBhFy5gYEjKMfz9AylsaRRgGzvZAAAAAElFTkSuQmCC';
+    }
+    return new Blockly.FieldImage(file, 12, 12, '"');
   }
 };
 
