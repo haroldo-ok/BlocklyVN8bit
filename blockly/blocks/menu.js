@@ -170,9 +170,9 @@ Blockly.Blocks['controls_menu_menu'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.setColour(Blockly.Blocks.menu.HUE);
+    this.setColour(MENU_HUE);
     this.appendDummyInput()
-        .appendField(Blockly.Msg.CONTROLS_IF_IF_TITLE_IF);
+        .appendField(MSG_MENU);
     this.appendStatementInput('STACK');
     this.setTooltip(Blockly.Msg.CONTROLS_IF_IF_TOOLTIP);
     this.contextMenu = false;
@@ -185,9 +185,9 @@ Blockly.Blocks['controls_menu_option'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.setColour(Blockly.Blocks.menu.HUE);
+    this.setColour(MENU_HUE);
     this.appendDummyInput()
-        .appendField(Blockly.Msg.CONTROLS_IF_ELSEIF_TITLE_ELSEIF);
+        .appendField(MSG_MENU_OPTION);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setTooltip(Blockly.Msg.CONTROLS_IF_ELSEIF_TOOLTIP);
