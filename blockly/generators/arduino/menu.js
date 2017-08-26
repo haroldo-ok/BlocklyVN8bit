@@ -19,16 +19,18 @@ function getVariables() {
 	
 Blockly.Arduino.menu = function() {	
 	const menuNumber = nextMenuNumber();		
-	const variables = ['mn_option_' + menuNumber];
+	const varName = 'mn_option_' + menuNumber;
+	const variables = [varName];
 	
 	getVarStack().push(variables);
 	const internalCode = Blockly.Arduino.statementToCode(this, 'DO');
 	getVarStack().pop();
 	
 	return '{\n' + 
-		'  int ' + variables.join(',') + '\n\n' +
-		internalCode + 
-		'\n}';
+		'  int ' + variables.join(', ') + ';\n\n' +
+		internalCode + '\n' +
+		'  ' + varName + ' = vnMenu();\n' +
+		'}';
 };
 
 Blockly.Arduino.menu_option = function() {
@@ -36,9 +38,9 @@ Blockly.Arduino.menu_option = function() {
 	const varName = 'mn_choice_' + optionNumber;
 	const text = this.getFieldValue('TEXT');
 	
+	getVariables().push(varName);
 	
-	
-	return text;
+	return varName + ' = addMenuItem(' + Blockly.Arduino.quote_(text) + ');\n';
 }
 	
 })();

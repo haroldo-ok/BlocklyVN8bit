@@ -23,7 +23,7 @@ Blockly.Blocks['menu'] = {
 			.setCheck('MenuOption');
 		
 		this.setPreviousStatement(true);
-		this.setNextStatement(false);
+		this.setNextStatement(true);
 	}
 };
 
