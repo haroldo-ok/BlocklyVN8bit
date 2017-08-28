@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, Menu, globalShortcut} = require('electron')
 const path = require('path')
 const url = require('url')
 
@@ -17,8 +17,8 @@ function createWindow () {
     slashes: true
   }))
 
-  // Open the DevTools.
-  win.webContents.openDevTools()
+  // Start maximized.
+  win.maximize();
 
   // Emitted when the window is closed.
   win.on('closed', () => {
@@ -26,7 +26,9 @@ function createWindow () {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     win = null
-  })
+  });
+  
+  createMainMenu();
 }
 
 // This method will be called when Electron has finished
@@ -49,4 +51,71 @@ app.on('activate', () => {
   if (win === null) {
     createWindow()
   }
-})
+});
+
+function createMainMenu() {
+	const template = [
+		{
+			label: 'File',
+			submenu: [
+				{role: 'quit'}
+			]
+		},
+		{
+			label: 'Edit',
+			submenu: [
+				{role: 'undo'},
+				{role: 'redo'},
+				{type: 'separator'},
+				{role: 'cut'},
+				{role: 'copy'},
+				{role: 'paste'},
+				{role: 'pasteandmatchstyle'},
+				{role: 'delete'},
+				{role: 'selectall'}
+			]
+		},
+		{
+			label: 'Project',
+			submenu: [
+				{
+					label: 'Run',
+					accelerator: 'F9',
+					click() { sendToMainWindow('compileAndRun', {}); }
+				}
+			]
+		},
+		{
+			label: 'View',
+			submenu: [
+				{role: 'reload'},
+				{role: 'forcereload'},
+				{type: 'separator'},
+				{role: 'togglefullscreen'}
+			]
+		},
+		{
+			role: 'window',
+			submenu: [
+				{role: 'minimize'},
+				{role: 'close'}
+			]
+		}
+	];
+	
+	const menu = Menu.buildFromTemplate(template);
+	Menu.setApplicationMenu(menu);
+
+	globalShortcut.register('CommandOrControl+Shift+I', () => {
+		execInMainWindow(win => win.webContents.toggleDevTools());
+	});	
+	
+	function execInMainWindow(f) {
+		let win = BrowserWindow.getFocusedWindow();
+		win && f(win);
+	}
+	
+	function sendToMainWindow(msgType, contents) {
+		execInMainWindow(win => win.webContents.send(msgType, contents));		
+	}
+}
