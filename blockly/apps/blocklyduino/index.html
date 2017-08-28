@@ -114,12 +114,6 @@ function renderContent() {
     var xmlText = Blockly.Xml.domToPrettyText(xmlDom);
     xmlTextarea.value = xmlText;
     xmlTextarea.focus();
-  /*} else if (content.id == 'content_javascript') {
-    content.innerHTML = Blockly.JavaScript.workspaceToCode();
-  } else if (content.id == 'content_dart') {
-    content.innerHTML = Blockly.Dart.workspaceToCode();
-  } else if (content.id == 'content_python') {
-    content.innerHTML = Blockly.Python.workspaceToCode();*/
   } else if (content.id == 'content_arduino') {
     //content.innerHTML = Blockly.Arduino.workspaceToCode();
     var arduinoTextarea = document.getElementById('content_arduino');
@@ -156,9 +150,6 @@ function getBBox_(element) {
  * Initialize Blockly.  Called on page load.
  */
 function init() {
-  //window.onbeforeunload = function() {
-  //  return 'Leaving this page will result in the loss of your work.';
-  //};
 
   var container = document.getElementById('content_area');
   var onresize = function(e) {
@@ -221,20 +212,10 @@ function init() {
           <tr id="tabRow" height="1em">
             <td id="tab_blocks" class="tabon" onclick="tabClick('blocks')">Blocks</td>
             <td class="tabmin">&nbsp;</td>
-            <!--td id="tab_javascript" class="taboff" onclick="tabClick(this.id)">JavaScript</td>
-            <td class="tabmin">&nbsp;</td-->
-            <!--td id="tab_dart" class="taboff" onclick="tabClick(this.id)">Dart</td>
-            <td class="tabmin">&nbsp;</td>
-            <td id="tab_python" class="taboff" onclick="tabClick(this.id)">Python</td>
-            <td class="tabmin">&nbsp;</td-->
             <td id="tab_arduino" class="taboff" onclick="tabClick('arduino')">C</td>
             <td class="tabmin">&nbsp;</td>
             <td id="tab_xml" class="taboff" onclick="tabClick('xml')">XML</td>
             <td class="tabmax">
-				<!--
-              <button type="button" onclick="resetClick()">Reset</button>
-              <button onclick="discard()">Discard</button>
-			  -->
               <button onclick="compile()">Compile</button>
               <button onclick="compileAndRun()">Compile &amp; Run</button>
               <button onclick="saveCode()">Save C Code</button>
