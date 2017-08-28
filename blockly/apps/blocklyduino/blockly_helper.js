@@ -345,3 +345,8 @@ function initConsole() {
 		vn32x.subscribe(printToConsole);
 	})(require('jquery'));
 }
+
+function initMainProcEvents() {
+	const { ipcRenderer } = require('electron');
+	ipcRenderer.on('compileAndRun', compileAndRun);
+}

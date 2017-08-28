@@ -76,6 +76,16 @@ function createMainMenu() {
 			]
 		},
 		{
+			label: 'Project',
+			submenu: [
+				{
+					label: 'Run',
+					accelerator: 'F9',
+					click() { sendToMainWindow('compileAndRun', {}); }
+				}
+			]
+		},
+		{
 			label: 'View',
 			submenu: [
 				{role: 'reload'},
@@ -97,7 +107,15 @@ function createMainMenu() {
 	Menu.setApplicationMenu(menu);
 
 	globalShortcut.register('CommandOrControl+Shift+I', () => {
-		const win = BrowserWindow.getFocusedWindow();
-		win && win.webContents.toggleDevTools();
+		execInMainWindow(win => win.webContents.toggleDevTools());
 	});	
+	
+	function execInMainWindow(f) {
+		let win = BrowserWindow.getFocusedWindow();
+		win && f(win);
+	}
+	
+	function sendToMainWindow(msgType, contents) {
+		execInMainWindow(win => win.webContents.send(msgType, contents));		
+	}
 }
