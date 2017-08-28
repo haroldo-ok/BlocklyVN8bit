@@ -17,8 +17,9 @@ function createWindow () {
     slashes: true
   }))
 
-  // Open the DevTools.
-  win.webContents.openDevTools()
+  // Start maximized.
+  win.maximize();
+  
 
   // Emitted when the window is closed.
   win.on('closed', () => {
