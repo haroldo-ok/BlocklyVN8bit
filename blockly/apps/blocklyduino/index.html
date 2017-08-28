@@ -38,6 +38,7 @@
 	<script type="text/javascript" src="Blob.js"></script>
 	<script type="text/javascript" src="spin.js"></script>
 	<script type="text/javascript" src="FileSaver.min.js"></script>
+	<script type="text/javascript" src="rivets.min.js"></script>
 	<script type="text/javascript" src="blockly_helper.js"></script>
   <script>
 
@@ -195,6 +196,8 @@ function init() {
 
   initConsole();
   initMainProcEvents();
+  
+  rivets.bind(require('jquery')('#content_backgrounds'), {something: 'Testing'});
 }
   </script>
   <link rel="stylesheet" type="text/css" href="main.css">
@@ -241,7 +244,10 @@ function init() {
   <div id="content_blocks" class="content"></div>
   <textarea id="content_arduino" class="content" readonly wrap="off"></textarea>
   <textarea id="content_xml" class="content" wrap="off"></textarea>
-  <div id="content_backgrounds" class="content">Test!</div>
+  
+  <div id="content_backgrounds" class="content">
+	<h3>{ something }</h3>
+  </div>
 
   <xml id="toolbox" style="display: none">
     <category name="Logic">
