@@ -72,6 +72,6 @@ function compile() {
 module.exports = {
 	compile: compile,
 	clean: () => exec('make clean'),
-	exec: exec,
+	run: () => exec('make run'),
 	subscribe: listener => consoleListener.subscribe({next: listener})
 }

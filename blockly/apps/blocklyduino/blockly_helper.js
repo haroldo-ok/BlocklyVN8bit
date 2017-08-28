@@ -37,12 +37,25 @@ function compile() {
 	printToConsole('-----------------------');
 	printToConsole('Starting compilation...');
 	
-	generateCode()		
+	return generateCode()		
 		.then(vn32x.compile)
 		.then(function(){
-			printToConsole('All done!');
+			printToConsole('Compilation done!');
+			return Promise.resolve();
 		})
-		.catch(err => printToConsole('Failed!'));
+		.catch(err => printToConsole('Compilation failed!'));
+}
+
+function compileAndRun() {
+	const vn32x = require('./vn32x');
+
+	compile()
+		.then(function(){
+			printToConsole('-----------------------');
+			printToConsole('Starting emulator...');	
+			vn32x.run().then(() => printToConsole('Emulator closed.'));
+		})
+		.catch(err => printToConsole('Failed to run emulator!'));;
 }
 
 /**
