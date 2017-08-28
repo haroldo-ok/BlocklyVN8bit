@@ -45,7 +45,7 @@
  * List of tab names.
  * @private
  */
-var TABS_ = ['blocks', 'arduino', 'xml'];
+var TABS_ = ['blocks', 'arduino', 'xml', 'backgrounds'];
 
 var selected = 'blocks';
 
@@ -215,6 +215,8 @@ function init() {
             <td id="tab_arduino" class="taboff" onclick="tabClick('arduino')">C</td>
             <td class="tabmin">&nbsp;</td>
             <td id="tab_xml" class="taboff" onclick="tabClick('xml')">XML</td>
+            <td class="tabmin">&nbsp;</td>
+            <td id="tab_backgrounds" class="taboff" onclick="tabClick('backgrounds')">Backgrounds</td>
             <td class="tabmax">
               <button onclick="compile()">Compile</button>
               <button onclick="compileAndRun()">Compile &amp; Run</button>
@@ -239,6 +241,7 @@ function init() {
   <div id="content_blocks" class="content"></div>
   <textarea id="content_arduino" class="content" readonly wrap="off"></textarea>
   <textarea id="content_xml" class="content" wrap="off"></textarea>
+  <div id="content_backgrounds" class="content">Test!</div>
 
   <xml id="toolbox" style="display: none">
     <category name="Logic">
