@@ -1,9 +1,12 @@
 const $ = require('jquery');
 const project = require('./project');
+const canvasBuffer = require('electron-canvas-to-buffer');
+const fs = require('fs');
 
 rivets.bind($('#content_backgrounds'), {
 	data: {
 		imageName: 'none',
+		canvas: $('#content_backgrounds').find('> div > canvas')[0],
 		images: project.backgrounds		
 	},
 	
@@ -14,7 +17,7 @@ rivets.bind($('#content_backgrounds'), {
 			
 			let img = new Image();
 			img.onload = () => {
-				let canvas = $(ev.target).parent().find('> canvas')[0];
+				let canvas = model.data.canvas;
 				let ctx = canvas.getContext('2d');
 				ctx.drawImage(img, 0, 0, canvas.width, canvas.height);				
 			}
@@ -23,6 +26,7 @@ rivets.bind($('#content_backgrounds'), {
 		
 		addImage: function(ev, model) {
 			console.log('addImage', this, arguments);
+			project.saveBackground(model.data.imageName, model.data.canvas);
 		}
 	}
 });
