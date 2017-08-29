@@ -197,7 +197,7 @@ function init() {
   initConsole();
   initMainProcEvents();
   
-  rivets.bind(require('jquery')('#content_backgrounds'), {something: 'Testing'});
+  require('./image.js');
 }
   </script>
   <link rel="stylesheet" type="text/css" href="main.css">
@@ -247,6 +247,12 @@ function init() {
   
   <div id="content_backgrounds" class="content">
 	<h3>{ something }</h3>
+	<ul class="image-list">
+		<li rv-each-image="images">
+			<h3>{ image.name }</h3>
+			<img rv-src="image.fullPath">
+		</li>
+	</ul>
   </div>
 
   <xml id="toolbox" style="display: none">
