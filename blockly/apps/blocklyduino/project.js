@@ -40,14 +40,18 @@ module.exports = {
 	},
 	
 	saveBackground: function(name, canvas) {
-		let buffer = canvasBuffer(canvas, 'image/png');
-		let fileName = name + ".png";
-		let dir = projectPath('bg');
-		fs.writeFile(path.resolve(dir, fileName), buffer, function (err) {
-			if (err) {
-				console.error('Error writing ' + fileName, err);
-				return;
-			}
+		return new Promise((resolve, reject) => {
+			let buffer = canvasBuffer(canvas, 'image/png');
+			let fileName = name + ".png";
+			let dir = projectPath('bg');
+			fs.writeFile(path.resolve(dir, fileName), buffer, function (err) {
+				if (err) {
+					console.error('Error writing ' + fileName, err);
+					reject();
+				} else {
+					resolve();					
+				}				
+			});			
 		});
 	}
 };
