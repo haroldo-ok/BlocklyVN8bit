@@ -2,6 +2,9 @@
 
 const fs = require('fs');
 const path = require('path');
+
+const canvasBuffer = require('electron-canvas-to-buffer');
+
 const config = require('./config');
 
 let selectedProjectName = 'test';
@@ -34,5 +37,21 @@ module.exports = {
 	
 	get portraits() {
 		return listImages('portrait');
+	},
+	
+	saveBackground: function(name, canvas) {
+		return new Promise((resolve, reject) => {
+			let buffer = canvasBuffer(canvas, 'image/png');
+			let fileName = name + ".png";
+			let dir = projectPath('bg');
+			fs.writeFile(path.resolve(dir, fileName), buffer, function (err) {
+				if (err) {
+					console.error('Error writing ' + fileName, err);
+					reject();
+				} else {
+					resolve();					
+				}				
+			});			
+		});
 	}
 };
