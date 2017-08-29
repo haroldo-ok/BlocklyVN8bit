@@ -2,6 +2,9 @@
 <head>
   <meta charset="utf-8">
   <title>BlocklyVN32X</title>
+  
+	<link rel="stylesheet" type="text/css" href="main.css">
+	<link rel="stylesheet" type="text/css" href="image.css">
   <!--
   <script type="text/javascript" src="../../blockly_compressed.js"></script>
   <script type="text/javascript" src="../../blocks_compressed.js"></script>
@@ -200,7 +203,6 @@ function init() {
   require('./image.js');
 }
   </script>
-  <link rel="stylesheet" type="text/css" href="main.css">
 </head>
 <body onload="init()">
   <table height="100%" width="100%">
@@ -245,12 +247,18 @@ function init() {
   <textarea id="content_arduino" class="content" readonly wrap="off"></textarea>
   <textarea id="content_xml" class="content" wrap="off"></textarea>
   
-  <div id="content_backgrounds" class="content" style="overflow: auto">
-	<div>
-		<input type="file" rv-on-change="controller.selectFile" />
-		<input type="text" rv-value="data.imageName" />
-		<canvas width="320" height="202"></canvas>
-		<button rv-on-click="controller.addImage">Add</button>
+  <div id="content_backgrounds" class="content image-panel">
+	<div class="image-fields">
+		<section>
+			<label>Image file:</label>
+			<input type="file" rv-on-change="controller.selectFile" />
+		</section>
+		<section>
+			<label>Image name:</label>
+			<input type="text" rv-value="data.imageName" />
+		</section>
+		<canvas class="image-preview" width="320" height="202"></canvas>
+		<button rv-on-click="controller.addImage">Add image</button>
 	</div>
 	<ul class="image-list">
 		<li rv-each-image="data.images">
