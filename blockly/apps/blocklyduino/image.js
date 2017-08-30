@@ -18,7 +18,8 @@ rivets.bind($('#content_backgrounds'), {
 			let img = new Image();
 			img.onload = () => {
 				let canvas = model.data.canvas;
-				let ctx = canvas.getContext('2d');
+				let ctx = canvas.getContext('2d');				
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
 				ctx.drawImage(img, 0, 0, canvas.width, canvas.height);				
 			}
 			img.src = ev.target.files[0].path;
