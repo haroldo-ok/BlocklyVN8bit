@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const cmd = require('node-cmd');
 const rx = require('rxjs');
 
@@ -65,6 +66,13 @@ function deleteBinary() {
 	});
 }
 
+function copyImagesFrom(originPath) {
+	let originGlob = path.resolve(originPath, '*.png');
+	let targetDir = config.fileName('vn32x', 'script');	
+	let commandLine = `xcopy "${originGlob}" "${targetDir}" /d`;
+	return exec(commandLine);
+}
+
 function compile() {
 	return deleteBinary().then(() => exec('make')).then(binaryExists);
 }
@@ -73,5 +81,6 @@ module.exports = {
 	compile: compile,
 	clean: () => exec('make clean'),
 	run: () => exec('make run'),
+	copyImagesFrom: copyImagesFrom,
 	subscribe: listener => consoleListener.subscribe({next: listener})
 }

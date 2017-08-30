@@ -30,14 +30,24 @@ function listImages(subDir) {
 	return images;
 }
 
+function imgPathAccessor(subDir) {
+	return {
+		
+		get items() {
+			return listImages(subDir);
+		},		
+		
+		get path() {
+			return projectPath(subDir);
+		}
+		
+	}
+}
+
 module.exports = {
-	get backgrounds() {
-		return listImages('bg');
-	},
-	
-	get portraits() {
-		return listImages('portrait');
-	},
+
+	bg: imgPathAccessor('bg'),
+	portrait: imgPathAccessor('portrait'),
 	
 	saveBackground: function(name, canvas) {
 		return new Promise((resolve, reject) => {

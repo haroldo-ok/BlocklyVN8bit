@@ -7,7 +7,7 @@ const project = require('./project');
 function createImageComponent(params) {
 	return {
 		init: function() {		
-			var options = project[params.origin].map(o => [o.name, o.fullPath]);
+			var options = project[params.origin].items.map(o => [o.name, o.fullPath]);
 			options = options.length ? options : [['no_image', '']];
 			
 			var dropdown = new Blockly.FieldDropdown(options,
@@ -31,13 +31,13 @@ function createImageComponent(params) {
 Blockly.Blocks['background_image'] = createImageComponent({
 	label: 'Background',
 	tooltip: 'Shows a background image.',
-	origin: 'backgrounds'
+	origin: 'bg'
 });
 
 Blockly.Blocks['portrait_image'] = createImageComponent({
 	label: 'Portrait',
 	tooltip: 'Shows a character portrait.',
-	origin: 'portraits'
+	origin: 'portrait'
 });
 
 })();

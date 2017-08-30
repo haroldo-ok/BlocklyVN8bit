@@ -1,0 +1,38 @@
+.image-panel {
+	overflow: auto;
+}
+
+.image-panel .image-preview {
+	border: 2px solid #888;
+}
+
+.image-panel .image-fields > section > label {
+    display: inline-block;
+	width: 6em;
+    margin-bottom: 0.5em;
+}
+
+.image-panel .image-fields > .image-preview {
+	margin-left: 6em;
+}
+
+.image-panel .image-fields > button {
+    vertical-align: top;
+    background: #8F8;
+}
+
+.image-panel .image-list {
+	list-style-type: none;
+}
+
+.image-panel .image-list > li {
+    display: inline-block;
+    background: #ddd;
+    padding: 0.2em;
+    margin: 0.2em;
+}
+
+.image-panel .image-list > li h3 {
+	margin: 0;
+	padding: 0;
+}

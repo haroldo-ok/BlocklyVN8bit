@@ -7,7 +7,7 @@ rivets.bind($('#content_backgrounds'), {
 	data: {
 		imageName: 'none',
 		canvas: $('#content_backgrounds').find('> div > canvas')[0],
-		images: project.backgrounds		
+		images: project.bg.items		
 	},
 	
 	controller: {
@@ -18,7 +18,8 @@ rivets.bind($('#content_backgrounds'), {
 			let img = new Image();
 			img.onload = () => {
 				let canvas = model.data.canvas;
-				let ctx = canvas.getContext('2d');
+				let ctx = canvas.getContext('2d');				
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
 				ctx.drawImage(img, 0, 0, canvas.width, canvas.height);				
 			}
 			img.src = ev.target.files[0].path;
@@ -26,7 +27,7 @@ rivets.bind($('#content_backgrounds'), {
 		
 		addImage: function(ev, model) {
 			console.log('addImage', this, arguments);
-			project.saveBackground(model.data.imageName, model.data.canvas).then(() => model.data.images = project.backgrounds);
+			project.saveBackground(model.data.imageName, model.data.canvas).then(() => model.data.images = project.bg.items);
 		}
 	}
 });
