@@ -33,17 +33,25 @@ function restore_blocks() {
 
 function compile() {
 	const vn32x = require('./vn32x');
+	const project = require('./project');
 	
 	printToConsole('-----------------------');
 	printToConsole('Starting compilation...');
 	
-	return generateCode()		
+	return generateCode()	
+		.then(() => {
+			return Promise.all(project.bg.items.map(img => vn32x.copyImagesFrom(img.fullPath)));
+		})
 		.then(vn32x.compile)
 		.then(function(){
 			printToConsole('Compilation done!');
 			return Promise.resolve();
 		})
-		.catch(err => printToConsole('Compilation failed!'));
+		.catch(err => {
+			console.error(err);
+			printToConsole('Compilation failed!');
+			return Promise.reject();
+		});
 }
 
 function compileAndRun() {
@@ -55,7 +63,10 @@ function compileAndRun() {
 			printToConsole('Starting emulator...');	
 			vn32x.run().then(() => printToConsole('Emulator closed.'));
 		})
-		.catch(err => printToConsole('Failed to run emulator!'));;
+		.catch(err => {
+			console.error(err);
+			printToConsole('Failed to run emulator!');
+		});
 }
 
 /**
