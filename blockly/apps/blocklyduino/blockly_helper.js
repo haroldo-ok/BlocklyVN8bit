@@ -39,9 +39,8 @@ function compile() {
 	printToConsole('Starting compilation...');
 	
 	return generateCode()	
-		.then(() => {
-			return vn32x.copyImagesFrom(project.bg.path);
-		})
+		.then(() =>  vn32x.copyImagesFrom(project.bg.path))
+		.then(() =>  vn32x.copyImagesFrom(project.portrait.path))
 		.then(vn32x.compile)
 		.then(function(){
 			printToConsole('Compilation done!');

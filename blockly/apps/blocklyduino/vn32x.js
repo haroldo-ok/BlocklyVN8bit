@@ -69,7 +69,7 @@ function deleteBinary() {
 function copyImagesFrom(originPath) {
 	let originGlob = path.resolve(originPath, '*.png');
 	let targetDir = config.fileName('vn32x', 'script');	
-	let commandLine = `xcopy "${originGlob}" "${targetDir}" /d`;
+	let commandLine = `cp "${originGlob}" "${targetDir}" -v -u`;
 	return exec(commandLine);
 }
 

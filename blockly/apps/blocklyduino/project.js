@@ -30,7 +30,7 @@ function listImages(subDir) {
 	return images;
 }
 
-function imgPathAccessor(subDir) {
+function ImagePathAccessor(subDir) {
 	let acc = {
 		
 		get items() {
@@ -62,7 +62,7 @@ function imgPathAccessor(subDir) {
 
 module.exports = {
 
-	bg: imgPathAccessor('bg'),
-	portrait: imgPathAccessor('portrait')
+	bg: new ImagePathAccessor('bg'),
+	portrait: new ImagePathAccessor('portrait')
 	
 };
