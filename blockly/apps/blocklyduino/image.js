@@ -32,7 +32,7 @@ function prepareImageList(options) {
 			
 			addImage: function(ev, model) {
 				console.log('addImage', this, arguments);
-				project.saveBackground(model.data.imageName, model.data.canvas).then(() => model.data.images = imageAccessor.items);
+				imageAccessor.add(model.data.imageName, model.data.canvas).then(() => model.data.images = imageAccessor.items);
 			}
 		}
 	});	
