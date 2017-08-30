@@ -31,7 +31,7 @@ function listImages(subDir) {
 }
 
 function imgPathAccessor(subDir) {
-	return {
+	let acc = {
 		
 		get items() {
 			return listImages(subDir);
@@ -39,29 +39,30 @@ function imgPathAccessor(subDir) {
 		
 		get path() {
 			return projectPath(subDir);
+		},
+		
+		add: (name, canvas) => {
+			return new Promise((resolve, reject) => {
+				let buffer = canvasBuffer(canvas, 'image/png');
+				let fileName = name + ".png";
+				fs.writeFile(path.resolve(acc.path, fileName), buffer, function (err) {
+					if (err) {
+						console.error('Error writing ' + fileName, err);
+						reject();
+					} else {
+						resolve();					
+					}				
+				});			
+			});			
 		}
 		
-	}
+	};
+	return acc;
 }
 
 module.exports = {
 
 	bg: imgPathAccessor('bg'),
-	portrait: imgPathAccessor('portrait'),
+	portrait: imgPathAccessor('portrait')
 	
-	saveBackground: function(name, canvas) {
-		return new Promise((resolve, reject) => {
-			let buffer = canvasBuffer(canvas, 'image/png');
-			let fileName = name + ".png";
-			let dir = projectPath('bg');
-			fs.writeFile(path.resolve(dir, fileName), buffer, function (err) {
-				if (err) {
-					console.error('Error writing ' + fileName, err);
-					reject();
-				} else {
-					resolve();					
-				}				
-			});			
-		});
-	}
 };

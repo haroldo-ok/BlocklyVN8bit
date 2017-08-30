@@ -49,7 +49,7 @@
  * List of tab names.
  * @private
  */
-var TABS_ = ['blocks', 'arduino', 'xml', 'backgrounds'];
+var TABS_ = ['blocks', 'arduino', 'xml', 'backgrounds', 'portraits'];
 
 var selected = 'blocks';
 
@@ -222,6 +222,8 @@ function init() {
             <td id="tab_xml" class="taboff" onclick="tabClick('xml')">XML</td>
             <td class="tabmin">&nbsp;</td>
             <td id="tab_backgrounds" class="taboff" onclick="tabClick('backgrounds')">Backgrounds</td>
+            <td class="tabmin">&nbsp;</td>
+            <td id="tab_portraits" class="taboff" onclick="tabClick('portraits')">Portraits</td>
             <td class="tabmax">
               <button onclick="compile()">Compile</button>
               <button onclick="compileAndRun()">Compile &amp; Run</button>
@@ -246,8 +248,14 @@ function init() {
   <div id="content_blocks" class="content"></div>
   <textarea id="content_arduino" class="content" readonly wrap="off"></textarea>
   <textarea id="content_xml" class="content" wrap="off"></textarea>
-  
+
   <div id="content_backgrounds" class="content image-panel">
+  </div>
+  
+  <div id="content_portraits" class="content image-panel">
+  </div>
+  
+  <div id="image_list_template" style="display: none">
 	<div class="image-fields">
 		<section>
 			<label>Image file:</label>
