@@ -45,15 +45,9 @@ function imgPathAccessor(subDir) {
 }
 
 module.exports = {
-	get backgrounds() {
-		return listImages('bg');
-	},
-	
-	get portraits() {
-		return listImages('portrait');
-	},	
-	
+
 	bg: imgPathAccessor('bg'),
+	portrait: imgPathAccessor('portrait'),
 	
 	saveBackground: function(name, canvas) {
 		return new Promise((resolve, reject) => {

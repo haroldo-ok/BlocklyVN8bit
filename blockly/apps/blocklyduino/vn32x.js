@@ -1,7 +1,7 @@
 const fs = require('fs');
+const path = require('path');
 const cmd = require('node-cmd');
 const rx = require('rxjs');
-const copyNewer = require('copy-newer');
 
 const config = require('./config');
 
@@ -67,9 +67,10 @@ function deleteBinary() {
 }
 
 function copyImagesFrom(originPath) {
-	let targetDir = config.fileName('vn32x', 'script');
-	console.warn('Copy ', originPath, ' to ', targetDir);
-	return copyNewer(originPath, targetDir, {debug: true});
+	let originGlob = path.resolve(originPath, '*.png');
+	let targetDir = config.fileName('vn32x', 'script');	
+	let commandLine = `xcopy "${originGlob}" "${targetDir}" /d`;
+	return exec(commandLine);
 }
 
 function compile() {

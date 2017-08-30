@@ -40,7 +40,7 @@ function compile() {
 	
 	return generateCode()	
 		.then(() => {
-			return Promise.all(project.bg.items.map(img => vn32x.copyImagesFrom(img.fullPath)));
+			return vn32x.copyImagesFrom(project.bg.path);
 		})
 		.then(vn32x.compile)
 		.then(function(){
