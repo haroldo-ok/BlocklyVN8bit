@@ -58,6 +58,16 @@ function createMainMenu() {
 		{
 			label: 'File',
 			submenu: [
+				{
+					label: 'Save',
+					accelerator: 'CommandOrControl+S',
+					click() { sendToMainWindow('saveProject', {}); }
+				},
+				{
+					label: 'Reload',
+					click() { sendToMainWindow('reloadProject', {}); }
+				},
+				{type: 'separator'},
 				{role: 'quit'}
 			]
 		},
@@ -78,6 +88,16 @@ function createMainMenu() {
 		{
 			label: 'Project',
 			submenu: [
+				{
+					label: 'Compile',
+					accelerator: 'CommandOrControl+F9',
+					click() { sendToMainWindow('compile', {}); }
+				},
+				{
+					label: 'Rebuild',
+					accelerator: 'CommandOrControl+Shift+F9',
+					click() { sendToMainWindow('rebuild', {}); }
+				},
 				{
 					label: 'Run',
 					accelerator: 'F9',
