@@ -270,7 +270,7 @@ function init() {
 	</div>
 	<ul class="image-list">
 		<li rv-each-image="data.images">
-			<h3>{ image.name }</h3>
+			<h3>{ image.name }<button class="delete-image" rv-data-image-name="image.name" rv-on-click="controller.deleteImage">X</button></h3>
 			<img rv-src="image.fullPath">
 		</li>
 	</ul>

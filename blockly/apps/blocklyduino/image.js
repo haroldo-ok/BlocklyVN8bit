@@ -11,7 +11,7 @@ function prepareImageList(options) {
 	let imageAccessor = project[options.origin];
 	
 	$container.html($('#image_list_template').html());
-	rivets.bind($container, {
+	let binding = rivets.bind($container, {
 		data: {
 			imageName: 'none',
 			canvas: $container.find('> div > canvas')[0],
@@ -35,10 +35,20 @@ function prepareImageList(options) {
 			
 			addImage: function(ev, model) {
 				console.log('addImage', this, arguments);
-				imageAccessor.add(model.data.imageName, model.data.canvas).then(() => model.data.images = imageAccessor.items);
+				imageAccessor.add(model.data.imageName, model.data.canvas).then(() => refreshImages(model));
+			},
+			
+			deleteImage: function(ev) {
+				console.log('deleteImage', this, arguments);
+				let imageName = $(this).data('image-name');
+				imageAccessor.remove(imageName).then(() => refreshImages(binding.models));
 			}
 		}
 	});	
+	
+	function refreshImages(model) {
+		model.data.images = imageAccessor.items;
+	}
 }
 
 [

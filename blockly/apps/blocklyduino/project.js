@@ -54,6 +54,19 @@ function ImagePathAccessor(subDir) {
 					}				
 				});			
 			});			
+		},
+		
+		remove: name => {
+			return new Promise((resolve, reject) => {
+				fs.unlink(path.resolve(acc.path, name + '.png'), err => {
+					if (err) {
+						console.error('Error deleting ' + name, err);
+						reject();
+					} else {
+						resolve();
+					}
+				});
+			});
 		}
 		
 	};
