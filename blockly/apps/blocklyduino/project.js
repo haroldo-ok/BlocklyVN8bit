@@ -30,7 +30,7 @@ function listImages(subDir) {
 	return images;
 }
 
-function imgPathAccessor(subDir) {
+function ImagePathAccessor(subDir) {
 	let acc = {
 		
 		get items() {
@@ -54,6 +54,19 @@ function imgPathAccessor(subDir) {
 					}				
 				});			
 			});			
+		},
+		
+		remove: name => {
+			return new Promise((resolve, reject) => {
+				fs.unlink(path.resolve(acc.path, name + '.png'), err => {
+					if (err) {
+						console.error('Error deleting ' + name, err);
+						reject();
+					} else {
+						resolve();
+					}
+				});
+			});
 		}
 		
 	};
@@ -62,7 +75,7 @@ function imgPathAccessor(subDir) {
 
 module.exports = {
 
-	bg: imgPathAccessor('bg'),
-	portrait: imgPathAccessor('portrait')
+	bg: new ImagePathAccessor('bg'),
+	portrait: new ImagePathAccessor('portrait')
 	
 };
