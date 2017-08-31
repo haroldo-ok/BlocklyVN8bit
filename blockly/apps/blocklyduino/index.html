@@ -263,14 +263,17 @@ function init() {
 		</section>
 		<section>
 			<label>Image name:</label>
-			<input type="text" rv-value="data.imageName" />
+			<input type="text" rv-value="data.imageName | imageName" />
 		</section>
 		<canvas class="image-preview" width="320" height="202"></canvas>
 		<button rv-on-click="controller.addImage">Add image</button>
 	</div>
 	<ul class="image-list">
 		<li rv-each-image="data.images">
-			<h3>{ image.name }<button class="delete-image" rv-data-image-name="image.name" rv-on-click="controller.deleteImage">X</button></h3>
+			<h3>
+				{ image.name }
+				<button class="delete-image" rv-data-image-name="image.name" rv-on-click="controller.deleteImage" title="Delete this image.">X</button>
+			</h3>
 			<img rv-src="image.fullPath">
 		</li>
 	</ul>

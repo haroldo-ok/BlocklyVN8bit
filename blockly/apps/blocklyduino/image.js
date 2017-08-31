@@ -2,9 +2,21 @@ const $ = require('jquery');
 const project = require('./project');
 const canvasBuffer = require('electron-canvas-to-buffer');
 const fs = require('fs');
+const path = require('path');
 
 const MAX_WIDTH = 320;
 const MAX_HEIGHT = 202;
+
+rivets.formatters.imageName = {
+	
+	read: value => prepareImageName(value),
+	publish: value => prepareImageName(value)
+	
+};
+
+function prepareImageName(value) {
+	return (value || '').trim().toLowerCase().replace(/[^a-z0-9_]/g, '_');
+}
 
 function prepareImageList(options) {
 	let $container = $(options.selector);
@@ -21,7 +33,7 @@ function prepareImageList(options) {
 		controller: {
 			selectFile: function(ev, model) {
 				console.log('selectFile', this, arguments);
-				model.data.imageName = ev.target.files[0].name;
+				model.data.imageName = path.parse(ev.target.files[0].name).name;
 				
 				let img = new Image();
 				img.onload = () => {
