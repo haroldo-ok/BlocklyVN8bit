@@ -36,3 +36,7 @@
 	margin: 0;
 	padding: 0;
 }
+
+.image-panel .image-list > li h3 > button {
+	float: right;
+}
