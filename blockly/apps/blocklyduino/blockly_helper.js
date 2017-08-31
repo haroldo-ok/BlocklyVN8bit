@@ -149,12 +149,14 @@ function save() {
 	var fs = require('fs');
 	var config = require('./config');
 
+	printToConsole("Saving project...");
 	fs.writeFile(config.fileName('projects', 'project.xml'), data, function(err) {
 		if(err) {
 			return console.log(err);
 		}
 
-		console.log("The file was saved!");
+		console.log("The project was saved!");
+		printToConsole("The project was saved!");
 	}); 
 }
 
@@ -165,12 +167,13 @@ function load() {
 	var fs = require('fs');
 	var config = require('./config');
 
+	printToConsole("Loading project...");
 	fs.readFile(config.fileName('projects', 'project.xml'), "utf8", function(err, data) {
 		if (err) {
 			return console.log(err);
 		}
 
-		console.log("The file was loaded!");
+		console.log("The project was loaded!");
 		try {
 			var xml = Blockly.Xml.textToDom(data);
 		} catch (e) {
@@ -180,6 +183,8 @@ function load() {
 
 		Blockly.mainWorkspace.clear();
 		Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, xml);
+
+		printToConsole("The project was loaded!");
 	}); 
 }
 
@@ -377,6 +382,10 @@ function initConsole() {
 
 function initMainProcEvents() {
 	const { ipcRenderer } = require('electron');
+	// Save/Load
+	ipcRenderer.on('saveProject', save);
+	ipcRenderer.on('reloadProject', load);
+	// Compilation
 	ipcRenderer.on('rebuild', rebuild);
 	ipcRenderer.on('compile', compile);
 	ipcRenderer.on('compileAndRun', compileAndRun);
