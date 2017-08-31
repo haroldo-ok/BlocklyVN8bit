@@ -31,6 +31,25 @@ function restore_blocks() {
   }
 }
 
+function rebuild() {
+	const vn32x = require('./vn32x');
+	
+	printToConsole('-----------------------');
+	printToConsole('Cleaning up...');
+	
+	return vn32x.clean()
+		.then(compile)
+		.then(function(){
+			printToConsole('Build done!');
+			return Promise.resolve();
+		})
+		.catch(err => {
+			console.error(err);
+			printToConsole('Build failed!');
+			return Promise.reject();
+		});	
+}
+
 function compile() {
 	const vn32x = require('./vn32x');
 	const project = require('./project');
@@ -358,5 +377,7 @@ function initConsole() {
 
 function initMainProcEvents() {
 	const { ipcRenderer } = require('electron');
+	ipcRenderer.on('rebuild', rebuild);
+	ipcRenderer.on('compile', compile);
 	ipcRenderer.on('compileAndRun', compileAndRun);
 }

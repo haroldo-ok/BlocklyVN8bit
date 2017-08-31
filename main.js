@@ -79,6 +79,16 @@ function createMainMenu() {
 			label: 'Project',
 			submenu: [
 				{
+					label: 'Compile',
+					accelerator: 'CommandOrControl+F9',
+					click() { sendToMainWindow('compile', {}); }
+				},
+				{
+					label: 'Rebuild',
+					accelerator: 'CommandOrControl+Shift+F9',
+					click() { sendToMainWindow('rebuild', {}); }
+				},
+				{
 					label: 'Run',
 					accelerator: 'F9',
 					click() { sendToMainWindow('compileAndRun', {}); }
