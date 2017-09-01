@@ -3,6 +3,7 @@
   <meta charset="utf-8">
   <title>BlocklyVN32X</title>
   
+	<link rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="main.css">
 	<link rel="stylesheet" type="text/css" href="image.css">
   <!--
@@ -154,6 +155,8 @@ function getBBox_(element) {
  * Initialize Blockly.  Called on page load.
  */
 function init() {
+  const topbar = require('topbar');
+  topbar.show();
 
   var container = document.getElementById('content_area');
   var onresize = function(e) {
@@ -201,7 +204,9 @@ function init() {
   initMainProcEvents();
   
   require('./image.js');
+  topbar.hide();
 }
+
   </script>
 </head>
 <body onload="init()">
@@ -225,7 +230,9 @@ function init() {
             <td class="tabmin">&nbsp;</td>
             <td id="tab_portraits" class="taboff" onclick="tabClick('portraits')">Portraits</td>
             <td class="tabmax">
-              <button onclick="compileAndRun()">Run</button>
+              <button onclick="compileAndRun()" class="run">
+				<i class="fa fa-play"></i> Run
+              </button>
             </td>
           </tr>
         </table>

@@ -119,3 +119,7 @@ button:hover {
 #console_area > ul > li {
 	white-space: nowrap;
 }
+
+button.run > i {
+	color: #0c0;
+}
