@@ -154,6 +154,8 @@ function getBBox_(element) {
  * Initialize Blockly.  Called on page load.
  */
 function init() {
+  const topbar = require('topbar');
+  topbar.show();
 
   var container = document.getElementById('content_area');
   var onresize = function(e) {
@@ -201,7 +203,9 @@ function init() {
   initMainProcEvents();
   
   require('./image.js');
+  topbar.hide();
 }
+
   </script>
 </head>
 <body onload="init()">

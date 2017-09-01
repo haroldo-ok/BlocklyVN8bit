@@ -32,8 +32,10 @@ function restore_blocks() {
 }
 
 function rebuild() {
+	const topbar = require('topbar');
 	const vn32x = require('./vn32x');
 	
+	topbar.show();
 	printToConsole('-----------------------');
 	printToConsole('Cleaning up...');
 	
@@ -41,19 +43,23 @@ function rebuild() {
 		.then(compile)
 		.then(function(){
 			printToConsole('Build done!');
+			topbar.hide();
 			return Promise.resolve();
 		})
 		.catch(err => {
 			console.error(err);
 			printToConsole('Build failed!');
+			topbar.hide();
 			return Promise.reject();
 		});	
 }
 
 function compile() {
+	const topbar = require('topbar');
 	const vn32x = require('./vn32x');
 	const project = require('./project');
 	
+	topbar.show();
 	printToConsole('-----------------------');
 	printToConsole('Starting compilation...');
 	
@@ -63,11 +69,13 @@ function compile() {
 		.then(vn32x.compile)
 		.then(function(){
 			printToConsole('Compilation done!');
+			topbar.hide();
 			return Promise.resolve();
 		})
 		.catch(err => {
 			console.error(err);
 			printToConsole('Compilation failed!');
+			topbar.hide();
 			return Promise.reject();
 		});
 }
@@ -92,15 +100,20 @@ function compileAndRun() {
 */
 function saveCode() {
 	const vn32x = require('./vn32x');
-	
+
 	printToConsole('-----------------------');
 	printToConsole('Generating files...');
 	
 	generateCode()		
 		.then(function(){
 			printToConsole('All done!');
+			return Promise.success();
 		})
-		.catch(err => printToConsole('Failed!'));
+		.catch(err => {
+			console.error('File generation failed!', err);
+			printToConsole('Failed!')
+			return Promise.reject();
+		});
 
 }
 
@@ -143,14 +156,19 @@ function generateCode() {
  * better include Blob and FileSaver for browser compatibility
  */
 function save() {
+	const topbar = require('topbar');	  
+	const fs = require('fs');
+	const config = require('./config');
+
+	topbar.show();
+	printToConsole("Saving project...");
+	
 	var xml = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
 	var data = Blockly.Xml.domToPrettyText(xml);
-  
-	var fs = require('fs');
-	var config = require('./config');
-
-	printToConsole("Saving project...");
+	
 	fs.writeFile(config.fileName('projects', 'project.xml'), data, function(err) {
+		topbar.hide();
+			
 		if(err) {
 			return console.log(err);
 		}
@@ -164,12 +182,15 @@ function save() {
  * Load blocks from local file.
  */
 function load() {
-	var fs = require('fs');
-	var config = require('./config');
+	const topbar = require('topbar');
+	const fs = require('fs');
+	const config = require('./config');
 
+	topbar.show();
 	printToConsole("Loading project...");
 	fs.readFile(config.fileName('projects', 'project.xml'), "utf8", function(err, data) {
 		if (err) {
+			topbar.hide();
 			return console.log(err);
 		}
 
@@ -178,6 +199,7 @@ function load() {
 			var xml = Blockly.Xml.textToDom(data);
 		} catch (e) {
 			console.error('Error parsing XML', e);
+			topbar.hide();
 			return;
 		}
 
@@ -185,6 +207,7 @@ function load() {
 		Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, xml);
 
 		printToConsole("The project was loaded!");
+		topbar.hide();
 	}); 
 }
 
