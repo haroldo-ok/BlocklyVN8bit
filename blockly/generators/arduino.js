@@ -108,7 +108,7 @@ Blockly.Arduino.init = function(workspace) {
 
 	if (!Blockly.Arduino.variableDB_) {
 		Blockly.Arduino.variableDB_ =
-				new Blockly.Names(Blockly.Arduino.RESERVED_WORDS_);
+				new Blockly.Names(Blockly.Arduino.RESERVED_WORDS_, 'gv_');
 	} else {
 		Blockly.Arduino.variableDB_.reset();
 	}
