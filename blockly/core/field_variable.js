@@ -170,30 +170,44 @@ Blockly.FieldVariable.dropdownCreate = function() {
  */
 Blockly.FieldVariable.dropdownChange = function(text) {
   function promptName(promptText, defaultText) {
-    Blockly.hideChaff();
-    var newVar = window.prompt(promptText, defaultText);
-    // Merge runs of whitespace.  Strip leading and trailing whitespace.
-    // Beyond this, all names are legal.
-    if (newVar) {
-      newVar = newVar.replace(/[\s\xa0]+/g, ' ').replace(/^ | $/g, '');
-      if (newVar == Blockly.Msg.RENAME_VARIABLE ||
-          newVar == Blockly.Msg.NEW_VARIABLE) {
-        // Ok, not ALL names are legal...
-        newVar = null;
-      }
-    }
-    return newVar;
+	  return new Promise((resolve, reject) => {
+		const alertify = require('alertifyjs');
+		
+		Blockly.hideChaff();
+		
+		alertify.prompt(promptText, defaultText, 
+			(evt, newVar) => {
+				// Merge runs of whitespace.  Strip leading and trailing whitespace.
+				// Beyond this, all names are legal.
+				if (newVar) {
+				  newVar = newVar.replace(/[\s\xa0]+/g, ' ').replace(/^ | $/g, '');
+				  if (newVar == Blockly.Msg.RENAME_VARIABLE ||
+					  newVar == Blockly.Msg.NEW_VARIABLE) {
+					// Ok, not ALL names are legal...
+					newVar = null;
+				  }
+				}
+				resolve(newVar);
+			},
+			() => {
+				console.log('Prompt cancelled.');
+			});		
+	  });
   }
   var workspace = this.sourceBlock_.workspace;
   if (text == Blockly.Msg.RENAME_VARIABLE) {
     var oldVar = this.getText();
-    text = promptName(Blockly.Msg.RENAME_VARIABLE_TITLE.replace('%1', oldVar),
-                      oldVar);
-    if (text) {
-      Blockly.Variables.renameVariable(oldVar, text, workspace);
-    }
+    promptName(Blockly.Msg.RENAME_VARIABLE_TITLE.replace('%1', oldVar),
+                      oldVar)
+		.then(text => {
+			if (text) {
+			  Blockly.Variables.renameVariable(oldVar, text, workspace);
+			}
+		});
+	
     return null;
   } else if (text == Blockly.Msg.NEW_VARIABLE) {
+	  throw new Error("Not implemented");
     text = promptName(Blockly.Msg.NEW_VARIABLE_TITLE, '');
     // Since variables are case-insensitive, ensure that if the new variable
     // matches with an existing variable, the new case prevails throughout.
