@@ -199,22 +199,13 @@ Blockly.FieldVariable.dropdownChange = function(text) {
     var oldVar = this.getText();
     promptName(Blockly.Msg.RENAME_VARIABLE_TITLE.replace('%1', oldVar),
                       oldVar)
-		.then(text => {
-			if (text) {
-			  Blockly.Variables.renameVariable(oldVar, text, workspace);
-			}
-		});
+		.then(text => text && Blockly.Variables.renameVariable(oldVar, text, workspace));
 	
     return null;
   } else if (text == Blockly.Msg.NEW_VARIABLE) {
-	  throw new Error("Not implemented");
-    text = promptName(Blockly.Msg.NEW_VARIABLE_TITLE, '');
-    // Since variables are case-insensitive, ensure that if the new variable
-    // matches with an existing variable, the new case prevails throughout.
-    if (text) {
-      Blockly.Variables.renameVariable(text, text, workspace);
-      return text;
-    }
+    var block = this;
+	promptName(Blockly.Msg.NEW_VARIABLE_TITLE, '')
+		.then(text => text && block.setValue(text));
     return null;
   }
   return undefined;
