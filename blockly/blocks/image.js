@@ -2,6 +2,7 @@
 
 (function(){
 
+const path = require('path');
 const project = require('./project');
 
 function createImageComponent(params) {
@@ -24,7 +25,13 @@ function createImageComponent(params) {
 			this.setPreviousStatement(true, null);
 			this.setNextStatement(true, null);
 			this.setTooltip(params.tooltip);
-		}
+		},
+		
+		mutationToDom: function() {
+			let src = this.getFieldValue('SOURCE');
+			let onlyFName = path.basename(src, path.extname(src));	
+			this.setFieldValue(onlyFName, 'SOURCE');
+		},
 	};
 }
 
