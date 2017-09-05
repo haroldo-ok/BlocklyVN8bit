@@ -52,7 +52,7 @@
  * List of tab names.
  * @private
  */
-var TABS_ = ['blocks', 'arduino', 'xml', 'backgrounds', 'portraits'];
+var TABS_ = ['blocks', 'overview', 'arduino', 'xml', 'backgrounds', 'portraits'];
 
 var selected = 'blocks';
 
@@ -224,6 +224,8 @@ function init() {
           <tr id="tabRow" height="1em">
             <td id="tab_blocks" class="tabon" onclick="tabClick('blocks')">Blocks</td>
             <td class="tabmin">&nbsp;</td>
+            <td id="tab_overview" class="taboff" onclick="tabClick('overview')">Overview</td>
+            <td class="tabmin">&nbsp;</td>
             <td id="tab_arduino" class="taboff" onclick="tabClick('arduino')">C</td>
             <td class="tabmin">&nbsp;</td>
             <td id="tab_xml" class="taboff" onclick="tabClick('xml')">XML</td>
@@ -253,6 +255,9 @@ function init() {
   <div id="content_blocks" class="content"></div>
   <textarea id="content_arduino" class="content" readonly wrap="off"></textarea>
   <textarea id="content_xml" class="content" wrap="off"></textarea>
+
+  <div id="content_overview" class="content image-panel">
+  </div>
 
   <div id="content_backgrounds" class="content image-panel">
   </div>
