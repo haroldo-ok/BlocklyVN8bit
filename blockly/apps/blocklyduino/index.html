@@ -126,6 +126,14 @@ function renderContent() {
     var arduinoTextarea = document.getElementById('content_arduino');
     arduinoTextarea.value = Blockly.Arduino.workspaceToCode();
     arduinoTextarea.focus();
+  } else if (content.id == 'content_overview') {
+    var overviewContainer = document.getElementById('content_overview');
+	var workspace = Blockly.getMainWorkspace();
+	var metrics = workspace.getMetrics();
+	var svg = '<svg width="' + metrics.contentHeight + '" height="' + metrics.contentWidth + '">' + 
+		workspace.svgBlockCanvas_.outerHTML + 
+		'</svg>';
+	overviewContainer.innerHTML = svg;
   }
 }
 
@@ -184,6 +192,8 @@ function init() {
   window.addEventListener('resize', onresize, false);
 
   var toolbox = document.getElementById('toolbox');
+  
+  // Main blockly workspace
   Blockly.inject(document.getElementById('content_blocks'),
       {grid:
           {spacing: 25,
@@ -192,7 +202,7 @@ function init() {
            snap: true},
        media: '../../media/',
        toolbox: toolbox});
-
+	   
   auto_save_and_restore_blocks();
 
   //load from url parameter (single param)
