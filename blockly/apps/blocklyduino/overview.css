@@ -1,0 +1,8 @@
+#content_overview > svg > g > g {
+	cursor: pointer;
+	transition: opacity 0.5s ease-in-out;
+}
+
+#content_overview > svg > g > g:hover {
+	opacity: 0.8;
+}

@@ -8,6 +8,7 @@
 	<link rel="stylesheet" href="css/alertify/themes/default.min.css">
 	<link rel="stylesheet" type="text/css" href="main.css">
 	<link rel="stylesheet" type="text/css" href="image.css">
+	<link rel="stylesheet" type="text/css" href="overview.css">
   <!--
   <script type="text/javascript" src="../../blockly_compressed.js"></script>
   <script type="text/javascript" src="../../blocks_compressed.js"></script>
@@ -128,7 +129,6 @@ function renderContent() {
     arduinoTextarea.focus();
   } else if (content.id == 'content_overview') {
     var _ = require('lodash');
-	var nanoid = require('nanoid');
 	
     var overviewContainer = document.getElementById('content_overview');
 	var workspace = Blockly.getMainWorkspace();
@@ -151,14 +151,13 @@ function renderContent() {
 	var minX = _.chain(coords).map('x').min().value();
 	var minY = _.chain(coords).map('y').min().value();
 	rootG.attributes.getNamedItem('transform').value = 
-		'scale(0.3) ' + 
+		'scale(0.15) ' + 
 		'translate(' + (-minX) + ', ' + (-minY) + ')';
 		
 	// On click, changes back to 'blocks' tab, and scrolls to the tab.
 	coords.forEach(c => {
 		c.g.addEventListener('click', ev => {
 			ev.preventDefault();
-			console.warn(c);
 			tabClick('blocks');
 			workspace.scrollbar.set(c.x, c.y + (metrics.viewHeight / 2));
 		});
