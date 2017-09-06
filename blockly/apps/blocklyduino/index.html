@@ -127,6 +127,7 @@ function renderContent() {
     arduinoTextarea.value = Blockly.Arduino.workspaceToCode();
     arduinoTextarea.focus();
   } else if (content.id == 'content_overview') {
+    var _ = require('lodash');
     var overviewContainer = document.getElementById('content_overview');
 	var workspace = Blockly.getMainWorkspace();
 	var metrics = workspace.getMetrics();
@@ -134,6 +135,24 @@ function renderContent() {
 		workspace.svgBlockCanvas_.outerHTML + 
 		'</svg>';
 	overviewContainer.innerHTML = svg;
+	
+	var rootG = overviewContainer.querySelector('g');
+	//rootG.attributes.getNamedItem('transform').value = 'scale(0.3)';
+	//rootG.querySelectorAll('g')[0].transform.baseVal[0].matrix.e
+	//rootG.querySelectorAll('g').map(g => { let m = transform.baseVal[0].matrix; return {x: m.e, y: m.f}; })
+	//_.map(rootG.querySelectorAll('g'), g => { let m = g.transform.baseVal[0].matrix; return {x: m.e, y: m.f}; })
+	
+	var coords = _.map(rootG.querySelectorAll('g'), g => { 
+		let m = g.transform.baseVal[0].matrix; 
+		return {x: m.e, y: m.f}; 
+	});
+	
+	var minX = _.chain(coords).map('x').min().value();
+	var minY = _.chain(coords).map('y').min().value();
+	
+	rootG.attributes.getNamedItem('transform').value = 
+		'scale(0.3) ' + 
+		'translate(' + (-minX) + ', ' + (-minY) + ')';
   }
 }
 
