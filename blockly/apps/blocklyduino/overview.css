@@ -1,8 +1,18 @@
-#content_overview > svg > g > g {
+.overview-search {
+	width: 12em;
+}
+
+.overview-content {
+	width: calc(100% - 12em);
+	height: 100%;
+	overflow: auto;
+}
+
+.overview-content > svg > g > g {
 	cursor: pointer;
 	transition: opacity 0.5s ease-in-out;
 }
 
-#content_overview > svg > g > g:hover {
+.overview-content > svg > g > g:hover {
 	opacity: 0.8;
 }

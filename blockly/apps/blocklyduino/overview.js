@@ -1,7 +1,7 @@
 const _ = require('lodash');
 	
 function update() {
-    var overviewContainer = document.getElementById('content_overview');
+    var overviewContainer = document.getElementById('content_overview').querySelector('.overview-content');
 	var workspace = Blockly.getMainWorkspace();
 	var metrics = workspace.getMetrics();
 
