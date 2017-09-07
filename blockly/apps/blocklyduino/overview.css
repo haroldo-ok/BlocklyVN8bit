@@ -1,11 +1,13 @@
 .overview-search {
 	width: 12em;
+	float: right;
 }
 
 .overview-content {
 	width: calc(100% - 12em);
 	height: 100%;
 	overflow: auto;
+	float: left;
 }
 
 .overview-content > svg > g > g {

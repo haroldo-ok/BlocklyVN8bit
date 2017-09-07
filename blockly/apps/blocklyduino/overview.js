@@ -1,7 +1,12 @@
 const _ = require('lodash');
 	
 function update() {
-    var overviewContainer = document.getElementById('content_overview').querySelector('.overview-content');
+	updateMiniatures();
+	updateSearch();
+}
+
+function updateMiniatures() {
+    var overviewContainer = document.querySelector('.overview-content');
 	var workspace = Blockly.getMainWorkspace();
 	var metrics = workspace.getMetrics();
 
@@ -32,6 +37,30 @@ function update() {
 			tabClick('blocks');
 			workspace.scrollbar.set(c.x, c.y + (metrics.viewHeight / 2));
 		});
+	});
+}
+
+function updateSearch() {
+	let overviewContainer = document.querySelector('.overview-content');
+	let searchContainer = document.querySelector('.overview-search');
+	
+	let elementsToIndex = _.chain(overviewContainer.querySelectorAll('.blocklyNonEditableText'))
+		.map(el => {
+			return {
+				text: el.textContent.replace('\u25BE', ''),
+				element: el
+			};
+		})
+		.value();
+	
+	rivets.bind(searchContainer, {
+		data: {
+			results: elementsToIndex
+		},
+		
+		controller: {
+			
+		}
 	});
 }
 
