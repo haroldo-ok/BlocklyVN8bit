@@ -56,9 +56,15 @@ function updateSearch() {
 			let item = {
 				text: text,
 				element: el,
+				
 				hover: () => {
 					removeClassFromChildren(overviewContainer, 'search-hover')
 					el.parentNode.classList.add('search-hover');
+				},
+				
+				click: () => { 
+					console.warn(el); 
+					svgFireClick(el);
 				}
 			};
 			
@@ -101,6 +107,13 @@ function updateSearch() {
 
 function removeClassFromChildren(parent, name) {	
 	parent.querySelectorAll('.' + name).forEach(el => el.classList.remove(name));
+}
+
+function svgFireClick(el) {
+	// Based on https://groups.google.com/forum/#!topic/d3-js/T05RnxO5IFQ
+	let event = document.createEvent("SVGEvents");
+	event.initEvent("click",true,true);
+	el.dispatchEvent(event);
 }
 
 module.exports = {

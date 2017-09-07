@@ -268,8 +268,8 @@ function init() {
 			<input type="text" rv-value="data.searchString" rv-on-keyup="controller.search" />
 		</section>
 		<ul class="search-results">
-			<li rv-each-result="data.results">
-				<label rv-on-mouseover="result.hover">{ result.text }</label>
+			<li rv-each-result="data.results" rv-on-mouseover="result.hover" rv-on-click="result.click">
+				<label>{ result.text }</label>
 			</li>
 		</ul>
 	</div>
