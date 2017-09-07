@@ -1,4 +1,6 @@
 const _ = require('lodash');
+
+let searchBinding = null;
 	
 function update() {
 	updateMiniatures();
@@ -63,17 +65,23 @@ function updateSearch() {
 		})
 		.value();
 	
-	rivets.bind(searchContainer, {
-		data: {
-			results: elementsToIndex
-		},
-		
-		controller: {
-			hover: () => {
-				console.log(arguments)
+	if (!searchBinding) {
+		searchBinding = rivets.bind(searchContainer, {
+			data: {
+				results: []
+			},
+			
+			controller: {
+				hover: () => {
+					console.log(arguments)
+				},
+				
+				updateIndex: items => searchBinding.models.data.results = items
 			}
-		}
-	});
+		});
+	}
+	
+	searchBinding.models.controller.updateIndex(elementsToIndex);
 }
 
 function removeClassFromChildren(parent, name) {	
