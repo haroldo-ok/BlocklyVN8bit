@@ -18,3 +18,9 @@
 .overview-content > svg > g > g:hover {
 	opacity: 0.8;
 }
+
+.overview-search .search-results {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}

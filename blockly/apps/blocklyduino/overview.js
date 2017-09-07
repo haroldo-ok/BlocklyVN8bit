@@ -44,10 +44,14 @@ function updateSearch() {
 	let overviewContainer = document.querySelector('.overview-content');
 	let searchContainer = document.querySelector('.overview-search');
 	
-	let elementsToIndex = _.chain(overviewContainer.querySelectorAll('.blocklyNonEditableText'))
+	let elementsToIndex = _.chain(overviewContainer.querySelectorAll('.blocklyEditableText'))
 		.map(el => {
+			let text = el.textContent
+				.replace('\u25BE', '') // Remove arrows
+				.replace(/\s+/g, ' '); // Normalize spaces				
+			
 			return {
-				text: el.textContent.replace('\u25BE', ''),
+				text: text,
 				element: el
 			};
 		})
