@@ -128,40 +128,7 @@ function renderContent() {
     arduinoTextarea.value = Blockly.Arduino.workspaceToCode();
     arduinoTextarea.focus();
   } else if (content.id == 'content_overview') {
-    var _ = require('lodash');
-	
-    var overviewContainer = document.getElementById('content_overview');
-	var workspace = Blockly.getMainWorkspace();
-	var metrics = workspace.getMetrics();
-
-	// Create a copy of Blockly's SVG.
-	var svg = '<svg width="' + metrics.contentHeight + '" height="' + metrics.contentWidth + '">' + 
-		workspace.svgBlockCanvas_.outerHTML + 
-		'</svg>';
-	overviewContainer.innerHTML = svg;
-
-	// Collect the coordinates of the child blocks
-	var rootG = overviewContainer.querySelector('g');	
-	var coords = _.map(rootG.querySelectorAll(':scope > g'), g => { 
-		let m = g.transform.baseVal[0].matrix; 
-		return {g: g, x: m.e, y: m.f}; 
-	});
-	
-	// Adjusts the root <g> tag so all children are visible
-	var minX = _.chain(coords).map('x').min().value();
-	var minY = _.chain(coords).map('y').min().value();
-	rootG.attributes.getNamedItem('transform').value = 
-		'scale(0.15) ' + 
-		'translate(' + (-minX) + ', ' + (-minY) + ')';
-		
-	// On click, changes back to 'blocks' tab, and scrolls to the tab.
-	coords.forEach(c => {
-		c.g.addEventListener('click', ev => {
-			ev.preventDefault();
-			tabClick('blocks');
-			workspace.scrollbar.set(c.x, c.y + (metrics.viewHeight / 2));
-		});
-	});
+    require('./overview').update();
   }
 }
 
@@ -295,6 +262,17 @@ function init() {
   <textarea id="content_xml" class="content" wrap="off"></textarea>
 
   <div id="content_overview" class="content image-panel">
+	<div class="overview-content"></div>
+	<div class="overview-search">
+		<section>
+			<input type="text" rv-value="data.searchString" rv-on-keyup="controller.search" />
+		</section>
+		<ul class="search-results">
+			<li rv-each-result="data.results" rv-on-mouseover="result.hover" rv-on-click="result.click">
+				<label>{ result.text }</label>
+			</li>
+		</ul>
+	</div>
   </div>
 
   <div id="content_backgrounds" class="content image-panel">

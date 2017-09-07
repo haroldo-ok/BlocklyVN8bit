@@ -1,8 +1,30 @@
-#content_overview > svg > g > g {
+.overview-search {
+	width: 12em;
+	float: right;
+}
+
+.overview-content {
+	width: calc(100% - 12em);
+	height: 100%;
+	overflow: auto;
+	float: left;
+}
+
+.overview-content > svg > g > g {
 	cursor: pointer;
 	transition: opacity 0.5s ease-in-out;
 }
 
-#content_overview > svg > g > g:hover {
+.overview-content > svg > g > g:hover {
 	opacity: 0.8;
+}
+
+.overview-content > svg .search-hover {
+	opacity: 0.8;
+}
+
+.overview-search .search-results {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
 }
