@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const Fuse = require('fuse.js');
 
 let searchBinding = null;
 	
@@ -68,15 +69,29 @@ function updateSearch() {
 	if (!searchBinding) {
 		searchBinding = rivets.bind(searchContainer, {
 			data: {
+				searchString: '',
+				index: [],
 				results: []
 			},
 			
 			controller: {
+				fuse: null,
+				
 				hover: () => {
 					console.log(arguments)
 				},
 				
-				updateIndex: items => searchBinding.models.data.results = items
+				search: () => {
+					let model = searchBinding.models;
+					model.data.results = model.data.searchString ? model.controller.fuse.search(model.data.searchString) : model.data.index;
+				},
+				
+				updateIndex: items => {
+					let model = searchBinding.models;
+					model.data.index = items;
+					model.controller.fuse = new Fuse(model.data.index, {keys: ['text'], tokenize: true});
+					model.controller.search();
+				}
 			}
 		});
 	}

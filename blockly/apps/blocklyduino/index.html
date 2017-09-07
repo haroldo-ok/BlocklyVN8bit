@@ -264,6 +264,9 @@ function init() {
   <div id="content_overview" class="content image-panel">
 	<div class="overview-content"></div>
 	<div class="overview-search">
+		<section>
+			<input type="text" rv-value="data.searchString" rv-on-keyup="controller.search" />
+		</section>
 		<ul class="search-results">
 			<li rv-each-result="data.results">
 				<label rv-on-mouseover="result.hover">{ result.text }</label>
