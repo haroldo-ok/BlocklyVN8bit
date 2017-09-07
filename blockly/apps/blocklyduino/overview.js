@@ -49,11 +49,17 @@ function updateSearch() {
 			let text = el.textContent
 				.replace('\u25BE', '') // Remove arrows
 				.replace(/\s+/g, ' '); // Normalize spaces				
-			
-			return {
+				
+			let item = {
 				text: text,
-				element: el
+				element: el,
+				hover: () => {
+					removeClassFromChildren(overviewContainer, 'search-hover')
+					el.parentNode.classList.add('search-hover');
+				}
 			};
+			
+			return item;
 		})
 		.value();
 	
@@ -63,9 +69,15 @@ function updateSearch() {
 		},
 		
 		controller: {
-			
+			hover: () => {
+				console.log(arguments)
+			}
 		}
 	});
+}
+
+function removeClassFromChildren(parent, name) {	
+	parent.querySelectorAll('.' + name).forEach(el => el.classList.remove(name));
 }
 
 module.exports = {

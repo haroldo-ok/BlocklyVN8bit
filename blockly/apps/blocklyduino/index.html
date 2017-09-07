@@ -266,7 +266,7 @@ function init() {
 	<div class="overview-search">
 		<ul class="search-results">
 			<li rv-each-result="data.results">
-				{ result.text }
+				<label rv-on-mouseover="result.hover">{ result.text }</label>
 			</li>
 		</ul>
 	</div>

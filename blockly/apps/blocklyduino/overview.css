@@ -19,6 +19,10 @@
 	opacity: 0.8;
 }
 
+.overview-content > svg .search-hover {
+	opacity: 0.8;
+}
+
 .overview-search .search-results {
 	list-style-type: none;
 	padding: 0;
