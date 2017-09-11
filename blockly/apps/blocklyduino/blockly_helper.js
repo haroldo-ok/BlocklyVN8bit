@@ -158,7 +158,7 @@ function generateCode() {
 function save() {
 	const topbar = require('topbar');	  
 	const fs = require('fs');
-	const config = require('./config');
+	const project = require('./project');
 
 	topbar.show();
 	printToConsole("Saving project...");
@@ -166,16 +166,17 @@ function save() {
 	var xml = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
 	var data = Blockly.Xml.domToPrettyText(xml);
 	
-	fs.writeFile(config.fileName('projects', 'project.xml'), data, function(err) {
-		topbar.hide();
-			
-		if(err) {
-			return console.log(err);
-		}
-
-		console.log("The project was saved!");
-		printToConsole("The project was saved!");
-	}); 
+	project.current.saveText('project.xml', data)
+		.then(() => {
+			topbar.hide();
+			console.log("The project was saved!");
+			printToConsole("The project was saved!");
+		})
+		.catch(err => {
+			topbar.hide();
+			console.error(err);
+			printToConsole("Saving failed!");
+		});
 }
 
 /**

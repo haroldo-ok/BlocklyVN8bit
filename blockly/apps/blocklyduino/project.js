@@ -30,6 +30,22 @@ function listImages(subDir) {
 	return images;
 }
 
+function ProjectAccessor() {
+	return {
+		saveText: (fileName, content) => {
+			return new Promise((resolve, reject) => {
+				fs.writeFile(path.resolve(projectPath(), fileName), content, function(err) {
+					if (err) {
+						reject(err);
+					} else {
+						resolve();
+					}
+				}); 
+			});
+		}
+	};
+}
+
 function ImagePathAccessor(subDir) {
 	let acc = {
 		
@@ -75,6 +91,8 @@ function ImagePathAccessor(subDir) {
 
 module.exports = {
 
+	current: new ProjectAccessor(),
+	
 	bg: new ImagePathAccessor('bg'),
 	portrait: new ImagePathAccessor('portrait')
 	
