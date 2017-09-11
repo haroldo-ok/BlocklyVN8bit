@@ -166,7 +166,7 @@ function save() {
 	var xml = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
 	var data = Blockly.Xml.domToPrettyText(xml);
 	
-	project.current.saveText('project.xml', data)
+	project.current.saveBlocklyXml(data)
 		.then(() => {
 			topbar.hide();
 			console.log("The project was saved!");

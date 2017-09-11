@@ -30,19 +30,21 @@ function listImages(subDir) {
 	return images;
 }
 
+function saveText(fileName, content) {
+	return new Promise((resolve, reject) => {
+		fs.writeFile(path.resolve(projectPath(), fileName), content, function(err) {
+			if (err) {
+				reject(err);
+			} else {
+				resolve();
+			}
+		}); 
+	});	
+}
+
 function ProjectAccessor() {
 	return {
-		saveText: (fileName, content) => {
-			return new Promise((resolve, reject) => {
-				fs.writeFile(path.resolve(projectPath(), fileName), content, function(err) {
-					if (err) {
-						reject(err);
-					} else {
-						resolve();
-					}
-				}); 
-			});
-		}
+		saveBlocklyXml: content => saveText('blockly.xml', content)
 	};
 }
 
