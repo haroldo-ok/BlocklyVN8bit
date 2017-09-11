@@ -185,31 +185,35 @@ function save() {
 function load() {
 	const topbar = require('topbar');
 	const fs = require('fs');
-	const config = require('./config');
+	const project = require('./project');
 
 	topbar.show();
 	printToConsole("Loading project...");
-	fs.readFile(config.fileName('projects', 'project.xml'), "utf8", function(err, data) {
-		if (err) {
+	project.current.loadBlocklyXml()
+		.then((data) => {
+			console.log("The project was loaded!");
+			
+			try {
+				var xml = Blockly.Xml.textToDom(data);
+			} catch (e) {
+				console.error('Error parsing XML', e);
+				printToConsole("Error parsing XML!");
+				topbar.hide();
+				return;
+			}
+			
+			Blockly.mainWorkspace.clear();
+			Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, xml);
+
+			printToConsole("The project was loaded!");
 			topbar.hide();
-			return console.log(err);
-		}
-
-		console.log("The project was loaded!");
-		try {
-			var xml = Blockly.Xml.textToDom(data);
-		} catch (e) {
-			console.error('Error parsing XML', e);
+		})
+		.catch(err => {
 			topbar.hide();
-			return;
-		}
+			console.error(err);			
+			printToConsole("Failed to load the project!");
+		});
 
-		Blockly.mainWorkspace.clear();
-		Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, xml);
-
-		printToConsole("The project was loaded!");
-		topbar.hide();
-	}); 
 }
 
 /**

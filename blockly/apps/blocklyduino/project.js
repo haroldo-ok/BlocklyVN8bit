@@ -42,9 +42,22 @@ function saveText(fileName, content) {
 	});	
 }
 
+function loadText(fileName) {
+	return new Promise((resolve, reject) => {
+		fs.readFile(path.resolve(projectPath(), fileName), "utf8", function(err, data) {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(data);
+			}
+		});
+	});	
+}
+
 function ProjectAccessor() {
 	return {
-		saveBlocklyXml: content => saveText('blockly.xml', content)
+		saveBlocklyXml: content => saveText('blockly.xml', content),
+		loadBlocklyXml: () => loadText('blockly.xml')
 	};
 }
 
