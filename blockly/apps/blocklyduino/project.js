@@ -8,6 +8,11 @@ const _ = require('lodash');
 
 const config = require('./config');
 
+const BASE_PROJECT_INFO = {
+	format: 1,
+	ide: _.pick(config.package, 'name', 'version')
+};
+
 let selectedProjectName = 'test';
 
 let projectInfo = newProjectInfo();
@@ -66,9 +71,7 @@ function loadTextFromPath(fullPath) {
 }
 
 function newProjectInfo() {
-	return {
-		format: 1
-	};
+	return _.clone(BASE_PROJECT_INFO);
 }
 
 function updateProjectStructure() {
@@ -126,6 +129,8 @@ function updateProjectStructure() {
 function ProjectAccessor() {
 	return {
 		save: content => {
+			_.extend(projectInfo, BASE_PROJECT_INFO);
+			
 			return Promise.all([
 				saveText('blockly.xml', content.xml),
 				saveText('project.json', JSON.stringify(projectInfo, null, '\t'))
@@ -141,7 +146,7 @@ function ProjectAccessor() {
 					])
 					.then(arr => {
 						let [xml, info] = arr;
-						projectInfo = info;
+						projectInfo = JSON.parse(info);
 						return Promise.resolve({xml, info});
 					});
 				});			
