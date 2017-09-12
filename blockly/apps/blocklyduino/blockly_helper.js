@@ -158,7 +158,7 @@ function generateCode() {
 function save() {
 	const topbar = require('topbar');	  
 	const fs = require('fs');
-	const config = require('./config');
+	const project = require('./project');
 
 	topbar.show();
 	printToConsole("Saving project...");
@@ -166,16 +166,19 @@ function save() {
 	var xml = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
 	var data = Blockly.Xml.domToPrettyText(xml);
 	
-	fs.writeFile(config.fileName('projects', 'project.xml'), data, function(err) {
+	project.current.save({
+		xml: data
+	})
+	.then(() => {
 		topbar.hide();
-			
-		if(err) {
-			return console.log(err);
-		}
-
 		console.log("The project was saved!");
 		printToConsole("The project was saved!");
-	}); 
+	})
+	.catch(err => {
+		topbar.hide();
+		console.error(err);
+		printToConsole("Saving failed!");
+	});
 }
 
 /**
@@ -184,31 +187,35 @@ function save() {
 function load() {
 	const topbar = require('topbar');
 	const fs = require('fs');
-	const config = require('./config');
+	const project = require('./project');
 
 	topbar.show();
 	printToConsole("Loading project...");
-	fs.readFile(config.fileName('projects', 'project.xml'), "utf8", function(err, data) {
-		if (err) {
+	project.current.load()
+		.then((data) => {
+			console.log("The project was loaded!");
+			
+			try {
+				var xml = Blockly.Xml.textToDom(data.xml);
+			} catch (e) {
+				console.error('Error parsing XML', e);
+				printToConsole("Error parsing XML!");
+				topbar.hide();
+				return;
+			}
+			
+			Blockly.mainWorkspace.clear();
+			Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, xml);
+
+			printToConsole("The project was loaded!");
 			topbar.hide();
-			return console.log(err);
-		}
-
-		console.log("The project was loaded!");
-		try {
-			var xml = Blockly.Xml.textToDom(data);
-		} catch (e) {
-			console.error('Error parsing XML', e);
+		})
+		.catch(err => {
 			topbar.hide();
-			return;
-		}
+			console.error(err);			
+			printToConsole("Failed to load the project!");
+		});
 
-		Blockly.mainWorkspace.clear();
-		Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, xml);
-
-		printToConsole("The project was loaded!");
-		topbar.hide();
-	}); 
 }
 
 /**

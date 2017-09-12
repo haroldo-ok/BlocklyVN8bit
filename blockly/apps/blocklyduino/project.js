@@ -4,13 +4,20 @@ const fs = require('fs');
 const path = require('path');
 
 const canvasBuffer = require('electron-canvas-to-buffer');
+const _ = require('lodash');
 
 const config = require('./config');
 
 let selectedProjectName = 'test';
 
+let projectInfo = newProjectInfo();
+
+function projectRootPath() {
+	return config.dir('projects');
+}
+
 function projectPath(subDir) {
-	return path.resolve(config.dir('projects'), selectedProjectName, subDir || '');
+	return path.resolve(projectRootPath(), selectedProjectName, subDir || '');
 }
 
 function listImages(subDir) {
@@ -28,6 +35,118 @@ function listImages(subDir) {
 	}, []);
 	
 	return images;
+}
+
+function saveText(fileName, content) {
+	return new Promise((resolve, reject) => {
+		fs.writeFile(path.resolve(projectPath(), fileName), content, function(err) {
+			if (err) {
+				reject(err);
+			} else {
+				resolve();
+			}
+		}); 
+	});	
+}
+
+function loadText(fileName) {
+	return loadTextFromPath(path.resolve(projectPath(), fileName));	
+}
+
+function loadTextFromPath(fullPath) {
+	return new Promise((resolve, reject) => {
+		fs.readFile(fullPath, "utf8", function(err, data) {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(data);
+			}
+		});
+	});	
+}
+
+function newProjectInfo() {
+	return {
+		format: 1
+	};
+}
+
+function updateProjectStructure() {
+	
+	// Converts pre-0.6.4 format
+	function updatePre064() {
+		if (selectedProjectName != 'test') {
+			// If the project name is not 'test', then it probably does not come from that version; nothing to do.
+			return Promise.resolve();
+		}
+		
+		let fullPaths = ['project.xml', 'test/project.xml'].map(fileName => path.resolve(projectRootPath(), fileName));
+
+		let filesExist = Promise.all(fullPaths.map(fullPath => {
+			return new Promise((resolve, reject) => fs.access(fullPath, err => resolve(!err)));
+		})).then(oldFileExists => Promise.resolve(_.every(oldFileExists)));
+		
+		return filesExist.then(oldFilesExist => {
+			if (!oldFilesExist) {
+				// Is not in the old format
+				return Promise.resolve();
+			}
+			
+			console.warn('Detected a project file genereted by a version prior to 0.6.4; updating.');
+			
+			return loadTextFromPath(fullPaths[0])
+				// Copy XML to the correct place and create project.json
+				.then(xml => Promise.all([
+					saveText('blockly.xml', xml),
+					saveText('project.json', '{format: 1}')
+				]))
+				// Delete old files
+				.then(() => Promise.all(fullPaths.map(fullPath => {
+					return new Promise((resolve, reject) => {
+						fs.unlink(fullPath, err => {
+							if (err) {
+								reject(err);
+							} else {
+								resolve();
+							}
+						});
+					});
+				})))
+				// Log success
+				.then(() => {
+					console.info('Upgraded project to 0.6.4');
+					return Promise.resolve();
+				});
+		});
+	}
+	
+	return updatePre064();
+}
+
+function ProjectAccessor() {
+	return {
+		save: content => {
+			return Promise.all([
+				saveText('blockly.xml', content.xml),
+				saveText('project.json', JSON.stringify(projectInfo, null, '\t'))
+			]);
+		},
+		
+		load: () => {
+			return updateProjectStructure()
+				.then(() => {
+					return Promise.all([
+						loadText('blockly.xml'),
+						loadText('project.json')
+					])
+					.then(arr => {
+						let [xml, info] = arr;
+						projectInfo = info;
+						return Promise.resolve({xml, info});
+					});
+				});			
+		}
+	};
 }
 
 function ImagePathAccessor(subDir) {
@@ -75,6 +194,8 @@ function ImagePathAccessor(subDir) {
 
 module.exports = {
 
+	current: new ProjectAccessor(),
+	
 	bg: new ImagePathAccessor('bg'),
 	portrait: new ImagePathAccessor('portrait')
 	
