@@ -191,12 +191,12 @@ function load() {
 
 	topbar.show();
 	printToConsole("Loading project...");
-	project.current.loadBlocklyXml()
+	project.current.load()
 		.then((data) => {
 			console.log("The project was loaded!");
 			
 			try {
-				var xml = Blockly.Xml.textToDom(data);
+				var xml = Blockly.Xml.textToDom(data.xml);
 			} catch (e) {
 				console.error('Error parsing XML', e);
 				printToConsole("Error parsing XML!");

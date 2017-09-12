@@ -66,7 +66,18 @@ function ProjectAccessor() {
 				saveText('project.json', JSON.stringify(projectInfo, null, '\t'))
 			]);
 		},
-		loadBlocklyXml: () => loadText('blockly.xml')
+		
+		load: () => {
+			return Promise.all([
+				loadText('blockly.xml'),
+				loadText('project.json')
+			])
+			.then(arr => {
+				let [xml, info] = arr;
+				projectInfo = info;
+				return Promise.resolve({xml, info});
+			});
+		}
 	};
 }
 
