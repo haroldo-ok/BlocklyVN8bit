@@ -166,17 +166,19 @@ function save() {
 	var xml = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
 	var data = Blockly.Xml.domToPrettyText(xml);
 	
-	project.current.saveBlocklyXml(data)
-		.then(() => {
-			topbar.hide();
-			console.log("The project was saved!");
-			printToConsole("The project was saved!");
-		})
-		.catch(err => {
-			topbar.hide();
-			console.error(err);
-			printToConsole("Saving failed!");
-		});
+	project.current.save({
+		xml: data
+	})
+	.then(() => {
+		topbar.hide();
+		console.log("The project was saved!");
+		printToConsole("The project was saved!");
+	})
+	.catch(err => {
+		topbar.hide();
+		console.error(err);
+		printToConsole("Saving failed!");
+	});
 }
 
 /**

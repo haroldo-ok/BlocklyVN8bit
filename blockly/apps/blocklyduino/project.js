@@ -9,6 +9,10 @@ const config = require('./config');
 
 let selectedProjectName = 'test';
 
+let projectInfo = {
+	format: 1
+};
+
 function projectPath(subDir) {
 	return path.resolve(config.dir('projects'), selectedProjectName, subDir || '');
 }
@@ -56,7 +60,12 @@ function loadText(fileName) {
 
 function ProjectAccessor() {
 	return {
-		saveBlocklyXml: content => saveText('blockly.xml', content),
+		save: content => {
+			return Promise.all([
+				saveText('blockly.xml', content.xml),
+				saveText('project.json', JSON.stringify(projectInfo, null, '\t'))
+			]);
+		},
 		loadBlocklyXml: () => loadText('blockly.xml')
 	};
 }
