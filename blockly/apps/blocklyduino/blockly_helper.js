@@ -151,6 +151,32 @@ function generateCode() {
 	return Promise.all(generatedFiles.map(o => writeGeneratedFile(o.name, o.content)));
 }
 
+function newProject() {
+	const topbar = require('topbar');	  
+	const alertify = require('alertifyjs');
+	
+	const project = require('./project');
+	
+	alertify.prompt('Project name', '', (evt, value) => {		
+		topbar.show();
+		printToConsole("Creating project " + value);
+		
+		project.current.createNew(value)
+			.then(() => {
+				topbar.hide();
+				console.log("The project was created!");
+				printToConsole("The project was created!");
+				load();
+			})
+			.catch(err => {
+				topbar.hide();
+				console.error('Error creating project', err);
+				printToConsole("Error creating project!");
+				alertify.error(err);
+			});
+	});
+}
+
 /**
  * Save blocks to local file.
  * better include Blob and FileSaver for browser compatibility
@@ -413,6 +439,7 @@ function initConsole() {
 function initMainProcEvents() {
 	const { ipcRenderer } = require('electron');
 	// Save/Load
+	ipcRenderer.on('newProject', newProject);
 	ipcRenderer.on('saveProject', save);
 	ipcRenderer.on('reloadProject', load);
 	// Compilation

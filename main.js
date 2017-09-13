@@ -59,6 +59,16 @@ function createMainMenu() {
 			label: 'File',
 			submenu: [
 				{
+					label: 'New',
+					accelerator: 'CommandOrControl+N',
+					click() { sendToMainWindow('newProject', {}); }
+				},
+				{
+					label: 'Open',
+					accelerator: 'CommandOrControl+O',
+					click() { sendToMainWindow('openProject', {}); }
+				},
+				{
 					label: 'Save',
 					accelerator: 'CommandOrControl+S',
 					click() { sendToMainWindow('saveProject', {}); }

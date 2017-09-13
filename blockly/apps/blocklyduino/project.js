@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const canvasBuffer = require('electron-canvas-to-buffer');
+const sanitize = require("sanitize-filename");
 const _ = require('lodash');
 
 const config = require('./config');
@@ -70,6 +71,23 @@ function loadTextFromPath(fullPath) {
 	});	
 }
 
+function ensureDirExists(path) {
+	// Based on https://stackoverflow.com/a/21196961/679240
+	return new Promise((resolve, reject) => {
+		fs.mkdir(path, '0777', function(err) {
+			if (err) {
+				if (err.code == 'EEXIST') {
+					resolve(); // ignore the error if the folder already exists
+				} else {
+					reject(err); // something else went wrong
+				}
+			} else {
+				resolve(); // successfully created folder
+			}
+		});
+	});	
+}
+
 function newProjectInfo() {
 	return _.clone(BASE_PROJECT_INFO);
 }
@@ -127,7 +145,37 @@ function updateProjectStructure() {
 }
 
 function ProjectAccessor() {
-	return {
+	let acc = {
+		
+		createNew: name => {
+			return new Promise((resolve, reject) => {
+				name = sanitize(name || '').trim();
+				if (!name) {
+					reject("Project name cannot be empty.");
+					return;
+				}
+				
+				selectedProjectName = name;
+				projectInfo = newProjectInfo();
+				
+				// Create project folder
+				ensureDirExists(projectPath())
+					// Create image subfolders
+					.then(() => Promise.all(['bg', 'portrait'].map(sub => ensureDirExists(projectPath(sub)))))
+					// Save main project files
+					.then(() => acc.save({
+						xml: '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
+					}))
+					// Okay, done
+					.then(resolve)
+					.catch(err => {
+						let msg = 'Error while saving new project.';
+						console.error(msg, err);
+						reject(msg);
+					});
+			});
+		},
+		
 		save: content => {
 			_.extend(projectInfo, BASE_PROJECT_INFO);
 			
@@ -152,6 +200,8 @@ function ProjectAccessor() {
 				});			
 		}
 	};
+
+	return acc;
 }
 
 function ImagePathAccessor(subDir) {
