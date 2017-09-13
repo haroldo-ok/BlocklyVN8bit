@@ -213,7 +213,9 @@ function save() {
 function load() {
 	const topbar = require('topbar');
 	const fs = require('fs');
+	
 	const project = require('./project');
+	const image = require('./image');
 
 	topbar.show();
 	printToConsole("Loading project...");
@@ -231,7 +233,9 @@ function load() {
 			}
 			
 			Blockly.mainWorkspace.clear();
-			Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, xml);
+			Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, xml);			
+		
+			image.refresh();
 
 			printToConsole("The project was loaded!");
 			topbar.hide();
