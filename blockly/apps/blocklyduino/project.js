@@ -147,6 +147,37 @@ function updateProjectStructure() {
 function ProjectAccessor() {
 	let acc = {
 		
+		listProjects: () => {
+			// List file names
+			return new Promise((resolve, reject) => {
+				fs.readdir(projectRootPath(), function(err, fileNames) {
+					if (err) {
+						reject(err);
+					} else {
+						resolve(fileNames);
+					}
+				});
+			})
+			// Check which of those are directories
+			.then(fileNames => Promise.all(fileNames.map(fileName => new Promise((resolve, reject) => {
+				fs.lstat(path.resolve(projectRootPath(), fileName), (err, stat) => {
+					if (err) {
+						reject(err);
+					} else {
+						resolve({fileName, dir: stat.isDirectory()});
+					}
+				});
+			}))))
+			// Filter only the ones that are directories
+			.then(maybeDirs => {
+				let onlyDirs = _.chain(maybeDirs).filter('dir').map(o => { 
+					return {name: o.fileName};
+				}).value();
+				
+				return Promise.resolve(onlyDirs);
+			});			
+		},
+		
 		createNew: name => {
 			return new Promise((resolve, reject) => {
 				name = sanitize(name || '').trim();
@@ -174,6 +205,17 @@ function ProjectAccessor() {
 						reject(msg);
 					});
 			});
+		},
+		
+		switchTo: name => {
+			name = sanitize(name || '').trim();
+			if (!name) {
+				reject("Project name cannot be empty.");
+				return;
+			}
+			
+			selectedProjectName = name;
+			return acc.load();
 		},
 		
 		save: content => {
