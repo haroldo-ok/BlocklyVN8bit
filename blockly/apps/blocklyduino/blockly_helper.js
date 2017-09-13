@@ -217,6 +217,17 @@ function openProject() {
 		});
 }
 
+function exportProject() {
+	const { remote } = require('electron');
+
+	remote.dialog.showSaveDialog({
+		title: 'Export project',
+		filters: [
+			{name: 'Zip file', extensions: ['zip']}
+		]
+	}, fileName => console.log('Export', fileName));
+}
+
 /**
  * Save blocks to local file.
  * better include Blob and FileSaver for browser compatibility
@@ -487,6 +498,7 @@ function initMainProcEvents() {
 	ipcRenderer.on('openProject', openProject);
 	ipcRenderer.on('saveProject', save);
 	ipcRenderer.on('reloadProject', load);
+	ipcRenderer.on('exportProject', exportProject);
 	// Compilation
 	ipcRenderer.on('rebuild', rebuild);
 	ipcRenderer.on('compile', compile);
