@@ -61,9 +61,15 @@ function prepareImageList(options) {
 	function refreshImages(model) {
 		model.data.images = imageAccessor.items;
 	}
+	
+	return {
+		refresh: () => refreshImages(binding.models)
+	}
 }
 
-prepareImageList({
+module.exports = {
+
+	bg: prepareImageList({
 		selector: '#content_backgrounds',
 		origin: 'bg',
 		prepareImage: (img, canvas, ctx) => {
@@ -71,28 +77,37 @@ prepareImageList({
 			canvas.height = MAX_HEIGHT;
 			ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 		}
-});
-
-prepareImageList({
-	selector: '#content_portraits',
-	origin: 'portrait',
-	prepareImage: (img, canvas, ctx) => {			
-		// The width must be a multiple of 8.
-		let targetWidth = Math.floor((img.width + 7) / 8) * 8;
-		
-		canvas.width =  Math.min(targetWidth, MAX_WIDTH);
-		canvas.height = Math.min(img.height, MAX_HEIGHT);
-		
-		// Calculate image size to fit
-		let imgWidth = img.width;
-		let imgHeight = img.height;			
-		if (imgHeight > canvas.height) {
-			imgWidth = Math.round(imgWidth * canvas.height / imgHeight);
-			imgHeight = canvas.height;
+	}),
+	
+	
+	portrait: prepareImageList({
+		selector: '#content_portraits',
+		origin: 'portrait',
+		prepareImage: (img, canvas, ctx) => {			
+			// The width must be a multiple of 8.
+			let targetWidth = Math.floor((img.width + 7) / 8) * 8;
+			
+			canvas.width =  Math.min(targetWidth, MAX_WIDTH);
+			canvas.height = Math.min(img.height, MAX_HEIGHT);
+			
+			// Calculate image size to fit
+			let imgWidth = img.width;
+			let imgHeight = img.height;			
+			if (imgHeight > canvas.height) {
+				imgWidth = Math.round(imgWidth * canvas.height / imgHeight);
+				imgHeight = canvas.height;
+			}
+			
+			// Center horizontally
+			let x = Math.round((canvas.width - imgWidth) / 2);
+			ctx.drawImage(img, x, 0, imgWidth, imgHeight);
 		}
-		
-		// Center horizontally
-		let x = Math.round((canvas.width - imgWidth) / 2);
-		ctx.drawImage(img, x, 0, imgWidth, imgHeight);
+	}),
+	
+	
+	refresh: () => {
+		module.exports.bg.refresh();
+		module.exports.portrait.refresh();
 	}
-});
+
+};

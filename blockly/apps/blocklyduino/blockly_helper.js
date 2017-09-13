@@ -151,6 +151,72 @@ function generateCode() {
 	return Promise.all(generatedFiles.map(o => writeGeneratedFile(o.name, o.content)));
 }
 
+function newProject() {
+	const topbar = require('topbar');	  
+	const alertify = require('alertifyjs');
+	
+	const project = require('./project');
+	
+	alertify.prompt('Project name', '', (evt, value) => {		
+		topbar.show();
+		printToConsole("Creating project " + value);
+		
+		project.current.createNew(value)
+			.then(() => {
+				topbar.hide();
+				console.log("The project was created!");
+				printToConsole("The project was created!");
+				load();
+			})
+			.catch(err => {
+				topbar.hide();
+				console.error('Error creating project', err);
+				printToConsole("Error creating project!");
+				alertify.error(err);
+			});
+	});
+}
+
+function openProject() {
+	const topbar = require('topbar');	  
+	const alertify = require('alertifyjs');
+
+	const project = require('./project');
+	
+	project.current.listProjects()
+		.then(projects => new Promise((resolve, reject) => {
+			// Builds the select
+			let select = document.createElement('select');
+			projects.forEach(prj => {
+				let option = document.createElement('option');
+				option.value = prj.name;
+				option.text = prj.name;
+				select.appendChild(option);
+			});
+			
+			// Shows the confirmation dialog
+			alertify.confirm(select, evt => {
+				let selectedProject = select.options[select.selectedIndex].value;
+				resolve(selectedProject);
+			});
+		}))
+		// Switch to the project
+		.then(selectedProject => {
+			topbar.show();
+			printToConsole("Loading project " + selectedProject);
+			return project.current.switchTo(selectedProject);
+		})
+		// Load the project
+		.then(() => load())
+		// If anything goes wrong...
+		.catch(err => {
+			topbar.hide();
+			console.error('Error loading project', err);
+			printToConsole("Error loading project!");
+			alertify.error(err);
+		});
+}
+
 /**
  * Save blocks to local file.
  * better include Blob and FileSaver for browser compatibility
@@ -187,7 +253,9 @@ function save() {
 function load() {
 	const topbar = require('topbar');
 	const fs = require('fs');
+	
 	const project = require('./project');
+	const image = require('./image');
 
 	topbar.show();
 	printToConsole("Loading project...");
@@ -205,7 +273,9 @@ function load() {
 			}
 			
 			Blockly.mainWorkspace.clear();
-			Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, xml);
+			Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, xml);			
+		
+			image.refresh();
 
 			printToConsole("The project was loaded!");
 			topbar.hide();
@@ -413,6 +483,8 @@ function initConsole() {
 function initMainProcEvents() {
 	const { ipcRenderer } = require('electron');
 	// Save/Load
+	ipcRenderer.on('newProject', newProject);
+	ipcRenderer.on('openProject', openProject);
 	ipcRenderer.on('saveProject', save);
 	ipcRenderer.on('reloadProject', load);
 	// Compilation

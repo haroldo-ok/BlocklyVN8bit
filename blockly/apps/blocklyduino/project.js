@@ -4,9 +4,15 @@ const fs = require('fs');
 const path = require('path');
 
 const canvasBuffer = require('electron-canvas-to-buffer');
+const sanitize = require("sanitize-filename");
 const _ = require('lodash');
 
 const config = require('./config');
+
+const BASE_PROJECT_INFO = {
+	format: 1,
+	ide: _.pick(config.package, 'name', 'version')
+};
 
 let selectedProjectName = 'test';
 
@@ -65,10 +71,25 @@ function loadTextFromPath(fullPath) {
 	});	
 }
 
+function ensureDirExists(path) {
+	// Based on https://stackoverflow.com/a/21196961/679240
+	return new Promise((resolve, reject) => {
+		fs.mkdir(path, '0777', function(err) {
+			if (err) {
+				if (err.code == 'EEXIST') {
+					resolve(); // ignore the error if the folder already exists
+				} else {
+					reject(err); // something else went wrong
+				}
+			} else {
+				resolve(); // successfully created folder
+			}
+		});
+	});	
+}
+
 function newProjectInfo() {
-	return {
-		format: 1
-	};
+	return _.clone(BASE_PROJECT_INFO);
 }
 
 function updateProjectStructure() {
@@ -124,8 +145,82 @@ function updateProjectStructure() {
 }
 
 function ProjectAccessor() {
-	return {
+	let acc = {
+		
+		listProjects: () => {
+			// List file names
+			return new Promise((resolve, reject) => {
+				fs.readdir(projectRootPath(), function(err, fileNames) {
+					if (err) {
+						reject(err);
+					} else {
+						resolve(fileNames);
+					}
+				});
+			})
+			// Check which of those are directories
+			.then(fileNames => Promise.all(fileNames.map(fileName => new Promise((resolve, reject) => {
+				fs.lstat(path.resolve(projectRootPath(), fileName), (err, stat) => {
+					if (err) {
+						reject(err);
+					} else {
+						resolve({fileName, dir: stat.isDirectory()});
+					}
+				});
+			}))))
+			// Filter only the ones that are directories
+			.then(maybeDirs => {
+				let onlyDirs = _.chain(maybeDirs).filter('dir').map(o => { 
+					return {name: o.fileName};
+				}).value();
+				
+				return Promise.resolve(onlyDirs);
+			});			
+		},
+		
+		createNew: name => {
+			return new Promise((resolve, reject) => {
+				name = sanitize(name || '').trim();
+				if (!name) {
+					reject("Project name cannot be empty.");
+					return;
+				}
+				
+				selectedProjectName = name;
+				projectInfo = newProjectInfo();
+				
+				// Create project folder
+				ensureDirExists(projectPath())
+					// Create image subfolders
+					.then(() => Promise.all(['bg', 'portrait'].map(sub => ensureDirExists(projectPath(sub)))))
+					// Save main project files
+					.then(() => acc.save({
+						xml: '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
+					}))
+					// Okay, done
+					.then(resolve)
+					.catch(err => {
+						let msg = 'Error while saving new project.';
+						console.error(msg, err);
+						reject(msg);
+					});
+			});
+		},
+		
+		switchTo: name => {
+			name = sanitize(name || '').trim();
+			if (!name) {
+				reject("Project name cannot be empty.");
+				return;
+			}
+			
+			selectedProjectName = name;
+			return acc.load();
+		},
+		
 		save: content => {
+			_.extend(projectInfo, BASE_PROJECT_INFO);
+			
 			return Promise.all([
 				saveText('blockly.xml', content.xml),
 				saveText('project.json', JSON.stringify(projectInfo, null, '\t'))
@@ -141,12 +236,14 @@ function ProjectAccessor() {
 					])
 					.then(arr => {
 						let [xml, info] = arr;
-						projectInfo = info;
+						projectInfo = JSON.parse(info);
 						return Promise.resolve({xml, info});
 					});
 				});			
 		}
 	};
+
+	return acc;
 }
 
 function ImagePathAccessor(subDir) {
