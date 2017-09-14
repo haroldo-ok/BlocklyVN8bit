@@ -78,6 +78,17 @@ function createMainMenu() {
 					click() { sendToMainWindow('reloadProject', {}); }
 				},
 				{type: 'separator'},
+				{
+					label: 'Export',
+					accelerator: 'CommandOrControl+E',
+					click() { sendToMainWindow('exportProject', {}); }
+				},
+				{
+					label: 'Import',
+					accelerator: 'CommandOrControl+I',
+					click() { sendToMainWindow('importProject', {}); }
+				},
+				{type: 'separator'},
 				{role: 'quit'}
 			]
 		},

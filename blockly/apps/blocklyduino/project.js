@@ -3,6 +3,9 @@
 const fs = require('fs');
 const path = require('path');
 
+const archiver = require('archiver');
+const unzip = require('unzip-stream');
+
 const canvasBuffer = require('electron-canvas-to-buffer');
 const sanitize = require("sanitize-filename");
 const _ = require('lodash');
@@ -147,6 +150,10 @@ function updateProjectStructure() {
 function ProjectAccessor() {
 	let acc = {
 		
+		get name() {
+			return selectedProjectName;
+		},
+		
 		listProjects: () => {
 			// List file names
 			return new Promise((resolve, reject) => {
@@ -240,7 +247,38 @@ function ProjectAccessor() {
 						return Promise.resolve({xml, info});
 					});
 				});			
-		}
+		},
+		
+		exportZip: fileName => new Promise((resolve, reject) => {
+			let output = fs.createWriteStream(fileName);
+			let archive = archiver('zip', {
+				comment: `Project: ${acc.name}\n${config.package.name} ${config.package.version}`
+			});
+			
+			output.on('close', function () {
+				console.log(archive.pointer() + ' total bytes');
+				resolve();
+			});
+
+			archive.on('error', reject);
+
+			archive.pipe(output);
+			archive.directory(projectPath(), '/');
+			archive.finalize();
+		}),
+		
+		importZip: (fileName, projectName) => new Promise((resolve, reject) => {
+			projectName = sanitize(projectName || '').trim();
+			if (!projectName) {
+				reject("Project name cannot be empty.");
+				return;
+			}
+			
+			fs.createReadStream(fileName)
+				.pipe(unzip.Extract({ path: path.resolve(projectRootPath(), projectName) }))
+				.on('end', resolve)
+				.on('error', reject);
+		})
 	};
 
 	return acc;

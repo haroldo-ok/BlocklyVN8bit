@@ -157,7 +157,7 @@ function newProject() {
 	
 	const project = require('./project');
 	
-	alertify.prompt('Project name', '', (evt, value) => {		
+	alertify.prompt('Project name', '', (evt, value) => {
 		topbar.show();
 		printToConsole("Creating project " + value);
 		
@@ -217,6 +217,83 @@ function openProject() {
 		});
 }
 
+function exportProject() {
+	const topbar = require('topbar');	  
+	const { remote } = require('electron');
+	const project = require('./project');
+
+	remote.dialog.showSaveDialog({
+		title: 'Export project',
+		defaultPath: project.current.name + '.vn32x.zip',
+		filters: [
+			{name: 'Zip file', extensions: ['zip']}
+		]
+	}, fileName => {
+		save().then(() => {
+			topbar.show();
+			printToConsole("Exporting to zip...");
+			return project.current.exportZip(fileName);
+		})
+		.then(() => {
+			topbar.hide();
+			printToConsole("Export successful!");
+		})
+		.catch(err => {
+			topbar.hide();
+			
+			let msg = "Export failed!";
+			console.error(msg, err);		
+			printToConsole(msg);
+		});
+	});
+}
+
+function importProject() {
+	const topbar = require('topbar');	  
+	const alertify = require('alertifyjs');
+	const { remote } = require('electron');
+	
+	const project = require('./project');
+
+	// Ask for file to load
+	new Promise((resolve, reject) => {
+		remote.dialog.showOpenDialog({
+			title: 'Import project',
+			filters: [
+				{name: 'Zip file', extensions: ['zip']}
+			]
+		}, fileNames => resolve(fileNames[0]))
+	})
+	// Ask for project name to load as
+	.then(fileName => new Promise((resolve, reject) => {
+		alertify.prompt('Project name', '', (evt, projectName) => resolve({fileName, projectName}));
+	}))
+	// Extract from zip
+	.then(o => {
+		topbar.show();
+		printToConsole("Importing zip...");
+		return project.current.importZip(o.fileName, o.projectName)
+			.then(() => Promise.resolve(o)); 
+	})
+	// Import done.
+	.then(o => {
+		topbar.hide();		
+		
+		let msg = `Successfully imported project "${o.projectName}". You may open it, if you want.`;
+		printToConsole(msg);
+		alertify.success(msg);
+		
+		return Promise.resolve();
+	})
+	.catch(err => {
+		topbar.hide();
+		
+		let msg = "Import failed!";
+		console.error(msg, err);		
+		printToConsole(msg);
+	});
+}
+
 /**
  * Save blocks to local file.
  * better include Blob and FileSaver for browser compatibility
@@ -232,18 +309,22 @@ function save() {
 	var xml = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
 	var data = Blockly.Xml.domToPrettyText(xml);
 	
-	project.current.save({
+	return project.current.save({
 		xml: data
 	})
 	.then(() => {
 		topbar.hide();
 		console.log("The project was saved!");
 		printToConsole("The project was saved!");
+		return Promise.resolve();
 	})
 	.catch(err => {
 		topbar.hide();
-		console.error(err);
-		printToConsole("Saving failed!");
+		
+		let msg = "Saving failed!";
+		console.error(msg, err);		
+		printToConsole(msg);
+		return Promise.reject(msg);
 	});
 }
 
@@ -487,6 +568,8 @@ function initMainProcEvents() {
 	ipcRenderer.on('openProject', openProject);
 	ipcRenderer.on('saveProject', save);
 	ipcRenderer.on('reloadProject', load);
+	ipcRenderer.on('exportProject', exportProject);
+	ipcRenderer.on('importProject', importProject);
 	// Compilation
 	ipcRenderer.on('rebuild', rebuild);
 	ipcRenderer.on('compile', compile);
