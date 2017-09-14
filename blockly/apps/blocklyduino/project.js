@@ -249,7 +249,9 @@ function ProjectAccessor() {
 		
 		exportZip: fileName => new Promise((resolve, reject) => {
 			let output = fs.createWriteStream(fileName);
-			let archive = archiver('zip');
+			let archive = archiver('zip', {
+				comment: `Project: ${acc.name}\n${config.package.name} ${config.package.version}`
+			});
 			
 			output.on('close', function () {
 				console.log(archive.pointer() + ' total bytes');
