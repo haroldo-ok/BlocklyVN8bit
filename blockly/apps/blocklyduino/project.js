@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const archiver = require('archiver');
-const unzip = require('unzip');
+const unzip = require('unzip-stream');
 
 const canvasBuffer = require('electron-canvas-to-buffer');
 const sanitize = require("sanitize-filename");

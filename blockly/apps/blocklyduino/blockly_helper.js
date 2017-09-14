@@ -268,12 +268,23 @@ function importProject() {
 	.then(fileName => new Promise((resolve, reject) => {
 		alertify.prompt('Project name', '', (evt, projectName) => resolve({fileName, projectName}));
 	}))
-	// Import from zip
+	// Extract from zip
 	.then(o => {
 		topbar.show();
 		printToConsole("Importing zip...");
-		return project.current.importZip(o.fileName, o.projectName); 
+		return project.current.importZip(o.fileName, o.projectName)
+			.then(() => Promise.resolve(o)); 
 	})
+	// Switch to project
+	.then(o => project.current.switchTo(o.projectName))
+	// Import done.
+	.then(() => {
+		topbar.hide();
+		printToConsole("Import successful!");
+		return Promise.resolve();
+	})
+	// Load the project
+	.then(() => load())
 	.catch(err => {
 		topbar.hide();
 		
