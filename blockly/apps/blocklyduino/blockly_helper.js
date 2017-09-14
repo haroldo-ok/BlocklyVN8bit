@@ -157,7 +157,7 @@ function newProject() {
 	
 	const project = require('./project');
 	
-	alertify.prompt('Project name', '', (evt, value) => {		
+	alertify.prompt('Project name', '', (evt, value) => {
 		topbar.show();
 		printToConsole("Creating project " + value);
 		
@@ -246,6 +246,30 @@ function exportProject() {
 			printToConsole(msg);
 		});
 	});
+}
+
+function importProject() {
+	const topbar = require('topbar');	  
+	const alertify = require('alertifyjs');
+	const { remote } = require('electron');
+	
+	const project = require('./project');
+
+	// Ask for file to load
+	new Promise((resolve, reject) => {
+		remote.dialog.showOpenDialog({
+			title: 'Import project',
+			filters: [
+				{name: 'Zip file', extensions: ['zip']}
+			]
+		}, fileNames => resolve(fileNames[0]))
+	})
+	// Ask for project name to load as
+	.then(fileName => new Promise((resolve, reject) => {
+		alertify.prompt('Project name', '', (evt, projectName) => resolve({fileName, projectName}));
+	}))
+	// Nothing yet
+	.then(o => console.warn(o)); 
 }
 
 /**
@@ -523,6 +547,7 @@ function initMainProcEvents() {
 	ipcRenderer.on('saveProject', save);
 	ipcRenderer.on('reloadProject', load);
 	ipcRenderer.on('exportProject', exportProject);
+	ipcRenderer.on('importProject', importProject);
 	// Compilation
 	ipcRenderer.on('rebuild', rebuild);
 	ipcRenderer.on('compile', compile);

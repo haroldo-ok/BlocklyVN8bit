@@ -77,6 +77,7 @@ function createMainMenu() {
 					label: 'Reload',
 					click() { sendToMainWindow('reloadProject', {}); }
 				},
+				{type: 'separator'},
 				{
 					label: 'Export',
 					accelerator: 'CommandOrControl+E',
