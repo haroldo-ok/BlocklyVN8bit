@@ -275,16 +275,16 @@ function importProject() {
 		return project.current.importZip(o.fileName, o.projectName)
 			.then(() => Promise.resolve(o)); 
 	})
-	// Switch to project
-	.then(o => project.current.switchTo(o.projectName))
 	// Import done.
-	.then(() => {
-		topbar.hide();
-		printToConsole("Import successful!");
+	.then(o => {
+		topbar.hide();		
+		
+		let msg = `Successfully imported project "${o.projectName}". You may open it, if you want.`;
+		printToConsole(msg);
+		alertify.success(msg);
+		
 		return Promise.resolve();
 	})
-	// Load the project
-	.then(() => load())
 	.catch(err => {
 		topbar.hide();
 		
