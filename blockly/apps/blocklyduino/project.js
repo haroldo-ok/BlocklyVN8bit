@@ -3,8 +3,10 @@
 const fs = require('fs');
 const path = require('path');
 
-const canvasBuffer = require('electron-canvas-to-buffer');
 const archiver = require('archiver');
+const unzip = require('unzip');
+
+const canvasBuffer = require('electron-canvas-to-buffer');
 const sanitize = require("sanitize-filename");
 const _ = require('lodash');
 
@@ -263,6 +265,19 @@ function ProjectAccessor() {
 			archive.pipe(output);
 			archive.directory(projectPath(), '/');
 			archive.finalize();
+		}),
+		
+		importZip: (fileName, projectName) => new Promise((resolve, reject) => {
+			projectName = sanitize(projectName || '').trim();
+			if (!projectName) {
+				reject("Project name cannot be empty.");
+				return;
+			}
+			
+			fs.createReadStream(fileName)
+				.pipe(unzip.Extract({ path: path.resolve(projectRootPath(), projectName) }))
+				.on('end', resolve)
+				.on('error', reject);
 		})
 	};
 

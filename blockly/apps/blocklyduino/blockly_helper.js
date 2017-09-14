@@ -268,8 +268,19 @@ function importProject() {
 	.then(fileName => new Promise((resolve, reject) => {
 		alertify.prompt('Project name', '', (evt, projectName) => resolve({fileName, projectName}));
 	}))
-	// Nothing yet
-	.then(o => console.warn(o)); 
+	// Import from zip
+	.then(o => {
+		topbar.show();
+		printToConsole("Importing zip...");
+		return project.current.importZip(o.fileName, o.projectName); 
+	})
+	.catch(err => {
+		topbar.hide();
+		
+		let msg = "Import failed!";
+		console.error(msg, err);		
+		printToConsole(msg);
+	});
 }
 
 /**
