@@ -218,14 +218,34 @@ function openProject() {
 }
 
 function exportProject() {
+	const topbar = require('topbar');	  
 	const { remote } = require('electron');
+	const project = require('./project');
 
 	remote.dialog.showSaveDialog({
 		title: 'Export project',
+		defaultPath: project.current.name + '.vn32x.zip',
 		filters: [
 			{name: 'Zip file', extensions: ['zip']}
 		]
-	}, fileName => console.log('Export', fileName));
+	}, fileName => {
+		save().then(() => {
+			topbar.show();
+			printToConsole("Exporting to zip...");
+			return project.current.exportZip(fileName);
+		})
+		.then(() => {
+			topbar.hide();
+			printToConsole("Export successful!");
+		})
+		.catch(err => {
+			topbar.hide();
+			
+			let msg = "Export failed!";
+			console.error(msg, err);		
+			printToConsole(msg);
+		});
+	});
 }
 
 /**
@@ -243,18 +263,22 @@ function save() {
 	var xml = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
 	var data = Blockly.Xml.domToPrettyText(xml);
 	
-	project.current.save({
+	return project.current.save({
 		xml: data
 	})
 	.then(() => {
 		topbar.hide();
 		console.log("The project was saved!");
 		printToConsole("The project was saved!");
+		return Promise.resolve();
 	})
 	.catch(err => {
 		topbar.hide();
-		console.error(err);
-		printToConsole("Saving failed!");
+		
+		let msg = "Saving failed!";
+		console.error(msg, err);		
+		printToConsole(msg);
+		return Promise.reject(msg);
 	});
 }
 

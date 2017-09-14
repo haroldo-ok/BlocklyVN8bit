@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const canvasBuffer = require('electron-canvas-to-buffer');
+const archiver = require('archiver');
 const sanitize = require("sanitize-filename");
 const _ = require('lodash');
 
@@ -147,6 +148,10 @@ function updateProjectStructure() {
 function ProjectAccessor() {
 	let acc = {
 		
+		get name() {
+			return selectedProjectName;
+		},
+		
 		listProjects: () => {
 			// List file names
 			return new Promise((resolve, reject) => {
@@ -240,7 +245,23 @@ function ProjectAccessor() {
 						return Promise.resolve({xml, info});
 					});
 				});			
-		}
+		},
+		
+		exportZip: fileName => new Promise((resolve, reject) => {
+			let output = fs.createWriteStream(fileName);
+			let archive = archiver('zip');
+			
+			output.on('close', function () {
+				console.log(archive.pointer() + ' total bytes');
+				resolve();
+			});
+
+			archive.on('error', reject);
+
+			archive.pipe(output);
+			archive.directory(projectPath(), '/');
+			archive.finalize();
+		})
 	};
 
 	return acc;
