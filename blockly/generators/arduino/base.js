@@ -157,7 +157,8 @@ Blockly.Arduino.vn_say = function() {
 	  reg.lastIndex = -1;
 	  content = content.replace(/%/g, '%%').replace(reg, '%d');
 	  
-      var code = 'vnTextF(' + content + ', ' + vars.join(', ') + ');\n';	  
+	  let varNames = vars.map(v => Blockly.Arduino.variableDB_.getName(v, Blockly.Variables.NAME_TYPE));
+      let code = 'vnTextF(' + content + ', ' + varNames.join(', ') + ');\n';	  
       return code;
 	}
   } 
