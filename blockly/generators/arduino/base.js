@@ -140,12 +140,31 @@ Blockly.Arduino.servo_read_degrees = function() {
 };
 
 Blockly.Arduino.vn_say = function() {
-  var content = Blockly.Arduino.valueToCode(this, 'CONTENT', Blockly.Arduino.ORDER_ATOMIC) || '0'
-  //content = content.replace('(','').replace(')','');
-
-  //Blockly.Arduino.setups_['setup_serial_' + profile.default.serial] = 'Serial.begin(' + profile.default.serial + ');\n';
-
-  var code = 'vnText(' + content + ');\n';
+  var contentTarget = this.getInputTargetBlock("CONTENT");
+  var content = Blockly.Arduino.valueToCode(this, 'CONTENT', Blockly.Arduino.ORDER_ATOMIC) || '"..."';
+  
+  // Searches for ${string interpolations}
+  if (contentTarget && contentTarget.type == 'text') {
+    const reg = /\\\$\{([\w\s]+)\}/g;
+	let vars = [];
+	let found;
+	while (found = reg.exec(content)) {
+		vars.push(found[1]); 
+    }
+	
+	if (vars.length) {
+	  // Found some interpolations
+	  reg.lastIndex = -1;
+	  content = content.replace(/%/g, '%%').replace(reg, '%d');
+	  
+	  let varNames = vars.map(v => Blockly.Arduino.variableDB_.getName(v, Blockly.Variables.NAME_TYPE));
+      let code = 'vnTextF(' + content + ', ' + varNames.join(', ') + ');\n';	  
+      return code;
+	}
+  } 
+  
+  // No formatting magic for the other cases
+  var code = 'vnText(' + content + ');\n';	  
   return code;
 };
 
