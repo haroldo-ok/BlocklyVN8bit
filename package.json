@@ -1,6 +1,6 @@
 {
   "name": "BlocklyVN32X",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Uses blockly to generate visual novels for VN32X",
   "main": "main.js",
   "scripts": {
