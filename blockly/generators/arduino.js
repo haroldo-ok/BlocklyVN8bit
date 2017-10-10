@@ -266,6 +266,7 @@ Blockly.Arduino.genImages_ = function() {
 		globls.push('.globl _vg_' + name);
 		incbins.push(
 			'_vg_' + name + ':\n' +
+			'.align 2\n' +
 			'.incbin "build/' + name + '.apg"\n'
 		);
 	}
