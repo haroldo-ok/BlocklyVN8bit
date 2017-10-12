@@ -265,15 +265,15 @@ Blockly.Arduino.genImages_ = function() {
 		images.push(name + '.apg');
 		globls.push('.globl _vg_' + name);
 		incbins.push(
+			'.align 2\n' +
+			'.word 0\n' +
 			'_vg_' + name + ':\n' +
-			//'.align 2\n' +
 			'.incbin "build/' + name + '.apg"\n'
 		);
 	}
 	
 	Blockly.Arduino.otherSources['generated_images.s'] = 
-		'\n.text\n' +
-		'.align 2\n\n' +
+		'\n.text\n\n' +
 		globls.join('\n') + '\n\n' +
 		incbins.join('\n') + '\n';
 }
