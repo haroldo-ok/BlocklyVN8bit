@@ -163,6 +163,8 @@ function init() {
   const topbar = require('topbar');
   topbar.show();
 
+  showVersionInfo();
+  
   var container = document.getElementById('content_area');
   var onresize = function(e) {
     var bBox = getBBox_(container);
@@ -220,7 +222,7 @@ function init() {
   <table height="100%" width="100%">
     <tr>
       <td>
-        <h1><a href="https://github.com/haroldo-ok/BlocklyVN32X">BlocklyVN32X</a> &gt; visual programming editor for VN32X</h1>
+        <h1 id="version_header">BlocklyVN32X</h1>
       </td>
     </tr>
     <tr>

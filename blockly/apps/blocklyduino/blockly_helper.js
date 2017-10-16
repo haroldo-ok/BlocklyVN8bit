@@ -360,7 +360,10 @@ function load() {
 
 			printToConsole("The project was loaded!");
 			topbar.hide();
+			
+			return Promise.resolve();
 		})
+		.then(showVersionInfo)
 		.catch(err => {
 			topbar.hide();
 			console.error(err);			
@@ -378,6 +381,13 @@ function discard() {
     Blockly.mainWorkspace.clear();
     renderContent();
   }
+}
+
+function showVersionInfo() {
+	const config = require('./config');
+	const project = require('./project');
+	const header = document.getElementById('version_header');
+	header.innerText = `${config.package.name} ${config.package.version} - ${project.current.name}`;	
 }
 
 /*
