@@ -17,8 +17,6 @@ const BASE_PROJECT_INFO = {
 	ide: _.pick(config.package, 'name', 'version')
 };
 
-let selectedProjectName = 'test';
-
 let projectInfo = newProjectInfo();
 
 function projectRootPath() {
@@ -26,7 +24,7 @@ function projectRootPath() {
 }
 
 function projectPath(subDir) {
-	return path.resolve(projectRootPath(), selectedProjectName, subDir || '');
+	return path.resolve(projectRootPath(), config.currentProject, subDir || '');
 }
 
 function listImages(subDir) {
@@ -99,7 +97,7 @@ function updateProjectStructure() {
 	
 	// Converts pre-0.6.4 format
 	function updatePre064() {
-		if (selectedProjectName != 'test') {
+		if (config.currentProject != 'test') {
 			// If the project name is not 'test', then it probably does not come from that version; nothing to do.
 			return Promise.resolve();
 		}
@@ -151,7 +149,7 @@ function ProjectAccessor() {
 	let acc = {
 		
 		get name() {
-			return selectedProjectName;
+			return config.currentProject;
 		},
 		
 		listProjects: () => {
@@ -193,7 +191,7 @@ function ProjectAccessor() {
 					return;
 				}
 				
-				selectedProjectName = name;
+				config.currentProject = name;
 				projectInfo = newProjectInfo();
 				
 				// Create project folder
@@ -221,7 +219,7 @@ function ProjectAccessor() {
 				return;
 			}
 			
-			selectedProjectName = name;
+			config.currentProject = name;
 			return acc.load();
 		},
 		
