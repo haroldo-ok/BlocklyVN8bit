@@ -14,7 +14,17 @@ const api = {
 	basePath: BASE_PATH,
 	dir: name => path.resolve(BASE_PATH, config.dirs[name]),
 	fileName: (dirName, fileName) => path.join(api.dir(dirName), fileName),
-	package: pkg
+	package: pkg,
+	
+	get currentProject() {
+		return config.project && config.project.name || 'test';
+	},
+	
+	set currentProject(name) {
+		config.project = config.project || {};
+		config.project.name = name;
+		fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, '\t'), "utf8")
+	}
 };
 
 const projectsPath = api.dir('projects');
