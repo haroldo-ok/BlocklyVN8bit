@@ -88,7 +88,7 @@ module.exports = {
 			let targetWidth = Math.floor((img.width + 7) / 8) * 8;
 			
 			canvas.width =  Math.min(targetWidth, MAX_WIDTH);
-			canvas.height = Math.min(img.height, MAX_HEIGHT);
+			canvas.height = Math.min(img.height, MAX_HEIGHT - 2);
 			
 			// Calculate image size to fit
 			let imgWidth = img.width;

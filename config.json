@@ -4,6 +4,6 @@
 		"projects": "./projects"
 	},
 	"project": {
-		"name": "test"
+		"name": "example"
 	}
 }
