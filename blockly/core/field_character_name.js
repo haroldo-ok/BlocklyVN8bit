@@ -146,6 +146,7 @@ Blockly.FieldCharacterName.dropdownCreate = function() {
     variableList.push(name);
   }
   variableList.sort(goog.string.caseInsensitiveCompare);
+  variableList.unshift(Blockly.FieldCharacterName.NO_CHARACTER);
   variableList.push(Blockly.FieldCharacterName.RENAME_CHARACTER);
   variableList.push(Blockly.FieldCharacterName.NEW_CHARACTER);
   // Variables are not language-specific, use the name as both the user-facing
@@ -210,6 +211,7 @@ Blockly.FieldCharacterName.dropdownChange = function(text) {
   return undefined;
 };
 
+Blockly.FieldCharacterName.NO_CHARACTER = "-- none --";
 Blockly.FieldCharacterName.RENAME_CHARACTER = "Rename character...";
 Blockly.FieldCharacterName.RENAME_CHARACTER_TITLE = "Rename all '%1' characters to";
 Blockly.FieldCharacterName.NEW_CHARACTER = "New character...";
