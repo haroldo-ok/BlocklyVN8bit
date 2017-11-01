@@ -27,6 +27,7 @@ goog.provide('Blockly.FieldCharacterName');
 
 goog.require('Blockly.FieldDropdown');
 goog.require('Blockly.Msg');
+goog.require('Blockly.CharacterNames');
 goog.require('goog.string');
 
 
@@ -94,7 +95,7 @@ Blockly.FieldCharacterName.prototype.init = function(block) {
     } else {
       var workspace = block.workspace;
     }
-    this.setValue(Blockly.Variables.generateUniqueName(workspace));
+    this.setValue(Blockly.CharacterNames.generateUniqueName(workspace));
   }
   Blockly.FieldCharacterName.superClass_.init.call(this, block);
 };
@@ -135,7 +136,7 @@ Blockly.FieldCharacterName.prototype.setValue = function(text) {
 Blockly.FieldCharacterName.dropdownCreate = function() {
   if (this.sourceBlock_ && this.sourceBlock_.workspace) {
     var variableList =
-        Blockly.Variables.allVariables(this.sourceBlock_.workspace);
+        Blockly.CharacterNames.allVariables(this.sourceBlock_.workspace);
   } else {
     var variableList = [];
   }
@@ -197,7 +198,7 @@ Blockly.FieldCharacterName.dropdownChange = function(text) {
     var oldVar = this.getText();
     promptName(Blockly.Msg.RENAME_VARIABLE_TITLE.replace('%1', oldVar),
                       oldVar)
-		.then(text => text && Blockly.Variables.renameVariable(oldVar, text, workspace));
+		.then(text => text && Blockly.CharacterNames.renameVariable(oldVar, text, workspace));
 	
     return null;
   } else if (text == Blockly.Msg.NEW_VARIABLE) {

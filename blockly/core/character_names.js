@@ -19,12 +19,11 @@
  */
 
 /**
- * @fileoverview Utility functions for handling variables.
- * @author fraser@google.com (Neil Fraser)
+ * This is basically a slightly modified version of "variables.js"
  */
 'use strict';
 
-goog.provide('Blockly.Variables');
+goog.provide('Blockly.CharacterNames');
 
 // TODO(scr): Fix circular dependencies
 // goog.require('Blockly.Block');
@@ -35,14 +34,14 @@ goog.require('goog.string');
 /**
  * Category to separate variable names from procedures and generated functions.
  */
-Blockly.Variables.NAME_TYPE = 'VARIABLE';
+Blockly.CharacterNames.NAME_TYPE = 'CHARACTER_NAME';
 
 /**
  * Find all user-created variables.
  * @param {!Blockly.Block|!Blockly.Workspace} root Root block or workspace.
  * @return {!Array.<string>} Array of variable names.
  */
-Blockly.Variables.allVariables = function(root) {
+Blockly.CharacterNames.allVariables = function(root) {
   var blocks;
   if (root.getDescendants) {
     // Root is Block.
@@ -56,7 +55,7 @@ Blockly.Variables.allVariables = function(root) {
   var variableHash = Object.create(null);
   // Iterate through every block and add each variable to the hash.
   for (var x = 0; x < blocks.length; x++) {
-    var func = blocks[x].getVars;
+    var func = blocks[x].getCharacterNames;
     if (func) {
       var blockVariables = func.call(blocks[x]);
       for (var y = 0; y < blockVariables.length; y++) {
@@ -82,11 +81,11 @@ Blockly.Variables.allVariables = function(root) {
  * @param {string} newName New variable name.
  * @param {!Blockly.Workspace} workspace Workspace rename variables in.
  */
-Blockly.Variables.renameVariable = function(oldName, newName, workspace) {
+Blockly.CharacterNames.renameVariable = function(oldName, newName, workspace) {
   var blocks = workspace.getAllBlocks();
   // Iterate through every block.
   for (var x = 0; x < blocks.length; x++) {
-    var func = blocks[x].renameVar;
+    var func = blocks[x].renameCharacter;
     if (func) {
       func.call(blocks[x], oldName, newName);
     }
@@ -100,8 +99,8 @@ Blockly.Variables.renameVariable = function(oldName, newName, workspace) {
  * @param {number} margin Standard margin width for calculating gaps.
  * @param {!Blockly.Workspace} workspace The flyout's workspace.
  */
-Blockly.Variables.flyoutCategory = function(blocks, gaps, margin, workspace) {
-  var variableList = Blockly.Variables.allVariables(workspace.targetWorkspace);
+Blockly.CharacterNames.flyoutCategory = function(blocks, gaps, margin, workspace) {
+  var variableList = Blockly.CharacterNames.allVariables(workspace.targetWorkspace);
   variableList.sort(goog.string.caseInsensitiveCompare);
   // In addition to the user's variables, we also want to display the default
   // variable name at the top.  We also don't want this duplicated if the
@@ -142,8 +141,8 @@ Blockly.Variables.flyoutCategory = function(blocks, gaps, margin, workspace) {
  * @param {!Blockly.Workspace} workspace The workspace to be unique in.
 * @return {string} New variable name.
 */
-Blockly.Variables.generateUniqueName = function(workspace) {
-  var variableList = Blockly.Variables.allVariables(workspace);
+Blockly.CharacterNames.generateUniqueName = function(workspace) {
+  var variableList = Blockly.CharacterNames.allVariables(workspace);
   var newName = '';
   if (variableList.length) {
     var nameSuffix = 1;
