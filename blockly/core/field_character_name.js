@@ -146,8 +146,8 @@ Blockly.FieldCharacterName.dropdownCreate = function() {
     variableList.push(name);
   }
   variableList.sort(goog.string.caseInsensitiveCompare);
-  variableList.push(Blockly.Msg.RENAME_VARIABLE);
-  variableList.push(Blockly.Msg.NEW_VARIABLE);
+  variableList.push(Blockly.FieldCharacterName.RENAME_CHARACTER);
+  variableList.push(Blockly.FieldCharacterName.NEW_CHARACTER);
   // Variables are not language-specific, use the name as both the user-facing
   // text and the internal representation.
   var options = [];
@@ -180,8 +180,8 @@ Blockly.FieldCharacterName.dropdownChange = function(text) {
 				// Beyond this, all names are legal.
 				if (newVar) {
 				  newVar = newVar.replace(/[\s\xa0]+/g, ' ').replace(/^ | $/g, '');
-				  if (newVar == Blockly.Msg.RENAME_VARIABLE ||
-					  newVar == Blockly.Msg.NEW_VARIABLE) {
+				  if (newVar == Blockly.FieldCharacterName.RENAME_CHARACTER ||
+					  newVar == Blockly.FieldCharacterName.NEW_CHARACTER) {
 					// Ok, not ALL names are legal...
 					newVar = null;
 				  }
@@ -194,18 +194,23 @@ Blockly.FieldCharacterName.dropdownChange = function(text) {
 	  });
   }
   var workspace = this.sourceBlock_.workspace;
-  if (text == Blockly.Msg.RENAME_VARIABLE) {
+  if (text == Blockly.FieldCharacterName.RENAME_CHARACTER) {
     var oldVar = this.getText();
-    promptName(Blockly.Msg.RENAME_VARIABLE_TITLE.replace('%1', oldVar),
+    promptName(Blockly.FieldCharacterName.RENAME_CHARACTER_TITLE.replace('%1', oldVar),
                       oldVar)
 		.then(text => text && Blockly.CharacterNames.renameVariable(oldVar, text, workspace));
 	
     return null;
-  } else if (text == Blockly.Msg.NEW_VARIABLE) {
+  } else if (text == Blockly.FieldCharacterName.NEW_CHARACTER) {
     var block = this;
-	promptName(Blockly.Msg.NEW_VARIABLE_TITLE, '')
+	promptName(Blockly.FieldCharacterName.NEW_CHARACTER_TITLE, '')
 		.then(text => text && block.setValue(text));
     return null;
   }
   return undefined;
 };
+
+Blockly.FieldCharacterName.RENAME_CHARACTER = "Rename character...";
+Blockly.FieldCharacterName.RENAME_CHARACTER_TITLE = "Rename all '%1' characters to";
+Blockly.FieldCharacterName.NEW_CHARACTER = "New character...";
+Blockly.FieldCharacterName.NEW_CHARACTER_TITLE = "New character name:";
