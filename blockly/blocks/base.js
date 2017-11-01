@@ -296,28 +296,21 @@ Blockly.Blocks['vn_character'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.jsonInit({
-      "message0": "Character %1",
-      "args0": [
-        {
-          "type": "field_character_name",
-          "name": "CHARACTER_NAME",
-          "variable": ""
-        }
-      ],
-      "previousStatement": null,
-      "nextStatement": null,
-      "colour": 230,
-      "tooltip": "Chooses who's talking"
-    });
-    this.contextMenuMsg_ = "Chooses who's talking.";
+	this.appendDummyInput()
+		.appendField("Character")
+		.appendField(new Blockly.FieldCharacterName("--none--"), 'CHARACTER_NAME');
+	this.setColour(230);
+	
+	this.setPreviousStatement(true, null);
+	this.setNextStatement(true, null);
+	this.setTooltip("Chooses who's talking");
   },
   /**
    * Return all variables referenced by this block.
    * @return {!Array.<string>} List of variable names.
    * @this Blockly.Block
    */
-  getVars: function() {
+  getCharacterNames: function() {
     return [this.getFieldValue('CHARACTER_NAME')];
   },
   /**
