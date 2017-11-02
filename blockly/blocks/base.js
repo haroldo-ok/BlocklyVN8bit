@@ -298,7 +298,7 @@ Blockly.Blocks['vn_character'] = {
   init: function() {
 	this.appendDummyInput()
 		.appendField("Character")
-		.appendField(new Blockly.FieldCharacterName("--none--"), 'CHARACTER_NAME');
+		.appendField(new Blockly.FieldCharacterName(Blockly.FieldCharacterName.NO_CHARACTER), 'CHARACTER_NAME');
 	this.setColour(230);
 	
 	this.setPreviousStatement(true, null);

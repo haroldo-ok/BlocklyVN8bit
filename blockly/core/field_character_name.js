@@ -146,9 +146,13 @@ Blockly.FieldCharacterName.dropdownCreate = function() {
     variableList.push(name);
   }
   variableList.sort(goog.string.caseInsensitiveCompare);
-  variableList.unshift(Blockly.FieldCharacterName.NO_CHARACTER);
   variableList.push(Blockly.FieldCharacterName.RENAME_CHARACTER);
   variableList.push(Blockly.FieldCharacterName.NEW_CHARACTER);
+  
+  if (variableList.indexOf(Blockly.FieldCharacterName.NO_CHARACTER) == -1) {
+    variableList.unshift(Blockly.FieldCharacterName.NO_CHARACTER);
+  }
+  
   // Variables are not language-specific, use the name as both the user-facing
   // text and the internal representation.
   var options = [];
