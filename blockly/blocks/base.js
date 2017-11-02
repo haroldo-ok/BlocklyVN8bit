@@ -288,3 +288,41 @@ Blockly.Blocks['vn_jump'] = {
     this.setTooltip('Says something.');
   }
 };
+
+Blockly.Blocks['vn_character'] = {
+  /**
+   * Based on 'variables_set'
+   * Block for variable setter.
+   * @this Blockly.Block
+   */
+  init: function() {
+	this.appendDummyInput()
+		.appendField("Character")
+		.appendField(new Blockly.FieldCharacterName(Blockly.FieldCharacterName.NO_CHARACTER), 'CHARACTER_NAME');
+	this.setColour(230);
+	
+	this.setPreviousStatement(true, null);
+	this.setNextStatement(true, null);
+	this.setTooltip("Chooses who's talking");
+  },
+  /**
+   * Return all variables referenced by this block.
+   * @return {!Array.<string>} List of variable names.
+   * @this Blockly.Block
+   */
+  getCharacterNames: function() {
+    return [this.getFieldValue('CHARACTER_NAME')];
+  },
+  /**
+   * Notification that a variable is renaming.
+   * If the name matches one of this block's variables, rename it.
+   * @param {string} oldName Previous name of variable.
+   * @param {string} newName Renamed variable.
+   * @this Blockly.Block
+   */
+  renameCharacter: function(oldName, newName) {
+    if (Blockly.Names.equals(oldName, this.getFieldValue('CHARACTER_NAME'))) {
+      this.setFieldValue(newName, 'CHARACTER_NAME');
+    }
+  }
+};

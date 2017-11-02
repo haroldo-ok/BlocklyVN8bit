@@ -113,6 +113,22 @@ Blockly.Arduino.init = function(workspace) {
 		Blockly.Arduino.variableDB_.reset();
 	}
 
+	var defchars = [];
+	var characters = Blockly.CharacterNames.allVariables(workspace);
+	for (var x = 0; x < characters.length; x++) {
+		var charName = characters[x];
+		if (charName == Blockly.FieldCharacterName.NO_CHARACTER) {
+			charName = "";
+		}
+		
+		var varName = 'vc_' + Blockly.Arduino.variableDB_.getName(characters[x], Blockly.CharacterNames.NAME_TYPE);
+		
+		defchars[x] = 'const char *' +
+				varName + ' = ' +
+				'"' + charName + '";';
+	}
+	Blockly.Arduino.definitions_['characters'] = defchars.length ? defchars.join('\n') + '\n' : '';
+
 	var defvars = [];
 	var variables = Blockly.Variables.allVariables(workspace);
 	for (var x = 0; x < variables.length; x++) {

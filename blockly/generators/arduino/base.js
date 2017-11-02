@@ -192,3 +192,10 @@ Blockly.Arduino.vn_label = function() {
   
   return null;
 };
+
+Blockly.Arduino.vn_character = function() {
+  var charName = 'vc_' + Blockly.Arduino.variableDB_.getName(this.getFieldValue('CHARACTER_NAME'),
+      Blockly.CharacterNames.NAME_TYPE);
+  var code = 'vnChar(' + charName + ');\n';	  
+  return code;
+}
