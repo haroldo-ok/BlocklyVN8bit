@@ -1,21 +1,5 @@
-### Blockly VN32X
+### Blockly VN for 8BitUnity
 
-This tool allows anyone to make a [visual novel][] for the [Sega 32X][] using [Blockly][]  plus [electron][]
+This is a mashup between [BlocklyVN32X][https://github.com/haroldo-ok/BlocklyVN32X] and [8Bit-Unity][https://github.com/8bit-Dude/8bit-Unity/]. It allows you to make Visual Novels for classic 8bit computers and consoles, using a visual scripting language.
 
-![blockly][Blockly image]
-
-[![YouTube Video](http://i.makeagif.com/media/8-23-2017/a5Mu5F.gif)](http://www.youtube.com/watch?v=dh5M_RHXBfg "BlocklyVN32X version 0.0.2 pre-alpha demonstration. ")
-
-Right now, it's a work in progress.
-
-Based on [BlocklyDuino][].
-
-Uses [vn32x][] as its backend.
-
-[BlocklyDuino]: https://github.com/BlocklyDuino/BlocklyDuino
-[vn32x]: https://github.com/haroldo-ok/vn32x
-[visual novel]: https://en.wikipedia.org/wiki/Visual_novel
-[Sega 32X]: https://en.wikipedia.org/wiki/32X
-[Blockly]: https://developers.google.com/blockly/
-[Blockly image]: https://camo.githubusercontent.com/2b4c453a05d72a3201ad8cbfed77cb3d37fbb462/68747470733a2f2f646576656c6f706572732e676f6f676c652e636f6d2f626c6f636b6c792f696d616765732f73616d706c652e706e67
-[electron]: https://github.com/electron/electron
+Work in progress.
