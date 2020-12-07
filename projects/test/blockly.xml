@@ -1,0 +1,197 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <block type="vn_label" id="22" x="838" y="-62">
+    <mutation></mutation>
+    <field name="NAME">another scene</field>
+    <statement name="STACK">
+      <block type="background_image" id="23">
+        <field name="SOURCE">lecturehall</field>
+        <field name="IMAGE">C:\Temp\blocklyvn32x-portable-0.4.0\projects\test\bg\lecturehall.png</field>
+        <next>
+          <block type="portrait_image" id="24">
+            <field name="SOURCE">sylvie_giggle</field>
+            <field name="IMAGE">C:\Temp\blocklyvn32x-portable-0.4.0\projects\test\portrait\sylvie_giggle.png</field>
+            <next>
+              <block type="vn_say" id="25">
+                <value name="CONTENT">
+                  <block type="text" id="26">
+                    <field name="TEXT">Seems to be working.</field>
+                  </block>
+                </value>
+                <next>
+                  <block type="controls_if" id="27">
+                    <mutation elseif="1"></mutation>
+                    <value name="IF0">
+                      <block type="logic_compare" id="28">
+                        <field name="OP">EQ</field>
+                        <value name="A">
+                          <block type="variables_get" id="29">
+                            <field name="VAR">variable</field>
+                          </block>
+                        </value>
+                        <value name="B">
+                          <block type="math_number" id="30">
+                            <field name="NUM">1</field>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                    <statement name="DO0">
+                      <block type="vn_say" id="31">
+                        <value name="CONTENT">
+                          <block type="text" id="32">
+                            <field name="TEXT">You chose option 1 previously!</field>
+                          </block>
+                        </value>
+                      </block>
+                    </statement>
+                    <value name="IF1">
+                      <block type="logic_compare" id="33">
+                        <field name="OP">EQ</field>
+                        <value name="A">
+                          <block type="variables_get" id="34">
+                            <field name="VAR">variable</field>
+                          </block>
+                        </value>
+                        <value name="B">
+                          <block type="math_number" id="35">
+                            <field name="NUM">2</field>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                    <statement name="DO1">
+                      <block type="vn_say" id="36">
+                        <value name="CONTENT">
+                          <block type="text" id="37">
+                            <field name="TEXT">You chose option 2 previously!</field>
+                          </block>
+                        </value>
+                      </block>
+                    </statement>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+  <block type="background_image" id="38" x="138" y="-12">
+    <field name="SOURCE">club</field>
+    <field name="IMAGE">C:\Users\Haroldo\Projetos\32x\BlocklyVN32X\projects\test\bg\club.png</field>
+    <next>
+      <block type="portrait_image" id="39">
+        <field name="SOURCE">sylvie_normal</field>
+        <field name="IMAGE">C:\Temp\blocklyvn32x-portable-0.4.0\projects\test\portrait\sylvie_normal.png</field>
+        <next>
+          <block type="variables_set" id="40">
+            <field name="VAR">val</field>
+            <value name="VALUE">
+              <block type="math_number" id="41">
+                <field name="NUM">456</field>
+              </block>
+            </value>
+            <next>
+              <block type="vn_say" id="42">
+                <value name="CONTENT">
+                  <block type="text" id="43">
+                    <field name="TEXT">Ok ${val}</field>
+                  </block>
+                </value>
+                <next>
+                  <block type="vn_say" id="44">
+                    <value name="CONTENT">
+                      <block type="text" id="45">
+                        <field name="TEXT">Hello.</field>
+                      </block>
+                    </value>
+                    <next>
+                      <block type="vn_say" id="46">
+                        <value name="CONTENT">
+                          <block type="text" id="47">
+                            <field name="TEXT">This is a demonstration of BlocklyVN32X.</field>
+                          </block>
+                        </value>
+                        <next>
+                          <block type="vn_say" id="48">
+                            <value name="CONTENT">
+                              <block type="text" id="49">
+                                <field name="TEXT">Combined with vn32x, it allows you to build visual novels for te Sega 32X.</field>
+                              </block>
+                            </value>
+                            <next>
+                              <block type="menu" id="50">
+                                <statement name="DO">
+                                  <block type="menu_option" id="51">
+                                    <field name="TEXT">Option 1</field>
+                                    <statement name="DO">
+                                      <block type="vn_say" id="52">
+                                        <value name="CONTENT">
+                                          <block type="text" id="53">
+                                            <field name="TEXT">xxxx</field>
+                                          </block>
+                                        </value>
+                                        <next>
+                                          <block type="variables_set" id="54">
+                                            <field name="VAR">variable</field>
+                                            <value name="VALUE">
+                                              <block type="math_number" id="55">
+                                                <field name="NUM">1</field>
+                                              </block>
+                                            </value>
+                                          </block>
+                                        </next>
+                                      </block>
+                                    </statement>
+                                    <next>
+                                      <block type="menu_option" id="56">
+                                        <field name="TEXT">Option 2</field>
+                                        <statement name="DO">
+                                          <block type="vn_say" id="57">
+                                            <value name="CONTENT">
+                                              <block type="text" id="58">
+                                                <field name="TEXT">zzzz</field>
+                                              </block>
+                                            </value>
+                                            <next>
+                                              <block type="variables_set" id="59">
+                                                <field name="VAR">variable</field>
+                                                <value name="VALUE">
+                                                  <block type="math_number" id="60">
+                                                    <field name="NUM">2</field>
+                                                  </block>
+                                                </value>
+                                              </block>
+                                            </next>
+                                          </block>
+                                        </statement>
+                                      </block>
+                                    </next>
+                                  </block>
+                                </statement>
+                                <next>
+                                  <block type="vn_jump" id="61">
+                                    <value name="TARGET">
+                                      <block type="procedures_callreturn" id="62">
+                                        <mutation name="another scene"></mutation>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </next>
+                              </block>
+                            </next>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </next>
+  </block>
+</xml>
