@@ -152,7 +152,7 @@ const createTargetDirectories = async () => {
 function generateCode() {
 	function writeGeneratedFile(fileName, content) {
 		return new Promise(async (resolve, reject) => {
-			const filePath = config.fileName('8bitUnity', 'projects/' + project.current.name + '/');
+			const filePath = `${targetPath()}src/`;
 
 			await createTargetDirectories(); 
 			

@@ -157,8 +157,9 @@ Blockly.Arduino.init = function(workspace) {
  */
 Blockly.Arduino.finish = function(code) {
   // Indent every line.
+  code = Blockly.Arduino.scrubLocalVars_(code);
   code = '  ' + code.replace(/\n/g, '\n  ');
-  code = code.replace(/\n\s+$/, '\n');
+  code = code.replace(/\n\s+$/, '\n');  
   code = 'void *vn_start() \n{\n' + code + '\n\n  return vn_start;\n}';
 
   // Convert the definitions dictionary into a list.
@@ -237,6 +238,7 @@ Blockly.Arduino.scrub_ = function(block, code) {
     // Block has handled code generation itself.
     return '';
   }
+
   var commentCode = '';
   // Only collect comments for blocks that aren't inline.
   if (!block.outputConnection || !block.outputConnection.targetConnection) {
@@ -263,6 +265,14 @@ Blockly.Arduino.scrub_ = function(block, code) {
   var nextCode = Blockly.Arduino.blockToCode(nextBlock);
   return commentCode + code + nextCode;
 };
+
+/** Move local variables to the top of the function */
+Blockly.Arduino.scrubLocalVars_ = function(code) {  
+  const varDeclarationRegex = /\n\s*int\s*(\w+\s*,\s*)*\s*\w+\s*;/g;
+  const vars = code.match(varDeclarationRegex).map(s => (s || '').trim());  
+  const codeWithNoVars = code.replace(varDeclarationRegex, '');
+  return vars.join('\n') + '\n\n' + codeWithNoVars;
+}
 
 Blockly.Arduino.genIncludeMk_ = function() {
 	var images = [];
