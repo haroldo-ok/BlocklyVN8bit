@@ -1,3 +1,5 @@
+const { fileName } = require('./config');
+
 /**
  * Execute the user's code.
  * Just a quick and dirty eval.  No checks for infinite loops, etc.
@@ -123,17 +125,26 @@ function generateCode() {
 	const config = require('./config');
 	const project = require('./project');
 
-	function writeGeneratedFile(fileName, content) {
+	const makeDirIfNotExists = async filePath => {
 		return new Promise((resolve, reject) => {
+			fs.mkdir(filePath, err => {
+				// Ignore "Directory already exists" errors
+				if (err && err.code != 'EEXIST') {
+					console.log(`Error creating dir ${filePath}`, err);
+					reject(err);
+					return;
+				}
+
+				resolve(fileName);
+			});
+		});
+	}
+
+	function writeGeneratedFile(fileName, content) {
+		return new Promise(async (resolve, reject) => {
 			const filePath = config.fileName('8bitUnity', 'projects/' + project.current.name + '/');
 
-			try {
-				fs.mkdirSync(filePath);
-			} catch (e) {
-				if (e.code != 'EEXIST') {
-					throw e;
-				}
-			}
+			await makeDirIfNotExists(filePath); 
 			
 			fs.writeFile(filePath + fileName, content, function(err) {
 				if(err) {
