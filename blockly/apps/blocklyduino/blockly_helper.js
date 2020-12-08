@@ -118,12 +118,24 @@ function saveCode() {
 }
 
 function generateCode() {
-	var fs = require('fs');
-	var config = require('./config');
-	
+	const fs = require('fs');
+	const path = require('path');
+	const config = require('./config');
+	const project = require('./project');
+
 	function writeGeneratedFile(fileName, content) {
 		return new Promise((resolve, reject) => {
-			fs.writeFile(config.fileName('vn32x', 'generated/' + fileName), content, function(err) {
+			const filePath = config.fileName('8bitUnity', 'projects/' + project.current.name + '/');
+
+			try {
+				fs.mkdirSync(filePath);
+			} catch (e) {
+				if (e.code != 'EEXIST') {
+					throw e;
+				}
+			}
+			
+			fs.writeFile(filePath + fileName, content, function(err) {
 				if(err) {
 					console.log('Error writing ' + fileName, err);
 					reject(err);
