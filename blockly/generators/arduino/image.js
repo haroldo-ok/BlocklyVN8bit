@@ -30,27 +30,29 @@ const getImageAbbreviation = imgName => {
 	return imgAbbrev;
 }
 	
-function getImage(component) {
+function getImage(component, imgType) {
 	let source = component.getField('SOURCE');
 	
 	let imgName = source.getText();
 	let imgAbbrev = getImageAbbreviation(imgName);
+	let imgExt = imgType == 'portrait' ? 'chk' : 'img';
 
 	Blockly.Arduino.images_[imgName] = {
-		viDecl: `const char *vi_${imgName} = "${imgAbbrev}.img";`
+		imgType,
+		viDecl: `const char *vi_${imgName} = "${imgAbbrev}.${imgExt}";`
 	}
 
 	return 'vi_' + imgName;
 }
 	
 Blockly.Arduino.background_image = function() {
-	let varName = getImage(this);
+	let varName = getImage(this, 'background');
 	let code = 'vnScene(' + varName + ');\n';
 	return code;
 };
 
 Blockly.Arduino.portrait_image = function() {
-	let varName = getImage(this);
+	let varName = getImage(this, 'portrait');
 	let code = 'vnShow(' + varName + ');\n';
 	return code;
 };
