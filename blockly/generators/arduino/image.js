@@ -7,8 +7,7 @@ function getImage(component) {
 	
 	let imgName = source.getText();
 	Blockly.Arduino.images_[imgName] = {
-		vgDecl: 'extern uint16 vg_' + imgName + '[];\n',
-		viDecl: 'const uint16 *vi_' + imgName + ' = vg_' + imgName + ';'
+		viDecl: `const char *vi_${imgName} = "${imgName}.img";`
 	}
 
 	return 'vi_' + imgName;

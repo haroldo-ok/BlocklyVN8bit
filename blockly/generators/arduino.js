@@ -181,11 +181,9 @@ Blockly.Arduino.finish = function(code) {
   }
 
   // Convert the images dict into a list.
-  var vgs = [];
   var vis = [];
   for (var name in Blockly.Arduino.images_) {
 	  var img = Blockly.Arduino.images_[name];
-	  vgs.push(img.vgDecl);
 	  vis.push(img.viDecl);	  
   }
   
@@ -193,7 +191,6 @@ Blockly.Arduino.finish = function(code) {
   Blockly.Arduino.genImages_();
   
   var allDefs = imports.join('\n') + '\n\n' + 
-		vgs.join('\n') + '\n\n' +
 		vis.join('\n') + '\n\n' +
 		definitions.join('\n') + '\n\n';
   return allDefs.replace(/\n\n+/g, '\n\n').replace(/\n*$/, '\n\n\n') + code;
