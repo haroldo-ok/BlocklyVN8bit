@@ -183,10 +183,12 @@ Blockly.Arduino.vn_label = function() {
     branch = Blockly.Arduino.INFINITE_LOOP_TRAP.replace(/%1/g,
         '\'' + this.id + '\'') + branch;
   }
+
+  branch = Blockly.Arduino.scrubLocalVars_(branch, '  ');
   
   var code = 'void *' + funcName + '() {\n' +
       branch + 
-	  '\n\n  return vn_start;\n}\n';
+    '\n\n  return vn_start;\n}\n';
   code = Blockly.Arduino.scrub_(this, code);
   Blockly.Arduino.definitions_[funcName] = code;
   

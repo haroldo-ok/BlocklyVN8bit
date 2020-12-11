@@ -1,14 +1,14 @@
 {
-  "name": "BlocklyVN32X",
-  "version": "0.10.1",
-  "description": "Uses blockly to generate visual novels for VN32X",
+  "name": "BlocklyVN8bit",
+  "version": "0.0.1",
+  "description": "Uses blockly to generate visual novels for 8bit-Unity",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/haroldo-ok/BlocklyVN32X"
+    "url": "https://github.com/haroldo-ok/BlocklyVN8bit"
   },
   "keywords": [
     "blockly",
@@ -20,9 +20,9 @@
   "author": "Haroldo de Oliveira Pinheiro",
   "license": "APACHE",
   "bugs": {
-    "url": "https://github.com/haroldo-ok/BlocklyVN32X/issues"
+    "url": "https://github.com/haroldo-ok/BlocklyVN8bit/issues"
   },
-  "homepage": "https://github.com/haroldo-ok/BlocklyVN32X",
+  "homepage": "https://github.com/haroldo-ok/BlocklyVN8bit",
   "devDependencies": {
     "electron": "1.7.5"
   },

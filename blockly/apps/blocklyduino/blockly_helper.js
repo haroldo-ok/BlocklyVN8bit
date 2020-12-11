@@ -1,3 +1,9 @@
+const { fileName } = require('./config');
+const fs = require('fs');
+const path = require('path');
+const config = require('./config');
+const project = require('./project');
+
 /**
  * Execute the user's code.
  * Just a quick and dirty eval.  No checks for infinite loops, etc.
@@ -117,13 +123,80 @@ function saveCode() {
 
 }
 
+const makeDirIfNotExists = async filePath => {
+	return new Promise((resolve, reject) => {
+		fs.mkdir(filePath, err => {
+			// Ignore "Directory already exists" errors
+			if (err && err.code != 'EEXIST') {
+				console.log(`Error creating dir ${filePath}`, err);
+				reject(err);
+				return;
+			}
+
+			resolve(fileName);
+		});
+	});
+}
+
+const targetPath = () =>  config.fileName('8bitUnity', 'projects/' + project.current.name + '/');
+
+const createTargetDirectories = async () => {
+	const targetPath = config.fileName('8bitUnity', 'projects/' + project.current.name + '/');
+	const subDirs = ['bitmaps', 'chunks', 'music', 'sprites', 'src']
+		.map(name => `${targetPath}${name}/`);
+
+	await makeDirIfNotExists(targetPath);
+	await Promise.all(subDirs.map(dir => makeDirIfNotExists(dir)));
+}
+
+const copyStandardSourceFiles = async () => {
+	const cmd = require('node-cmd');
+	return new Promise((resolve, reject) => {
+		// TODO: Only works on Windows; should be made more generic.
+		cmd.get(`xcopy /s/y "${__dirname}/base-project" "${targetPath()}"`, (err, data) => {
+			if (err) {
+				console.error(err);
+				reject(new Error('Failed to copy standard source files.'));
+				return;
+			}
+			resolve(data);
+		});
+	});
+}
+
+const generateBuilderProject = () => {
+	const projName = project.current.name;
+	const projDir = `projects/${projName}/`;
+	const builderProject = {
+	  "format": "8bit-Unity Project", 
+	  "formatVersion": 2, 
+	  "general": {
+		  "disk": projName, 
+		  "code": [
+			  projDir + "src/vn_engine.c", 
+			  projDir + "src/main.c", 
+			  projDir + "src/generated_script.c"
+		  ], 
+		  "shared": [], 
+		  "charmap": []
+	  }, 
+	  "platform": {
+	  }
+	};
+  
+	Blockly.Arduino.otherSources[`${projName}.builder`] = 
+	  JSON.stringify(builderProject, null, 4);  
+}
+
 function generateCode() {
-	var fs = require('fs');
-	var config = require('./config');
-	
 	function writeGeneratedFile(fileName, content) {
-		return new Promise((resolve, reject) => {
-			fs.writeFile(config.fileName('vn32x', 'generated/' + fileName), content, function(err) {
+		return new Promise(async (resolve, reject) => {
+			const filePath = `${targetPath()}`;
+
+			await createTargetDirectories(); 
+			await copyStandardSourceFiles(); 
+			
+			fs.writeFile(filePath + fileName, content, function(err) {
 				if(err) {
 					console.log('Error writing ' + fileName, err);
 					reject(err);
@@ -137,9 +210,11 @@ function generateCode() {
 	}
 	
 	let generatedFiles = [{
-		name: 'generated_script.c',
+		name: 'src/generated_script.c',
 		content: Blockly.Arduino.workspaceToCode()
 	}];
+
+	generateBuilderProject();
 	
 	for (var name in Blockly.Arduino.otherSources) {
 		generatedFiles.push({

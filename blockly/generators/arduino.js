@@ -99,6 +99,10 @@ Blockly.Arduino.init = function(workspace) {
 	Blockly.Arduino.setups_ = Object.create(null);
 	// Create a dictionary of image declarations to be printed before the code.
 	Blockly.Arduino.images_ = Object.create(null);
+	Blockly.Arduino.imageAbbrevs_ = {
+    fullToAbbrev: {},
+    abbrevToFull: {}
+  };
 	
 	// Context for the menus
 	Blockly.Arduino.menuContexts_ = Object.create(null);
@@ -157,8 +161,9 @@ Blockly.Arduino.init = function(workspace) {
  */
 Blockly.Arduino.finish = function(code) {
   // Indent every line.
+  code = Blockly.Arduino.scrubLocalVars_(code);
   code = '  ' + code.replace(/\n/g, '\n  ');
-  code = code.replace(/\n\s+$/, '\n');
+  code = code.replace(/\n\s+$/, '\n');  
   code = 'void *vn_start() \n{\n' + code + '\n\n  return vn_start;\n}';
 
   // Convert the definitions dictionary into a list.
@@ -180,19 +185,13 @@ Blockly.Arduino.finish = function(code) {
   }
 
   // Convert the images dict into a list.
-  var vgs = [];
   var vis = [];
   for (var name in Blockly.Arduino.images_) {
 	  var img = Blockly.Arduino.images_[name];
-	  vgs.push(img.vgDecl);
 	  vis.push(img.viDecl);	  
   }
-  
-  Blockly.Arduino.genIncludeMk_();
-  Blockly.Arduino.genImages_();
-  
+    
   var allDefs = imports.join('\n') + '\n\n' + 
-		vgs.join('\n') + '\n\n' +
 		vis.join('\n') + '\n\n' +
 		definitions.join('\n') + '\n\n';
   return allDefs.replace(/\n\n+/g, '\n\n').replace(/\n*$/, '\n\n\n') + code;
@@ -237,6 +236,7 @@ Blockly.Arduino.scrub_ = function(block, code) {
     // Block has handled code generation itself.
     return '';
   }
+
   var commentCode = '';
   // Only collect comments for blocks that aren't inline.
   if (!block.outputConnection || !block.outputConnection.targetConnection) {
@@ -264,32 +264,11 @@ Blockly.Arduino.scrub_ = function(block, code) {
   return commentCode + code + nextCode;
 };
 
-Blockly.Arduino.genIncludeMk_ = function() {
-	var images = [];
-	for (var name in Blockly.Arduino.images_) {
-		images.push(name + '.apg');
-	}
-	
-	Blockly.Arduino.otherSources['include.mk'] = 'IMGS := $(addprefix $(OBJDIR)/, ' + images.join(' ') + ')';
-}
-
-Blockly.Arduino.genImages_ = function() {
-	var images = [];
-	var globls = [];
-	var incbins = [];
-	for (var name in Blockly.Arduino.images_) {
-		images.push(name + '.apg');
-		globls.push('.globl _vg_' + name);
-		incbins.push(
-			'.align 2\n' +
-			'.word 0\n' +
-			'_vg_' + name + ':\n' +
-			'.incbin "build/' + name + '.apg"\n'
-		);
-	}
-	
-	Blockly.Arduino.otherSources['generated_images.s'] = 
-		'\n.text\n\n' +
-		globls.join('\n') + '\n\n' +
-		incbins.join('\n') + '\n';
+/** Move local variables to the top of the function */
+Blockly.Arduino.scrubLocalVars_ = function(code, indent) {  
+  indent = indent || '';
+  const varDeclarationRegex = /\n\s*int\s*(\w+\s*,\s*)*\s*\w+\s*;/g;
+  const vars = code.match(varDeclarationRegex).map(s => indent + (s || '').trim());  
+  const codeWithNoVars = code.replace(varDeclarationRegex, '');
+  return vars.join('\n') + '\n\n' + codeWithNoVars;
 }
