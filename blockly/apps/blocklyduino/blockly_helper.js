@@ -164,10 +164,34 @@ const copyStandardSourceFiles = async () => {
 	});
 }
 
+const generateBuilderProject = () => {
+	const projName = project.current.name;
+	const projDir = `projects/${projName}/`;
+	const builderProject = {
+	  "format": "8bit-Unity Project", 
+	  "formatVersion": 2, 
+	  "general": {
+		  "disk": projName, 
+		  "code": [
+			  projDir + "src/vn_engine.c", 
+			  projDir + "src/main.c", 
+			  projDir + "src/generated_script.c"
+		  ], 
+		  "shared": [], 
+		  "charmap": []
+	  }, 
+	  "platform": {
+	  }
+	};
+  
+	Blockly.Arduino.otherSources[`${projName}.builder`] = 
+	  JSON.stringify(builderProject, null, 4);  
+}
+
 function generateCode() {
 	function writeGeneratedFile(fileName, content) {
 		return new Promise(async (resolve, reject) => {
-			const filePath = `${targetPath()}src/`;
+			const filePath = `${targetPath()}`;
 
 			await createTargetDirectories(); 
 			await copyStandardSourceFiles(); 
@@ -186,9 +210,11 @@ function generateCode() {
 	}
 	
 	let generatedFiles = [{
-		name: 'generated_script.c',
+		name: 'src/generated_script.c',
 		content: Blockly.Arduino.workspaceToCode()
 	}];
+
+	generateBuilderProject();
 	
 	for (var name in Blockly.Arduino.otherSources) {
 		generatedFiles.push({
