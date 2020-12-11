@@ -149,12 +149,28 @@ const createTargetDirectories = async () => {
 	await Promise.all(subDirs.map(dir => makeDirIfNotExists(dir)));
 }
 
+const copyStandardSourceFiles = async () => {
+	const cmd = require('node-cmd');
+	return new Promise((resolve, reject) => {
+		// TODO: Only works on Windows; should be made more generic.
+		cmd.get(`xcopy /s/y "${__dirname}/base-project" "${targetPath()}"`, (err, data) => {
+			if (err) {
+				console.error(err);
+				reject(new Error('Failed to copy standard source files.'));
+				return;
+			}
+			resolve(data);
+		});
+	});
+}
+
 function generateCode() {
 	function writeGeneratedFile(fileName, content) {
 		return new Promise(async (resolve, reject) => {
 			const filePath = `${targetPath()}src/`;
 
 			await createTargetDirectories(); 
+			await copyStandardSourceFiles(); 
 			
 			fs.writeFile(filePath + fileName, content, function(err) {
 				if(err) {
