@@ -69,10 +69,7 @@ function compile() {
 	printToConsole('-----------------------');
 	printToConsole('Starting compilation...');
 	
-	return generateCode()	
-		.then(() =>  vn32x.copyImagesFrom(project.bg.path))
-		.then(() =>  vn32x.copyImagesFrom(project.portrait.path))
-		.then(vn32x.compile)
+	return generateCode()
 		.then(function(){
 			printToConsole('Compilation done!');
 			topbar.hide();
@@ -90,6 +87,7 @@ function compileAndRun() {
 	const vn32x = require('./vn32x');
 
 	compile()
+		.then(copyImageFiles())
 		.then(function(){
 			printToConsole('-----------------------');
 			printToConsole('Starting emulator...');	
@@ -149,11 +147,26 @@ const createTargetDirectories = async () => {
 	await Promise.all(subDirs.map(dir => makeDirIfNotExists(dir)));
 }
 
+const copyFile = async (originPath, destPath) => {
+	const cmd = require('node-cmd');
+	return new Promise((resolve, reject) => {
+		// TODO: Only works on Windows; should be made more generic.
+		cmd.get(`copy "${path.resolve(originPath)}" "${path.resolve(destPath)}"`, (err, data) => {
+			if (err) {
+				console.error(err);
+				reject(new Error('Failed to copy file.'));
+				return;
+			}
+			resolve(data);
+		});
+	});
+}
+
 const copyFiles = async (originPath, destPath) => {
 	const cmd = require('node-cmd');
 	return new Promise((resolve, reject) => {
 		// TODO: Only works on Windows; should be made more generic.
-		cmd.get(`xcopy /s/y "${originPath}" "${destPath}"`, (err, data) => {
+		cmd.get(`xcopy /s/y "${path.resolve(originPath)}" "${path.resolve(destPath)}"`, (err, data) => {
 			if (err) {
 				console.error(err);
 				reject(new Error('Failed to copy files.'));
@@ -166,6 +179,12 @@ const copyFiles = async (originPath, destPath) => {
 
 const copyStandardSourceFiles = async () => {
 	return copyFiles(`${__dirname}/base-project`, targetPath());
+}
+
+const copyImageFiles = async () => {
+	return Promise.all(Object.values(Blockly.Arduino.images_).filter(o => o.imgType === 'background')
+		.map(({imgName, imgAbbrev}) => 
+			copyFile(`${project.bg.path}/${imgName}.png`, `${targetPath()}/bitmaps/${imgAbbrev}.png`)))		
 }
 
 const generateBuilderProject = () => {
