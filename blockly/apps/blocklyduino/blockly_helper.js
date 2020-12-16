@@ -1,5 +1,6 @@
 const { fileName } = require('./config');
 const fs = require('fs');
+const _ = require('lodash');
 const path = require('path');
 const config = require('./config');
 const project = require('./project');
@@ -181,15 +182,26 @@ const copyStandardSourceFiles = async () => {
 	return copyFiles(`${__dirname}/base-project`, targetPath());
 }
 
+const listBackgroundImages = () => Object.values(Blockly.Arduino.images_)
+	.filter(o => o.imgType === 'background');
+
 const copyImageFiles = async () => {
-	return Promise.all(Object.values(Blockly.Arduino.images_).filter(o => o.imgType === 'background')
-		.map(({imgName, imgAbbrev}) => 
-			copyFile(`${project.bg.path}/${imgName}.png`, `${targetPath()}/bitmaps/${imgAbbrev}.png`)))		
+	return Promise.all(listBackgroundImages().map(({imgName, imgAbbrev}) => 
+		copyFile(`${project.bg.path}/${imgName}.png`, `${targetPath()}/bitmaps/${imgAbbrev}.png`)))		
 }
 
 const generateBuilderProject = () => {
 	const projName = project.current.name;
 	const projDir = `projects/${projName}/`;
+
+	const platforms = ['Apple', 'Atari', 'C64', 'Lynx', 'Oric']
+		.map(platformName => {
+			return [platformName, {
+				bitmap: listBackgroundImages().map(({imgName, imgAbbrev}) => 
+					`${projDir}${imgAbbrev}-${platformName.toLowerCase()}.png`)
+			}];
+		});
+
 	const builderProject = {
 	  "format": "8bit-Unity Project", 
 	  "formatVersion": 2, 
@@ -200,11 +212,8 @@ const generateBuilderProject = () => {
 			  projDir + "src/main.c", 
 			  projDir + "src/generated_script.c"
 		  ], 
-		  "shared": [], 
-		  "charmap": []
 	  }, 
-	  "platform": {
-	  }
+	  "platform": _.fromPairs(platforms)
 	};
   
 	Blockly.Arduino.otherSources[`${projName}.builder`] = 
