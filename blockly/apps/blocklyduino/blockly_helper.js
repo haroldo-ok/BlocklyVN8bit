@@ -1,5 +1,6 @@
 const { fileName } = require('./config');
 const fs = require('fs');
+const _ = require('lodash');
 const path = require('path');
 const config = require('./config');
 const project = require('./project');
@@ -69,10 +70,9 @@ function compile() {
 	printToConsole('-----------------------');
 	printToConsole('Starting compilation...');
 	
-	return generateCode()	
-		.then(() =>  vn32x.copyImagesFrom(project.bg.path))
-		.then(() =>  vn32x.copyImagesFrom(project.portrait.path))
-		.then(vn32x.compile)
+	return generateCode()
+		.then(copyImageFiles())
+		.then(convertImages())
 		.then(function(){
 			printToConsole('Compilation done!');
 			topbar.hide();
@@ -139,6 +139,8 @@ const makeDirIfNotExists = async filePath => {
 }
 
 const targetPath = () =>  config.fileName('8bitUnity', 'projects/' + project.current.name + '/');
+const pythonPath = () =>  config.fileName('8bitUnity', 'utils/py27/');
+const scriptsPath = () =>  config.fileName('8bitUnity', 'utils/scripts/');
 
 const createTargetDirectories = async () => {
 	const targetPath = config.fileName('8bitUnity', 'projects/' + project.current.name + '/');
@@ -149,14 +151,14 @@ const createTargetDirectories = async () => {
 	await Promise.all(subDirs.map(dir => makeDirIfNotExists(dir)));
 }
 
-const copyStandardSourceFiles = async () => {
+const copyFile = async (originPath, destPath) => {
 	const cmd = require('node-cmd');
 	return new Promise((resolve, reject) => {
 		// TODO: Only works on Windows; should be made more generic.
-		cmd.get(`xcopy /s/y "${__dirname}/base-project" "${targetPath()}"`, (err, data) => {
+		cmd.get(`copy "${path.resolve(originPath)}" "${path.resolve(destPath)}"`, (err, data) => {
 			if (err) {
 				console.error(err);
-				reject(new Error('Failed to copy standard source files.'));
+				reject(new Error('Failed to copy file.'));
 				return;
 			}
 			resolve(data);
@@ -164,9 +166,64 @@ const copyStandardSourceFiles = async () => {
 	});
 }
 
+const copyFiles = async (originPath, destPath) => {
+	const cmd = require('node-cmd');
+	return new Promise((resolve, reject) => {
+		// TODO: Only works on Windows; should be made more generic.
+		cmd.get(`xcopy /s/y "${path.resolve(originPath)}" "${path.resolve(destPath)}"`, (err, data) => {
+			if (err) {
+				console.error(err);
+				reject(new Error('Failed to copy files.'));
+				return;
+			}
+			resolve(data);
+		});
+	});
+}
+
+const execPython = async (cmdLine) => {
+	const cmd = require('node-cmd');
+	return new Promise((resolve, reject) => {
+		cmd.get(`"${path.resolve(pythonPath())}/python" ${cmdLine}`, (err, data) => {
+			if (err) {
+				console.error(err);
+				reject(new Error('Failed to execute Python command.'));
+				return;
+			}
+			resolve(data);
+		});
+	});
+}
+
+const copyStandardSourceFiles = async () => {
+	return copyFiles(`${__dirname}/base-project`, targetPath());
+}
+
+const listBackgroundImages = () => Object.values(Blockly.Arduino.images_)
+	.filter(o => o.imgType === 'background');
+
+const copyImageFiles = async () => {
+	return Promise.all(listBackgroundImages().map(({imgName, imgAbbrev}) => 
+		copyFile(`${project.bg.path}/${imgName}.png`, `${targetPath()}/bitmaps/${imgAbbrev}.png`)))		
+}
+
+const convertImages = async () => {
+	return Promise.all(listBackgroundImages().map(({imgAbbrev}) => 
+		execPython(`${path.resolve(scriptsPath())}/convert-images.py "${targetPath()}/bitmaps/${imgAbbrev}.png"`)))		
+}
+
 const generateBuilderProject = () => {
 	const projName = project.current.name;
 	const projDir = `projects/${projName}/`;
+
+	const platforms = ['Apple', 'Atari', 'C64', 'Lynx', 'Oric']
+		.map(platformName => {
+			return [platformName, {
+				bitmap: listBackgroundImages().map(({imgName, imgAbbrev}) => 
+					`${projDir}bitmaps/${imgAbbrev}-${platformName.toLowerCase()}.png`)
+			}];
+		});
+
 	const builderProject = {
 	  "format": "8bit-Unity Project", 
 	  "formatVersion": 2, 
@@ -177,11 +234,8 @@ const generateBuilderProject = () => {
 			  projDir + "src/main.c", 
 			  projDir + "src/generated_script.c"
 		  ], 
-		  "shared": [], 
-		  "charmap": []
 	  }, 
-	  "platform": {
-	  }
+	  "platform": _.fromPairs(platforms)
 	};
   
 	Blockly.Arduino.otherSources[`${projName}.builder`] = 

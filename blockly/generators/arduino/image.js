@@ -38,7 +38,7 @@ function getImage(component, imgType) {
 	let imgExt = imgType == 'portrait' ? 'chk' : 'img';
 
 	Blockly.Arduino.images_[imgName] = {
-		imgType,
+		imgType, imgName, imgAbbrev,
 		viDecl: `const char *vi_${imgName} = "${imgAbbrev}.${imgExt}";`
 	}
 
