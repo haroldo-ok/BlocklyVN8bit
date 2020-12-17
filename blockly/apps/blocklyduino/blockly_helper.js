@@ -71,6 +71,8 @@ function compile() {
 	printToConsole('Starting compilation...');
 	
 	return generateCode()
+		.then(copyImageFiles())
+		.then(convertImages())
 		.then(function(){
 			printToConsole('Compilation done!');
 			topbar.hide();
@@ -88,7 +90,6 @@ function compileAndRun() {
 	const vn32x = require('./vn32x');
 
 	compile()
-		.then(copyImageFiles())
 		.then(function(){
 			printToConsole('-----------------------');
 			printToConsole('Starting emulator...');	
@@ -138,6 +139,8 @@ const makeDirIfNotExists = async filePath => {
 }
 
 const targetPath = () =>  config.fileName('8bitUnity', 'projects/' + project.current.name + '/');
+const pythonPath = () =>  config.fileName('8bitUnity', 'utils/py27/');
+const scriptsPath = () =>  config.fileName('8bitUnity', 'utils/scripts/');
 
 const createTargetDirectories = async () => {
 	const targetPath = config.fileName('8bitUnity', 'projects/' + project.current.name + '/');
@@ -178,6 +181,20 @@ const copyFiles = async (originPath, destPath) => {
 	});
 }
 
+const execPython = async (cmdLine) => {
+	const cmd = require('node-cmd');
+	return new Promise((resolve, reject) => {
+		cmd.get(`"${path.resolve(pythonPath())}/python" ${cmdLine}`, (err, data) => {
+			if (err) {
+				console.error(err);
+				reject(new Error('Failed to execute Python command.'));
+				return;
+			}
+			resolve(data);
+		});
+	});
+}
+
 const copyStandardSourceFiles = async () => {
 	return copyFiles(`${__dirname}/base-project`, targetPath());
 }
@@ -188,6 +205,11 @@ const listBackgroundImages = () => Object.values(Blockly.Arduino.images_)
 const copyImageFiles = async () => {
 	return Promise.all(listBackgroundImages().map(({imgName, imgAbbrev}) => 
 		copyFile(`${project.bg.path}/${imgName}.png`, `${targetPath()}/bitmaps/${imgAbbrev}.png`)))		
+}
+
+const convertImages = async () => {
+	return Promise.all(listBackgroundImages().map(({imgAbbrev}) => 
+		execPython(`${path.resolve(scriptsPath())}/convert-images.py "${targetPath()}/bitmaps/${imgAbbrev}.png"`)))		
 }
 
 const generateBuilderProject = () => {
