@@ -230,7 +230,7 @@ const convertImages = async () => {
 
 const generateBuildScripts = async () => {	
 	return execBuilder(` -projectFile projects/${project.current.name}/test.builder ` +
-		'-useGUI False');
+		'-useGUI False -callEmu True');
 }
 
 const generateBuilderProject = () => {
