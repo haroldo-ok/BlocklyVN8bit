@@ -10,9 +10,13 @@ const BINARY_NAME = 'generated.32x';
 const consoleListener = new rx.Subject();
 
 function exec(commandLine) {
+	const bat = config.fileName('vn32x', 'exec.bat ' + commandLine);
+	return execConsole(commandLine);
+}
+
+function execConsole(commandLine) {
 	return new Promise((resolve, reject) => {
-		const bat = config.fileName('vn32x', 'exec.bat ' + commandLine);
-		const processRef = cmd.get(bat, () => resolve());
+		const processRef = cmd.get(commandLine, () => resolve());
 		
 		// listen to the terminal output
 		let data_line = '';
@@ -82,5 +86,6 @@ module.exports = {
 	clean: () => exec('make clean'),
 	run: () => exec('make run'),
 	copyImagesFrom: copyImagesFrom,
+	execConsole,
 	subscribe: listener => consoleListener.subscribe({next: listener})
 }

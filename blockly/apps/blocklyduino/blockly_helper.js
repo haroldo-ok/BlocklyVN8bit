@@ -91,10 +91,10 @@ function compileAndRun() {
 	const vn32x = require('./vn32x');
 
 	compile()
-		.then(function(){
+		.then(async () => {
 			printToConsole('-----------------------');
 			printToConsole('Building and starting emulator...');	
-			vn32x.run().then(() => printToConsole('Emulator closed.'));
+			await vn32x.execConsole(`cd "${path.resolve(buildScriptPath())}" && echo aaa | test-${platformToRun()}.bat`);
 		})
 		.catch(err => {
 			console.error(err);
@@ -145,7 +145,8 @@ const scriptsPath = () =>  config.fileName('8bitUnity', 'utils/scripts/');
 const buildScriptPath = () =>  config.fileName('8bitUnity', 'build/');
 const unityPath = () =>  config.fileName('8bitUnity', '');
 
-const platformToRun = () => document.getElementById('platformToRun').value;
+const platformToRun = () => document.getElementById('platformToRun').value
+	.replace(/\s/g, '').toLowerCase();
 
 const createTargetDirectories = async () => {
 	const targetPath = config.fileName('8bitUnity', 'projects/' + project.current.name + '/');
