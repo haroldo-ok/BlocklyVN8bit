@@ -243,6 +243,15 @@ function init() {
             <td class="tabmin">&nbsp;</td>
             <td id="tab_portraits" class="taboff" onclick="tabClick('portraits')">Portraits</td>
             <td class="tabmax">
+              <label for="platformToRun">Platform</label>
+              <select id="platformToRun">
+                <option>Apple 64k</option>
+                <option>Apple 128k</option>
+                <option>Atari</option>
+                <option selected>C64</option>
+                <option>Lynx</option>
+                <option>Oric 48k</option>
+              </select>
               <button onclick="compileAndRun()" class="run">
 				<i class="fa fa-play"></i> Run
               </button>

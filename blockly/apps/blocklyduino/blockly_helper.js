@@ -73,6 +73,7 @@ function compile() {
 	return generateCode()
 		.then(copyImageFiles())
 		.then(convertImages())
+		.then(generateBuildScripts())
 		.then(function(){
 			printToConsole('Compilation done!');
 			topbar.hide();
@@ -90,10 +91,10 @@ function compileAndRun() {
 	const vn32x = require('./vn32x');
 
 	compile()
-		.then(function(){
+		.then(async () => {
 			printToConsole('-----------------------');
-			printToConsole('Starting emulator...');	
-			vn32x.run().then(() => printToConsole('Emulator closed.'));
+			printToConsole('Building and starting emulator...');	
+			await vn32x.execConsole(`cd "${path.resolve(buildScriptPath())}" && echo aaa | test-${platformToRun()}.bat`);
 		})
 		.catch(err => {
 			console.error(err);
@@ -141,6 +142,11 @@ const makeDirIfNotExists = async filePath => {
 const targetPath = () =>  config.fileName('8bitUnity', 'projects/' + project.current.name + '/');
 const pythonPath = () =>  config.fileName('8bitUnity', 'utils/py27/');
 const scriptsPath = () =>  config.fileName('8bitUnity', 'utils/scripts/');
+const buildScriptPath = () =>  config.fileName('8bitUnity', 'build/');
+const unityPath = () =>  config.fileName('8bitUnity', '');
+
+const platformToRun = () => document.getElementById('platformToRun').value
+	.replace(/\s/g, '').toLowerCase();
 
 const createTargetDirectories = async () => {
 	const targetPath = config.fileName('8bitUnity', 'projects/' + project.current.name + '/');
@@ -195,6 +201,20 @@ const execPython = async (cmdLine) => {
 	});
 }
 
+const execBuilder = async (cmdLine) => {
+	const cmd = require('node-cmd');
+	return new Promise((resolve, reject) => {
+		cmd.get(`cd "${path.resolve(unityPath())}" && _builder_.bat ${cmdLine}`, (err, data) => {
+			if (err) {
+				console.error(err);
+				reject(new Error('Failed to execute builder.'));
+				return;
+			}
+			resolve(data);
+		});
+	});
+}
+
 const copyStandardSourceFiles = async () => {
 	return copyFiles(`${__dirname}/base-project`, targetPath());
 }
@@ -210,6 +230,11 @@ const copyImageFiles = async () => {
 const convertImages = async () => {
 	return Promise.all(listBackgroundImages().map(({imgAbbrev}) => 
 		execPython(`${path.resolve(scriptsPath())}/convert-images.py "${targetPath()}/bitmaps/${imgAbbrev}.png"`)))		
+}
+
+const generateBuildScripts = async () => {	
+	return execBuilder(` -projectFile projects/${project.current.name}/test.builder ` +
+		'-useGUI False -callEmu True');
 }
 
 const generateBuilderProject = () => {

@@ -124,7 +124,7 @@
               <block type="vn_say" id="27">
                 <value name="CONTENT">
                   <block type="text" id="28">
-                    <field name="TEXT">Ok ${val}</field>
+                    <field name="TEXT">Variable 'val' has value ${val}</field>
                   </block>
                 </value>
                 <next>
@@ -138,14 +138,14 @@
                       <block type="vn_say" id="31">
                         <value name="CONTENT">
                           <block type="text" id="32">
-                            <field name="TEXT">This is a demonstration of BlocklyVN32X.</field>
+                            <field name="TEXT">This is a demonstration of BlocklyVN8bit.</field>
                           </block>
                         </value>
                         <next>
                           <block type="vn_say" id="33">
                             <value name="CONTENT">
                               <block type="text" id="34">
-                                <field name="TEXT">Combined with vn32x, it allows you to build visual novels for te Sega 32X.</field>
+                                <field name="TEXT">Combined with 8bit-Unity, it allows you to build visual novels for multiple 8-bit platforms.</field>
                               </block>
                             </value>
                             <next>
