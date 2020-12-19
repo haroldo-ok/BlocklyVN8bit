@@ -93,7 +93,7 @@ function compileAndRun() {
 	compile()
 		.then(function(){
 			printToConsole('-----------------------');
-			printToConsole('Starting emulator...');	
+			printToConsole('Building and starting emulator...');	
 			vn32x.run().then(() => printToConsole('Emulator closed.'));
 		})
 		.catch(err => {
@@ -142,7 +142,10 @@ const makeDirIfNotExists = async filePath => {
 const targetPath = () =>  config.fileName('8bitUnity', 'projects/' + project.current.name + '/');
 const pythonPath = () =>  config.fileName('8bitUnity', 'utils/py27/');
 const scriptsPath = () =>  config.fileName('8bitUnity', 'utils/scripts/');
+const buildScriptPath = () =>  config.fileName('8bitUnity', 'build/');
 const unityPath = () =>  config.fileName('8bitUnity', '');
+
+const platformToRun = () => document.getElementById('platformToRun').value;
 
 const createTargetDirectories = async () => {
 	const targetPath = config.fileName('8bitUnity', 'projects/' + project.current.name + '/');
