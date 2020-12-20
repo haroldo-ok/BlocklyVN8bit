@@ -71,6 +71,7 @@ function compile() {
 	printToConsole('Starting compilation...');
 	
 	return generateCode()
+		.then(async () => await delay(500))
 		.then(copyImageFiles())
 		.then(convertImages())
 		.then(generateBuildScripts())
@@ -91,7 +92,7 @@ function compileAndRun() {
 	const vn32x = require('./vn32x');
 
 	compile()
-		.then(delay(3000))
+		.then(async () => await delay(500))
 		.then(async () => {
 			printToConsole('-----------------------');
 			printToConsole('Building and starting emulator...');	
@@ -149,15 +150,7 @@ const unityPath = () =>  config.fileName('8bitUnity', '');
 const platformToRun = () => document.getElementById('platformToRun').value
 	.replace(/\s/g, '').toLowerCase();
 
-const delay = async ms => {
-	printToConsole(`waiting ${ms} ms...`);
-	return new Promise(resolve => {
-		setTimeout(() => {
-			resolve();
-			printToConsole('Done wating.');
-		}, ms);
-	});
-};
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const createTargetDirectories = async () => {
 	const targetPath = config.fileName('8bitUnity', 'projects/' + project.current.name + '/');
