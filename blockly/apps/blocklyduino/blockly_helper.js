@@ -271,14 +271,15 @@ const generateBuilderProject = () => {
 	  JSON.stringify(builderProject, null, 4);  
 }
 
-function generateCode() {
+const generateCode = async () => {
+	await createTargetDirectories(); 
+	await delay(500);
+	await copyStandardSourceFiles(); 
+
 	function writeGeneratedFile(fileName, content) {
 		return new Promise(async (resolve, reject) => {
 			const filePath = `${targetPath()}`;
 
-			await createTargetDirectories(); 
-			await copyStandardSourceFiles(); 
-			
 			fs.writeFile(filePath + fileName, content, function(err) {
 				if(err) {
 					console.log('Error writing ' + fileName, err);
@@ -306,7 +307,8 @@ function generateCode() {
 		});
 	}
 	
-	return Promise.all(generatedFiles.map(o => writeGeneratedFile(o.name, o.content)));
+	await Promise.all(generatedFiles.map(o => writeGeneratedFile(o.name, o.content)));
+	await delay(3000);
 }
 
 function newProject() {
