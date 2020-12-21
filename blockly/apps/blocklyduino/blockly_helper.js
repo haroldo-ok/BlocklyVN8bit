@@ -280,40 +280,16 @@ async function generateCode() {
 		return new Promise(async (resolve, reject) => {
 			const filePath = `${targetPath()}`;
 
-			fs.open(filePath + fileName, "w+",(err, fd) => {
+			fs.writeFile(filePath + fileName, content, function(err) {
 				if (err) {
-					console.log('Error opening ' + fileName, err);
+					console.warn('Error writing ' + fileName, err);
 					reject(err);
 					return;
 				}
-
-				fs.writeFile(fd, content, (err) => {
-					if (err) {
-						console.log('Error writing ' + fileName, err);
-						reject(err);
-						return;
-					}
-
-					fs.fdatasync(fd, (err) => {
-						if (err) {
-							console.log('Error flushing ' + fileName, err);
-							reject(err);
-							return;
-						}
-
-						fs.close(fd, (err) => {
-							if (err) {
-								console.log('Error closing ' + fileName, err);
-								reject(err);
-								return;
-							}	
-
-							printToConsole("The file was saved: " + fileName);
-							resolve(fileName);
-						})
-					});
-				});
-			});
+				
+				printToConsole("The file was saved: " + fileName);
+				resolve(fileName);
+			}); 		
 		});
 	}
 	
