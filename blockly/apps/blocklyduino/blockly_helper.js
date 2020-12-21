@@ -61,36 +61,38 @@ function rebuild() {
 		});	
 }
 
-function compile() {
-	const topbar = require('topbar');
-	const vn32x = require('./vn32x');
-	const project = require('./project');
-	
-	topbar.show();
-	printToConsole('-----------------------');
-	printToConsole('Starting compilation...');
-	
-	return generateCode()
-		.then(copyImageFiles())
-		.then(convertImages())
-		.then(generateBuildScripts())
-		.then(function(){
-			printToConsole('Compilation done!');
-			topbar.hide();
-			return Promise.resolve();
-		})
-		.catch(err => {
-			console.error(err);
-			printToConsole('Compilation failed!');
-			topbar.hide();
-			return Promise.reject();
-		});
+async function compile() {
+	try {
+		const topbar = require('topbar');
+		const vn32x = require('./vn32x');
+		const project = require('./project');
+		
+		topbar.show();
+		printToConsole('-----------------------');
+		printToConsole('Starting compilation...');
+
+		await generateCode();
+		await delay(500);
+		await copyImageFiles();
+		await convertImages();
+		await generateBuildScripts();
+		
+		printToConsole('Compilation done!');
+		topbar.hide();
+		return Promise.resolve();
+	} catch (err) {
+		console.error(err);
+		printToConsole('Compilation failed!');
+		topbar.hide();
+		return Promise.reject();
+	};
 }
 
 function compileAndRun() {
 	const vn32x = require('./vn32x');
 
 	compile()
+		.then(async () => await delay(500))
 		.then(async () => {
 			printToConsole('-----------------------');
 			printToConsole('Building and starting emulator...');	
@@ -147,6 +149,8 @@ const unityPath = () =>  config.fileName('8bitUnity', '');
 
 const platformToRun = () => document.getElementById('platformToRun').value
 	.replace(/\s/g, '').toLowerCase();
+
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const createTargetDirectories = async () => {
 	const targetPath = config.fileName('8bitUnity', 'projects/' + project.current.name + '/');
@@ -267,17 +271,18 @@ const generateBuilderProject = () => {
 	  JSON.stringify(builderProject, null, 4);  
 }
 
-function generateCode() {
+async function generateCode() {
+	await createTargetDirectories(); 
+	await delay(500);
+	await copyStandardSourceFiles(); 
+
 	function writeGeneratedFile(fileName, content) {
 		return new Promise(async (resolve, reject) => {
 			const filePath = `${targetPath()}`;
 
-			await createTargetDirectories(); 
-			await copyStandardSourceFiles(); 
-			
 			fs.writeFile(filePath + fileName, content, function(err) {
-				if(err) {
-					console.log('Error writing ' + fileName, err);
+				if (err) {
+					console.warn('Error writing ' + fileName, err);
 					reject(err);
 					return;
 				}
@@ -302,7 +307,9 @@ function generateCode() {
 		});
 	}
 	
-	return Promise.all(generatedFiles.map(o => writeGeneratedFile(o.name, o.content)));
+	await Promise.all(generatedFiles.map(o => writeGeneratedFile(o.name, o.content)));
+
+	console.log('Generated files written.');
 }
 
 function newProject() {
