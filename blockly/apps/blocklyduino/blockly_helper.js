@@ -61,31 +61,31 @@ function rebuild() {
 		});	
 }
 
-function compile() {
-	const topbar = require('topbar');
-	const vn32x = require('./vn32x');
-	const project = require('./project');
-	
-	topbar.show();
-	printToConsole('-----------------------');
-	printToConsole('Starting compilation...');
-	
-	return generateCode()
-		.then(async () => await delay(500))
-		.then(copyImageFiles())
-		.then(convertImages())
-		.then(generateBuildScripts())
-		.then(function(){
-			printToConsole('Compilation done!');
-			topbar.hide();
-			return Promise.resolve();
-		})
-		.catch(err => {
-			console.error(err);
-			printToConsole('Compilation failed!');
-			topbar.hide();
-			return Promise.reject();
-		});
+async function compile() {
+	try {
+		const topbar = require('topbar');
+		const vn32x = require('./vn32x');
+		const project = require('./project');
+		
+		topbar.show();
+		printToConsole('-----------------------');
+		printToConsole('Starting compilation...');
+
+		await generateCode();
+		await delay(500);
+		await copyImageFiles();
+		await convertImages();
+		await generateBuildScripts();
+		
+		printToConsole('Compilation done!');
+		topbar.hide();
+		return Promise.resolve();
+	} catch (err) {
+		console.error(err);
+		printToConsole('Compilation failed!');
+		topbar.hide();
+		return Promise.reject();
+	};
 }
 
 function compileAndRun() {
@@ -271,7 +271,7 @@ const generateBuilderProject = () => {
 	  JSON.stringify(builderProject, null, 4);  
 }
 
-const generateCode = async () => {
+async function generateCode() {
 	await createTargetDirectories(); 
 	await delay(500);
 	await copyStandardSourceFiles(); 
@@ -333,7 +333,7 @@ const generateCode = async () => {
 	
 	await Promise.all(generatedFiles.map(o => writeGeneratedFile(o.name, o.content)));
 
-	console.log('Files written.');
+	console.log('Generated files written.');
 }
 
 function newProject() {
