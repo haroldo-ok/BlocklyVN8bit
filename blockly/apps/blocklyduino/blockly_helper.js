@@ -280,16 +280,40 @@ const generateCode = async () => {
 		return new Promise(async (resolve, reject) => {
 			const filePath = `${targetPath()}`;
 
-			fs.writeFile(filePath + fileName, content, function(err) {
-				if(err) {
-					console.log('Error writing ' + fileName, err);
+			fs.open(filePath + fileName, "w+",(err, fd) => {
+				if (err) {
+					console.log('Error opening ' + fileName, err);
 					reject(err);
 					return;
 				}
-				
-				printToConsole("The file was saved: " + fileName);
-				resolve(fileName);
-			}); 		
+
+				fs.writeFile(fd, content, (err) => {
+					if (err) {
+						console.log('Error writing ' + fileName, err);
+						reject(err);
+						return;
+					}
+
+					fs.fdatasync(fd, (err) => {
+						if (err) {
+							console.log('Error flushing ' + fileName, err);
+							reject(err);
+							return;
+						}
+
+						fs.close(fd, (err) => {
+							if (err) {
+								console.log('Error closing ' + fileName, err);
+								reject(err);
+								return;
+							}	
+
+							printToConsole("The file was saved: " + fileName);
+							resolve(fileName);
+						})
+					});
+				});
+			});
 		});
 	}
 	
@@ -308,7 +332,8 @@ const generateCode = async () => {
 	}
 	
 	await Promise.all(generatedFiles.map(o => writeGeneratedFile(o.name, o.content)));
-	await delay(3000);
+
+	console.log('Files written.');
 }
 
 function newProject() {
