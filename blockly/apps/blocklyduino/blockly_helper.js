@@ -75,6 +75,8 @@ async function compile() {
 		await delay(500);
 		await copyImageFiles();
 		await convertImages();
+		await copyPortraitFiles();
+		await convertPortraits();
 		await generateBuildScripts();
 		
 		printToConsole('Compilation done!');
@@ -226,14 +228,27 @@ const copyStandardSourceFiles = async () => {
 const listBackgroundImages = () => Object.values(Blockly.Arduino.images_)
 	.filter(o => o.imgType === 'background');
 
+const listPortraitImages = () => Object.values(Blockly.Arduino.images_)
+	.filter(o => o.imgType === 'portrait');
+
 const copyImageFiles = async () => {
 	return Promise.all(listBackgroundImages().map(({imgName, imgAbbrev}) => 
 		copyFile(`${project.bg.path}/${imgName}.png`, `${targetPath()}/bitmaps/${imgAbbrev}.png`)))		
 }
 
+const copyPortraitFiles = async () => {
+	return Promise.all(listPortraitImages().map(({imgName, imgAbbrev}) => 
+		copyFile(`${project.portrait.path}/${imgName}.png`, `${targetPath()}/chunks/${imgAbbrev}.png`)))		
+}
+
 const convertImages = async () => {
 	return Promise.all(listBackgroundImages().map(({imgAbbrev}) => 
 		execPython(`${path.resolve(scriptsPath())}/convert-images.py "${targetPath()}/bitmaps/${imgAbbrev}.png"`)))		
+}
+
+const convertPortraits = async () => {
+	return Promise.all(listPortraitImages().map(({imgAbbrev}) => 
+		execPython(`${path.resolve(scriptsPath())}/convert-images.py "${targetPath()}/chunks/${imgAbbrev}.png"`)))		
 }
 
 const generateBuildScripts = async () => {	
