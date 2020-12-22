@@ -241,7 +241,7 @@ const copyPortraitFiles = async () => {
 }
 
 const copyPortraitFile = async ({imgName, imgAbbrev}) => {
-	const sourceImage = await loadImage(`${project.portrait.path}/${imgName}.png`);
+	const img = await loadImage(`${project.portrait.path}/${imgName}.png`);
 
 	const canvas = document.createElement('canvas');
 	canvas.width = 320;
@@ -249,7 +249,19 @@ const copyPortraitFile = async ({imgName, imgAbbrev}) => {
 
 	const ctx = canvas.getContext('2d');
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	ctx.drawImage(sourceImage, 0, 0);
+	
+	// Calculate image size to fit
+	let imgWidth = img.width;
+	let imgHeight = img.height;			
+	if (imgHeight > canvas.height) {
+		imgWidth = Math.round(imgWidth * canvas.height / imgHeight);
+		imgHeight = canvas.height;
+	}
+	
+	// Center horizontally, allign to bottom
+	const x = Math.round((canvas.width - imgWidth) / 2);
+	const y = canvas.height - imgHeight;
+	ctx.drawImage(img, x, y, imgWidth, imgHeight);
 
 	await saveCanvasToImage(canvas, `${targetPath()}/chunks/${imgAbbrev}.png`);
 }
