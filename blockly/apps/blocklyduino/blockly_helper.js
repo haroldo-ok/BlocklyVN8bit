@@ -237,8 +237,48 @@ const copyImageFiles = async () => {
 }
 
 const copyPortraitFiles = async () => {
-	return Promise.all(listPortraitImages().map(({imgName, imgAbbrev}) => 
-		copyFile(`${project.portrait.path}/${imgName}.png`, `${targetPath()}/chunks/${imgAbbrev}.png`)))		
+	return Promise.all(listPortraitImages().map(copyPortraitFile))
+}
+
+const copyPortraitFile = async ({imgName, imgAbbrev}) => {
+	const sourceImage = await loadImage(`${project.portrait.path}/${imgName}.png`);
+
+	const canvas = document.createElement('canvas');
+	canvas.width = 320;
+	canvas.height = 240;
+
+	const ctx = canvas.getContext('2d');
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.drawImage(sourceImage, 0, 0);
+
+	await saveCanvasToImage(canvas, `${targetPath()}/chunks/${imgAbbrev}.png`);
+}
+
+const loadImage = async path => {
+	return await new Promise((resolve, reject) => {
+		const img = new Image();
+		img.src = 'file:/' + path.replace(/\\/g, '/');
+		img.onload = () => resolve(img);
+		img.onerror = reject;
+	});
+}
+
+const saveCanvasToImage = async (canvas, path) => {
+	return await new Promise((resolve, reject) => {
+		// Get the DataUrl from the Canvas
+		const url = canvas.toDataURL('image/png');
+
+		// remove Base64 stuff from the Image
+		const base64Data = url.replace(/^data:image\/png;base64,/, "");
+		fs.writeFile(path, base64Data, 'base64', err => {
+			if (err) {
+				reject(err);
+				return;
+			}
+
+			resolve();
+		});
+	});
 }
 
 const convertImages = async () => {
