@@ -248,7 +248,7 @@ const copyPortraitFile = async ({imgName, imgAbbrev}) => {
 
 	const canvas = document.createElement('canvas');
 	canvas.width = 320;
-	canvas.height = 240;
+	canvas.height = 200;
 
 	const ctx = canvas.getContext('2d');
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -343,7 +343,7 @@ const generateChunkDefinitions = async portraits => {
 			resolve(name);
 		}); 			
 	})));
-	
+
 }
 
 const convertImages = async () => {
