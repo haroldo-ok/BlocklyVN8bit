@@ -307,8 +307,8 @@ const generateChunkDefinitions = async portraits => {
 		{name: 'oric', w: 240, h: 200, mulX: 3, mulY: 2}
 	];
 
-	const definitions = _.flatten(portraits.map(portrait => {
-		return PLATFORMS.map(platform => {
+	const definitions = PLATFORMS.map(platform => {
+		const lines = portraits.map(portrait => {
 			const scaleX = platform.w / 320;
 			const scaleY = platform.h / 200;
 
@@ -323,13 +323,14 @@ const generateChunkDefinitions = async portraits => {
 			const w = x2 - x1;
 			const h = y2 - y1;
 
-			return {
-				name: `chunks-${portrait.imgName}-${platform.name}.txt`,
-				content: '# Chunks definition file\n' +
-					`'${portrait.imgAbbrev}.png', '${portrait.imgAbbrev}.cnk', [${x1}, ${y1}, ${w}, ${h}] # ${portrait.imgName}`
-			};
+			return `'${portrait.imgAbbrev}.png', '${portrait.imgAbbrev}.cnk', [${x1}, ${y1}, ${w}, ${h}]\t# ${portrait.imgName}`;
 		});
-	}));
+
+		return {
+			name: `chunks-${platform.name}.txt`,
+			content: `# Chunks definition file\n\n${lines.join('\n')}\n`
+		};
+	});
 
 	await Promise.all(definitions.map(({name, content}) => new Promise((resolve, reject) => {
 		fs.writeFile(`${targetPath()}/chunks/${name}`, content, function(err) {
