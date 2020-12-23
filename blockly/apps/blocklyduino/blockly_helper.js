@@ -75,8 +75,11 @@ async function compile() {
 		await delay(500);
 		await copyImageFiles();
 		await convertImages();
-		await copyPortraitFiles();
+
+		const portraits = await copyPortraitFiles();
+		await generateChunkDefinitions(portraits);
 		await convertPortraits();
+
 		await generateBuildScripts();
 		
 		printToConsole('Compilation done!');
@@ -264,6 +267,8 @@ const copyPortraitFile = async ({imgName, imgAbbrev}) => {
 	ctx.drawImage(img, x, y, imgWidth, imgHeight);
 
 	await saveCanvasToImage(canvas, `${targetPath()}/chunks/${imgAbbrev}.png`);
+
+	return {x, y, w: imgWidth, h: imgHeight, imgName, imgAbbrev};
 }
 
 const loadImage = async path => {
@@ -291,6 +296,54 @@ const saveCanvasToImage = async (canvas, path) => {
 			resolve();
 		});
 	});
+}
+
+const generateChunkDefinitions = async portraits => {
+	PLATFORMS = [
+		{name: 'apple', w: 140, h: 192, mulX: 7, mulY: 1},
+		{name: 'atari', w: 160, h: 200, mulX: 4, mulY: 1},
+		{name: 'c64', w: 160, h: 200, mulX: 4, mulY: 8},
+		{name: 'lynx', w: 160, h: 102, mulX: 2, mulY: 1},
+		{name: 'oric', w: 240, h: 200, mulX: 3, mulY: 2}
+	];
+
+	const definitions = _.flatten(portraits.map(portrait => {
+		return PLATFORMS.map(platform => {
+			const scaleX = platform.w / 320;
+			const scaleY = platform.h / 200;
+
+			const x1 = Math.floor(portrait.x * scaleX / platform.mulX) * platform.mulX;
+			const y1 = Math.floor(portrait.y * scaleY / platform.mulY) * platform.mulY;
+
+			let x2 = Math.ceil((portrait.x + portrait.w) * scaleX / platform.mulX) * platform.mulX;
+			x2 = Math.min(platform.w, x2);
+			let y2 = Math.ceil((portrait.y + portrait.h) * scaleY / platform.mulY) * platform.mulY;
+			y2 = Math.min(platform.h, y2);
+
+			const w = x2 - x1;
+			const h = y2 - y1;
+
+			return {
+				name: `chunks-${portrait.imgName}-${platform.name}.txt`,
+				content: '# Chunks definition file\n' +
+					`'${portrait.imgAbbrev}.png', '${portrait.imgAbbrev}.cnk', [${x1}, ${y1}, ${w}, ${h}] # ${portrait.imgName}`
+			};
+		});
+	}));
+
+	await Promise.all(definitions.map(({name, content}) => new Promise((resolve, reject) => {
+		fs.writeFile(`${targetPath()}/chunks/${name}`, content, function(err) {
+			if (err) {
+				console.warn('Error writing ' + name, err);
+				reject(err);
+				return;
+			}
+			
+			printToConsole("The chunk file was saved: " + name);
+			resolve(name);
+		}); 			
+	})));
+	
 }
 
 const convertImages = async () => {
