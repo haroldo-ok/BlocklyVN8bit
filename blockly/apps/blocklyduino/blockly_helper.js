@@ -370,7 +370,8 @@ const generateBuilderProject = () => {
 		.map(platformName => {
 			return [platformName, {
 				bitmap: listBackgroundImages().map(({imgName, imgAbbrev}) => 
-					`${projDir}bitmaps/${imgAbbrev}-${platformName.toLowerCase()}.png`)
+					`${projDir}bitmaps/${imgAbbrev}-${platformName.toLowerCase()}.png`),
+				chunks: [ `${projDir}chunks/chunks-${platformName.toLowerCase()}.txt` ]
 			}];
 		});
 

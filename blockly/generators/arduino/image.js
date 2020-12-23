@@ -35,7 +35,7 @@ function getImage(component, imgType) {
 	
 	let imgName = source.getText();
 	let imgAbbrev = getImageAbbreviation(imgName);
-	let imgExt = imgType == 'portrait' ? 'chk' : 'img';
+	let imgExt = imgType == 'portrait' ? 'cnk' : 'img';
 
 	Blockly.Arduino.images_[imgName] = {
 		imgType, imgName, imgAbbrev,
