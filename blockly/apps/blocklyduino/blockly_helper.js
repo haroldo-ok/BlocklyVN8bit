@@ -323,7 +323,7 @@ const generateChunkDefinitions = async portraits => {
 			const w = x2 - x1;
 			const h = y2 - y1;
 
-			return `'${portrait.imgAbbrev}.png', '${portrait.imgAbbrev}.cnk', [${x1}, ${y1}, ${w}, ${h}]\t# ${portrait.imgName}`;
+			return `'${portrait.imgAbbrev}-${platform.name}.png', '${portrait.imgAbbrev}.cnk', [${x1}, ${y1}, ${w}, ${h}]\t# ${portrait.imgName}`;
 		});
 
 		return {
