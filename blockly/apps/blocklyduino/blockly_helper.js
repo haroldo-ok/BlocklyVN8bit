@@ -254,11 +254,12 @@ const copyPortraitFile = async ({imgName, imgAbbrev}) => {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	
 	// Calculate image size to fit
+	const maxHeight = 120;
 	let imgWidth = img.width;
 	let imgHeight = img.height;			
-	if (imgHeight > canvas.height) {
-		imgWidth = Math.round(imgWidth * canvas.height / imgHeight);
-		imgHeight = canvas.height;
+	if (imgHeight > maxHeight) {
+		imgWidth = Math.round(imgWidth * maxHeight / imgHeight);
+		imgHeight = maxHeight;
 	}
 	
 	// Center horizontally, allign to bottom

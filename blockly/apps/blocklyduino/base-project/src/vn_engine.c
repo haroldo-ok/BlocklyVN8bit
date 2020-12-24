@@ -172,7 +172,7 @@ void drawScene() {
 	
 	LoadChunk(&chunk, actorImage);
 	if (chunk) {
-		SetChunk(chunk, 0, 0);
+		SetChunk(chunk, 12, 8);
 		free(chunk);
 	}
 }
