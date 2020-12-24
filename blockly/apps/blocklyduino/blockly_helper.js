@@ -75,6 +75,11 @@ async function compile() {
 		await delay(500);
 		await copyImageFiles();
 		await convertImages();
+
+		const portraits = await copyPortraitFiles();
+		await generateChunkDefinitions(portraits);
+		await convertPortraits();
+
 		await generateBuildScripts();
 		
 		printToConsole('Compilation done!');
@@ -226,14 +231,131 @@ const copyStandardSourceFiles = async () => {
 const listBackgroundImages = () => Object.values(Blockly.Arduino.images_)
 	.filter(o => o.imgType === 'background');
 
+const listPortraitImages = () => Object.values(Blockly.Arduino.images_)
+	.filter(o => o.imgType === 'portrait');
+
 const copyImageFiles = async () => {
 	return Promise.all(listBackgroundImages().map(({imgName, imgAbbrev}) => 
 		copyFile(`${project.bg.path}/${imgName}.png`, `${targetPath()}/bitmaps/${imgAbbrev}.png`)))		
 }
 
+const copyPortraitFiles = async () => {
+	return Promise.all(listPortraitImages().map(copyPortraitFile))
+}
+
+const copyPortraitFile = async ({imgName, imgAbbrev}) => {
+	const img = await loadImage(`${project.portrait.path}/${imgName}.png`);
+
+	const canvas = document.createElement('canvas');
+	canvas.width = 320;
+	canvas.height = 200;
+
+	const ctx = canvas.getContext('2d');
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	
+	// Calculate image size to fit
+	const maxHeight = 120;
+	let imgWidth = img.width;
+	let imgHeight = img.height;			
+	if (imgHeight > maxHeight) {
+		imgWidth = Math.round(imgWidth * maxHeight / imgHeight);
+		imgHeight = maxHeight;
+	}
+	
+	// Center horizontally, allign to bottom
+	const x = Math.round((canvas.width - imgWidth) / 2);
+	const y = canvas.height - imgHeight;
+	ctx.drawImage(img, x, y, imgWidth, imgHeight);
+
+	await saveCanvasToImage(canvas, `${targetPath()}/chunks/${imgAbbrev}.png`);
+
+	return {x, y, w: imgWidth, h: imgHeight, imgName, imgAbbrev};
+}
+
+const loadImage = async path => {
+	return await new Promise((resolve, reject) => {
+		const img = new Image();
+		img.src = 'file:/' + path.replace(/\\/g, '/');
+		img.onload = () => resolve(img);
+		img.onerror = reject;
+	});
+}
+
+const saveCanvasToImage = async (canvas, path) => {
+	return await new Promise((resolve, reject) => {
+		// Get the DataUrl from the Canvas
+		const url = canvas.toDataURL('image/png');
+
+		// remove Base64 stuff from the Image
+		const base64Data = url.replace(/^data:image\/png;base64,/, "");
+		fs.writeFile(path, base64Data, 'base64', err => {
+			if (err) {
+				reject(err);
+				return;
+			}
+
+			resolve();
+		});
+	});
+}
+
+const generateChunkDefinitions = async portraits => {
+	PLATFORMS = [
+		{name: 'apple', w: 140, h: 192, mulX: 7, mulY: 1},
+		{name: 'atari', w: 160, h: 200, mulX: 4, mulY: 1},
+		{name: 'c64', w: 160, h: 200, mulX: 4, mulY: 8},
+		{name: 'lynx', w: 160, h: 102, mulX: 2, mulY: 1},
+		{name: 'oric', w: 240, h: 200, mulX: 3, mulY: 2}
+	];
+
+	const definitions = PLATFORMS.map(platform => {
+		const lines = portraits.map(portrait => {
+			const scaleX = platform.w / 320;
+			const scaleY = platform.h / 200;
+
+			const x1 = Math.floor(portrait.x * scaleX / platform.mulX) * platform.mulX;
+			const y1 = Math.floor(portrait.y * scaleY / platform.mulY) * platform.mulY;
+
+			let x2 = Math.ceil((portrait.x + portrait.w) * scaleX / platform.mulX) * platform.mulX;
+			x2 = Math.min(platform.w, x2);
+			let y2 = Math.ceil((portrait.y + portrait.h) * scaleY / platform.mulY) * platform.mulY;
+			y2 = Math.min(platform.h, y2);
+
+			const w = x2 - x1;
+			const h = y2 - y1;
+
+			return `'${portrait.imgAbbrev}-${platform.name}.png', '${portrait.imgAbbrev}.cnk', [${x1}, ${y1}, ${w}, ${h}]\t# ${portrait.imgName}`;
+		});
+
+		return {
+			name: `chunks-${platform.name}.txt`,
+			content: `# Chunks definition file\n\n${lines.join('\n')}\n`
+		};
+	});
+
+	await Promise.all(definitions.map(({name, content}) => new Promise((resolve, reject) => {
+		fs.writeFile(`${targetPath()}/chunks/${name}`, content, function(err) {
+			if (err) {
+				console.warn('Error writing ' + name, err);
+				reject(err);
+				return;
+			}
+			
+			printToConsole("The chunk file was saved: " + name);
+			resolve(name);
+		}); 			
+	})));
+
+}
+
 const convertImages = async () => {
 	return Promise.all(listBackgroundImages().map(({imgAbbrev}) => 
 		execPython(`${path.resolve(scriptsPath())}/convert-images.py "${targetPath()}/bitmaps/${imgAbbrev}.png"`)))		
+}
+
+const convertPortraits = async () => {
+	return Promise.all(listPortraitImages().map(({imgAbbrev}) => 
+		execPython(`${path.resolve(scriptsPath())}/convert-images.py "${targetPath()}/chunks/${imgAbbrev}.png"`)))		
 }
 
 const generateBuildScripts = async () => {	
@@ -249,7 +371,8 @@ const generateBuilderProject = () => {
 		.map(platformName => {
 			return [platformName, {
 				bitmap: listBackgroundImages().map(({imgName, imgAbbrev}) => 
-					`${projDir}bitmaps/${imgAbbrev}-${platformName.toLowerCase()}.png`)
+					`${projDir}bitmaps/${imgAbbrev}-${platformName.toLowerCase()}.png`),
+				chunks: [ `${projDir}chunks/chunks-${platformName.toLowerCase()}.txt` ]
 			}];
 		});
 

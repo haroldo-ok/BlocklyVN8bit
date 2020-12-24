@@ -166,7 +166,15 @@ void waitJoyButtonRelease() {
 }
 
 void drawScene() {
+	unsigned char* chunk = 0;
+	
     LoadBitmap(backgroundImage);
+	
+	LoadChunk(&chunk, actorImage);
+	if (chunk) {
+		SetChunk(chunk, 12, 8);
+		free(chunk);
+	}
 }
 
 void initGfx() {
@@ -206,6 +214,7 @@ void vnScene(char *scene) {
 
 void vnShow(char *actor) {
 	actorImage = actor;
+    drawScene();
 }
 
 void vnChar(char *charName) {

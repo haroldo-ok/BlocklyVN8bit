@@ -3,7 +3,7 @@
 (function(){
 
 // Convert the filename into something that can be used by 8bit-Unity
-const prepareFileName = name => name.toLowerCase().replace(/[^a-z0-9_]+/g, '').substring(0, 8);
+const prepareFileName = name => name.toLowerCase().replace(/[^a-z0-9]+/g, '').substring(0, 8);
 
 const getImageAbbreviation = imgName => {
 	let imgAbbrev = Blockly.Arduino.imageAbbrevs_.fullToAbbrev[imgName];
@@ -35,7 +35,7 @@ function getImage(component, imgType) {
 	
 	let imgName = source.getText();
 	let imgAbbrev = getImageAbbreviation(imgName);
-	let imgExt = imgType == 'portrait' ? 'chk' : 'img';
+	let imgExt = imgType == 'portrait' ? 'cnk' : 'img';
 
 	Blockly.Arduino.images_[imgName] = {
 		imgType, imgName, imgAbbrev,
