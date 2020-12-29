@@ -254,7 +254,7 @@ const copyPortraitFile = async ({imgName, imgAbbrev}) => {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	
 	// Calculate image size to fit
-	const maxHeight = 120;
+	const maxHeight = 100;
 	let imgWidth = img.width;
 	let imgHeight = img.height;			
 	if (imgHeight > maxHeight) {
