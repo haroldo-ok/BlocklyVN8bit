@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/haroldo-ok/BlocklyVN8bit",
   "devDependencies": {
-    "electron": "1.7.5"
+    "electron": "11.5.0"
   },
   "dependencies": {
     "alertifyjs": "^1.11.0",
