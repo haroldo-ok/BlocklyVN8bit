@@ -359,7 +359,7 @@ const convertPortraits = async () => {
 }
 
 const generateBuildScripts = async () => {	
-	return execBuilder(` -projectFile projects/${project.current.name}/test.builder ` +
+	return execBuilder(` -projectFile projects/${project.current.name}/${project.current.name}.builder ` +
 		'-useGUI False -callEmu True');
 }
 
