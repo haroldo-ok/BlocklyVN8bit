@@ -32,7 +32,7 @@
     "electron-canvas-to-buffer": "^2.0.0",
     "fuse.js": "^3.1.0",
     "jquery": "^3.2.1",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.21",
     "node-cmd": "^3.0.0",
     "rxjs": "^5.4.3",
     "sanitize-filename": "^1.6.1",
