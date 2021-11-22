@@ -101,7 +101,7 @@ function compileAndRun() {
 		.then(async () => {
 			printToConsole('-----------------------');
 			printToConsole('Building and starting emulator...');	
-			await vn32x.execConsole(`cd "${path.resolve(buildScriptPath())}" && echo aaa | test-${platformToRun()}.bat`);
+			await vn32x.execConsole(`cd "${path.resolve(buildScriptPath())}" && echo aaa | ${project.current.name}-${platformToRun()}.bat`);
 		})
 		.catch(err => {
 			console.error(err);
@@ -359,7 +359,7 @@ const convertPortraits = async () => {
 }
 
 const generateBuildScripts = async () => {	
-	return execBuilder(` -projectFile projects/${project.current.name}/test.builder ` +
+	return execBuilder(` -projectFile projects/${project.current.name}/${project.current.name}.builder ` +
 		'-useGUI False -callEmu True');
 }
 

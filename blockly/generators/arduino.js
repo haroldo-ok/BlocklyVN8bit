@@ -268,7 +268,7 @@ Blockly.Arduino.scrub_ = function(block, code) {
 Blockly.Arduino.scrubLocalVars_ = function(code, indent) {  
   indent = indent || '';
   const varDeclarationRegex = /\n\s*int\s*(\w+\s*,\s*)*\s*\w+\s*;/g;
-  const vars = code.match(varDeclarationRegex).map(s => indent + (s || '').trim());  
+  const vars = (code.match(varDeclarationRegex) || []).map(s => indent + (s || '').trim());  
   const codeWithNoVars = code.replace(varDeclarationRegex, '');
   return vars.join('\n') + '\n\n' + codeWithNoVars;
 }
