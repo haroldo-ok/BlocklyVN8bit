@@ -172,9 +172,14 @@ Blockly.FieldDropdown.prototype.showEditor_ = function() {
   menu.render(div);
   var menuDom = menu.getElement();
   Blockly.addClass_(menuDom, 'blocklyDropdownMenu');
+  
+  // Limit height (TODO: Update Blockly to newer version in order to avoid this workaround)
+  menuDom.style.maxHeight = '65vh';
+  menuDom.style.overflowY = 'auto';
+  
   // Record menuSize after adding menu.
   var menuSize = goog.style.getSize(menuDom);
-
+  
   // Position the menu.
   // Flip menu vertically if off the bottom.
   if (xy.y + menuSize.height + borderBBox.height >=
