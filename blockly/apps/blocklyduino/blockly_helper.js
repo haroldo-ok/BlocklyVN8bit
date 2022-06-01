@@ -88,6 +88,7 @@ async function compile() {
 	} catch (err) {
 		console.error(err);
 		printToConsole('Compilation failed!');
+		printToConsole(err);
 		topbar.hide();
 		return Promise.reject();
 	};
@@ -131,6 +132,12 @@ function saveCode() {
 
 }
 
+const isExistingFile = async filePath => {
+	return new Promise((resolve, reject) => {
+		fs.access(filePath, err => resolve(!err));
+	});
+}
+
 const makeDirIfNotExists = async filePath => {
 	return new Promise((resolve, reject) => {
 		fs.mkdir(filePath, err => {
@@ -158,6 +165,11 @@ const platformToRun = () => document.getElementById('platformToRun').value
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const createTargetDirectories = async () => {
+	const frameworkPath = config.fileName('8bitUnity', '');
+	if (!await isExistingFile(frameworkPath)) {
+		throw new Error(`Couldn't find 8bit-Unity at '${frameworkPath}'; please check if the installation is correct.`);
+	}
+
 	const targetPath = config.fileName('8bitUnity', 'projects/' + project.current.name + '/');
 	const subDirs = ['bitmaps', 'chunks', 'music', 'sprites', 'src']
 		.map(name => `${targetPath}${name}/`);
