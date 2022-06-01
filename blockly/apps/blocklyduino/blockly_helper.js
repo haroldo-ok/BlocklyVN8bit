@@ -88,6 +88,7 @@ async function compile() {
 	} catch (err) {
 		console.error(err);
 		printToConsole('Compilation failed!');
+		printToConsole(err);
 		topbar.hide();
 		return Promise.reject();
 	};
