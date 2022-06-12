@@ -228,7 +228,7 @@ void vnText(char *text) {
 		bufferClear();
 		textToDisplay = bufferWrappedText(textToDisplay, 0, 0, MSG_COL_COUNT, MSG_LINE_COUNT);			
 		
-		ListBox(1, CHR_ROWS - MSG_LINE_COUNT - 4, MSG_COL_COUNT, MSG_LINE_COUNT + 2, "Character name", msgLines, MSG_LINE_COUNT);	
+		ListBox(1, CHR_ROWS - MSG_LINE_COUNT - 4, MSG_COL_COUNT, MSG_LINE_COUNT + 2, characterName, msgLines, MSG_LINE_COUNT);	
 
 		#ifdef __LYNX__
 			// Wait until the joystick button is pressed
