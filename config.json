@@ -5,6 +5,6 @@
 		"projects": "./projects"
 	},
 	"project": {
-		"name": "keyboard-buffer-test"
+		"name": "test"
 	}
 }

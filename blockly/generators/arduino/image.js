@@ -39,10 +39,10 @@ function getImage(component, imgType) {
 
 	Blockly.Arduino.images_[imgName] = {
 		imgType, imgName, imgAbbrev,
-		viDecl: `const char *vi_${imgName} = "${imgAbbrev}.${imgExt}";`
+		viDecl: `const char *vi_${imgAbbrev} = "${imgAbbrev}.${imgExt}";`
 	}
 
-	return 'vi_' + imgName;
+	return 'vi_' + imgAbbrev;
 }
 	
 Blockly.Arduino.background_image = function() {
