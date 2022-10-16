@@ -166,11 +166,11 @@ void waitJoyButtonRelease() {
 }
 
 void waitNextButtonRelease() {
-		#ifdef __LYNX__
-			waitJoyButtonRelease();
-		#else
-			while (kbhit()) cgetc();
-		#endif
+	#ifdef __LYNX__
+		waitJoyButtonRelease();
+	#else
+		while (kbhit()) cgetc();
+	#endif
 }
 
 void drawScene() {
@@ -246,6 +246,7 @@ void vnText(char *text) {
 			waitJoyButtonRelease();
 		#else
 			cgetc();
+			waitNextButtonRelease();
 		#endif
 	}
 }
