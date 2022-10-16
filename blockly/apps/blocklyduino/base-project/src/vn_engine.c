@@ -165,6 +165,14 @@ void waitJoyButtonRelease() {
 	while (!(GetJoy(0) & JOY_BTN1));
 }
 
+void waitNextButtonRelease() {
+	#ifdef __LYNX__
+		waitJoyButtonRelease();
+	#else
+		while (kbhit()) cgetc();
+	#endif
+}
+
 void drawScene() {
 	unsigned char* chunk = 0;
 	
@@ -225,6 +233,8 @@ void vnText(char *text) {
 	char *textToDisplay;
 	
 	for (textToDisplay = text; textToDisplay;) {
+		waitNextButtonRelease();
+		
 		bufferClear();
 		textToDisplay = bufferWrappedText(textToDisplay, 0, 0, MSG_COL_COUNT, MSG_LINE_COUNT);			
 		
@@ -236,6 +246,7 @@ void vnText(char *text) {
 			waitJoyButtonRelease();
 		#else
 			cgetc();
+			waitNextButtonRelease();
 		#endif
 	}
 }
