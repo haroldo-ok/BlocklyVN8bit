@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const MAX_WIDTH = 320;
-const MAX_HEIGHT = 202;
+const MAX_HEIGHT = 200;
 
 rivets.formatters.imageName = {
 	
