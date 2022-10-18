@@ -5,6 +5,6 @@
 		"projects": "./projects"
 	},
 	"project": {
-		"name": "test"
+		"name": "image-load"
 	}
 }

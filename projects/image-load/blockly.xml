@@ -1,0 +1,36 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <block type="controls_for" id="79" x="237" y="13">
+    <field name="VAR">i</field>
+    <value name="FROM">
+      <block type="math_number" id="80">
+        <field name="NUM">1</field>
+      </block>
+    </value>
+    <value name="TO">
+      <block type="math_number" id="81">
+        <field name="NUM">30</field>
+      </block>
+    </value>
+    <statement name="DO">
+      <block type="background_image" id="57">
+        <field name="SOURCE">club</field>
+        <field name="IMAGE">D:\Pessoal\Projetos\BlocklyVN8bit\projects\image-load\bg\club.png</field>
+        <next>
+          <block type="background_image" id="58">
+            <field name="SOURCE">lecturehall</field>
+            <field name="IMAGE">D:\Pessoal\Projetos\BlocklyVN8bit\projects\image-load\bg\lecturehall.png</field>
+          </block>
+        </next>
+      </block>
+    </statement>
+    <next>
+      <block type="vn_say" id="89">
+        <value name="CONTENT">
+          <block type="text" id="90">
+            <field name="TEXT">OK</field>
+          </block>
+        </value>
+      </block>
+    </next>
+  </block>
+</xml>
