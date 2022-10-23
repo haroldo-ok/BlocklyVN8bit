@@ -3,8 +3,6 @@
 #include "unity.h"
 #include "vn_engine.h"
 
-#define MSG_COL_COUNT (CHR_COLS - 2)
-#define MSG_LINE_COUNT 4
 #define MENU_ENTRY_COUNT 8
 
 typedef struct _menuEntry {
@@ -156,22 +154,23 @@ char *bufferWrappedText(char *s, char x, char y, char w, char h) {
 	return o;
 }
 
-void bufferResize() {
+void bufferResize(char width, char height) {
 	unsigned char i;
 
-	msgLines.width = MSG_COL_COUNT;
-	msgLines.height = MSG_LINE_COUNT;
+	msgLines.width = width;
+	msgLines.height = height;
 	msgLines.lines = calloc(msgLines.height, sizeof(char *));
 	
 	for (i = 0; i != msgLines.height; i++) {
 		msgLines.lines[i] = malloc(msgLines.width + 1);
+		msgLines.lines[i][0] = 0;
 	}	
 }
 
 void bufferClear() {
 	unsigned char i;
 	
-	for (i = 0; i != MSG_LINE_COUNT; i++) {
+	for (i = 0; i != msgLines.height; i++) {
 		msgLines.lines[i][0] = 0;
 	}
 }
@@ -215,7 +214,7 @@ void initGfx() {
 	
 	EnterBitmapMode();
 	
-	bufferResize();
+	bufferResize(CHR_COLS - 2, 4);
 	bufferClear();	
 }
 
@@ -250,9 +249,9 @@ void vnText(char *text) {
 		waitNextButtonRelease();
 		
 		bufferClear();
-		textToDisplay = bufferWrappedText(textToDisplay, 0, 0, MSG_COL_COUNT, MSG_LINE_COUNT);			
+		textToDisplay = bufferWrappedText(textToDisplay, 0, 0, msgLines.width, msgLines.height);			
 		
-		ListBox(1, CHR_ROWS - MSG_LINE_COUNT - 4, MSG_COL_COUNT, MSG_LINE_COUNT + 2, characterName, msgLines.lines, MSG_LINE_COUNT);	
+		ListBox(1, CHR_ROWS - msgLines.height - 4, msgLines.width, msgLines.height + 2, characterName, msgLines.lines, msgLines.height);	
 
 		#ifdef __LYNX__
 			// Wait until the joystick button is pressed
