@@ -160,7 +160,18 @@ char *bufferWrappedText(char *s, char x, char y, char w, char h) {
 
 void bufferResize(char width, char height) {
 	unsigned char i;
+	
+	// Deallocate existing buffers
+	if (msgLines.lines) {
+		for (i = 0; i != msgLines.height; i++) {
+			free(msgLines.lines[i]);
+		}
+		free(msgLines.lines);
+		msgLines.lines = 0;
+	}
 
+	// Reallocate according to the new size
+	
 	msgLines.width = width;
 	msgLines.height = height;
 	msgLines.lines = calloc(msgLines.height, sizeof(char *));
