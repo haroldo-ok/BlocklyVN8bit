@@ -11,6 +11,7 @@ typedef struct _menuEntry {
 } menuEntry;
 
 typedef struct _lineConfig {
+	unsigned char x, y;
 	unsigned char width, height;
 	unsigned char** lines;
 } lineConfig;
@@ -18,6 +19,10 @@ typedef struct _lineConfig {
 menuEntry menuEntries[MENU_ENTRY_COUNT];
 unsigned char usedMenuEntries;
 unsigned char menuCursor;
+struct {
+	unsigned char x, y;
+	unsigned char width, height;
+} menuConfig;
 
 lineConfig msgLines;
 char characterName[32];
@@ -218,6 +223,16 @@ void initGfx() {
 	bufferClear();	
 }
 
+int convertCoordinate(int coord, int max, char unit) {
+	// Percent to chars
+	if (unit == WND_UNIT_PERCENT) coord = coord * max / 100;
+	
+	// Negative coordinates
+	if (coord < 0) coord = max - coord;
+	
+	return coord;
+}
+
 void initVN() {
 	initGfx();
 	InitJoy();
@@ -240,6 +255,19 @@ void vnShow(char *actor) {
 
 void vnChar(char *charName) {
 	strcpy(characterName, charName);
+}
+
+void vnWindowFrom(char target, int x, int y, char unit) {
+	x = convertCoordinate(x, CHR_COLS, unit);
+	y = convertCoordinate(x, CHR_ROWS, unit);
+	
+	if (unit == WND_TARGET_MENU) {
+		menuConfig.x = x;
+		menuConfig.y = y;
+	} else {
+		msgLines.x = x;
+		msgLines.y = y;
+	}
 }
 
 void vnText(char *text) {
