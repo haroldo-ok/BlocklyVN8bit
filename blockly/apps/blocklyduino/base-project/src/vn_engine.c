@@ -237,14 +237,8 @@ void initVN() {
 	backgroundImage = 0;
 	actorImage = 0;
 	
-	// Text window
 	msgLines.lines = 0;
-	vnWindowFrom(WND_TARGET_TEXT, 1, -8, WND_UNIT_CHARS);
-	vnWindowSize(WND_TARGET_TEXT, CHR_COLS - 2, 4, WND_UNIT_CHARS);
-	
-	// Menu window
-	vnWindowFrom(WND_TARGET_MENU, 1, (CHR_ROWS - 2) >> 1, WND_UNIT_CHARS);
-	vnWindowSize(WND_TARGET_MENU, CHR_COLS - 2, MENU_ENTRY_COUNT, WND_UNIT_CHARS);
+	vnWindowReset();
 	
 	strcpy(characterName, "");
 }
@@ -304,6 +298,16 @@ void vnWindowSize(char target, int width, int height, char unit) {
 	} else {
 		bufferResize(width, height);
 	}
+}
+
+void vnWindowReset() {
+	// Text window
+	vnWindowFrom(WND_TARGET_TEXT, 1, -8, WND_UNIT_CHARS);
+	vnWindowSize(WND_TARGET_TEXT, CHR_COLS - 2, 4, WND_UNIT_CHARS);
+	
+	// Menu window
+	vnWindowFrom(WND_TARGET_MENU, 1, (CHR_ROWS - 2) >> 1, WND_UNIT_CHARS);
+	vnWindowSize(WND_TARGET_MENU, CHR_COLS - 2, MENU_ENTRY_COUNT, WND_UNIT_CHARS);
 }
 
 void vnText(char *text) {
