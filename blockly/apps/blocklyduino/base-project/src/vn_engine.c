@@ -228,7 +228,22 @@ int convertCoordinate(int coord, int max, char unit) {
 	if (unit == WND_UNIT_PERCENT) coord = coord * max / 100;
 	
 	// Negative coordinates
-	if (coord < 0) coord = max - coord;
+	if (coord < 0) coord = max + coord;
+	
+	return coord;
+}
+
+int convertCoordinate2(int coord, int max, char unit) {
+	PrintNum(0, 12, -coord);
+
+	// Percent to chars
+	if (unit == WND_UNIT_PERCENT) coord = coord * max / 100;
+	PrintNum(0, 13, -coord);
+	
+	// Negative coordinates
+	if (coord < 0) coord = max + coord;
+	PrintNum(0, 14, coord);
+	PrintNum(5, 14, max);
 	
 	return coord;
 }
@@ -240,6 +255,8 @@ void initVN() {
 	
 	backgroundImage = 0;
 	actorImage = 0;
+	
+	vnWindowFrom(WND_TARGET_TEXT, 1, -8, WND_UNIT_CHARS);
 	strcpy(characterName, "");
 }
 
@@ -259,8 +276,8 @@ void vnChar(char *charName) {
 
 void vnWindowFrom(char target, int x, int y, char unit) {
 	x = convertCoordinate(x, CHR_COLS, unit);
-	y = convertCoordinate(x, CHR_ROWS, unit);
-	
+	y = convertCoordinate(y, CHR_ROWS, unit);
+		
 	if (unit == WND_TARGET_MENU) {
 		menuConfig.x = x;
 		menuConfig.y = y;
@@ -279,7 +296,14 @@ void vnText(char *text) {
 		bufferClear();
 		textToDisplay = bufferWrappedText(textToDisplay, 0, 0, msgLines.width, msgLines.height);			
 		
-		ListBox(1, CHR_ROWS - msgLines.height - 4, msgLines.width, msgLines.height + 2, characterName, msgLines.lines, msgLines.height);	
+		ListBox(msgLines.x, msgLines.y, msgLines.width, msgLines.height + 2, characterName, msgLines.lines, msgLines.height);	
+
+		/*
+		PrintNum(0, 12, msgLines.y);
+		PrintNum(0, 13, convertCoordinate(-8, CHR_ROWS, WND_UNIT_CHARS));
+		PrintNum(0, 14, CHR_ROWS - 8);
+		*/
+		convertCoordinate2(-8, CHR_ROWS, WND_UNIT_CHARS);
 
 		#ifdef __LYNX__
 			// Wait until the joystick button is pressed
