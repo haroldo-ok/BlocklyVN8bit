@@ -217,9 +217,6 @@ void initGfx() {
 	InitBitmap();
 	
 	EnterBitmapMode();
-	
-	bufferResize(CHR_COLS - 2, 4);
-	bufferClear();	
 }
 
 int convertCoordinate(int coord, int max, char unit) {
@@ -240,8 +237,15 @@ void initVN() {
 	backgroundImage = 0;
 	actorImage = 0;
 	
+	// Text window
+	msgLines.lines = 0;
 	vnWindowFrom(WND_TARGET_TEXT, 1, -8, WND_UNIT_CHARS);
+	vnWindowSize(WND_TARGET_TEXT, CHR_COLS - 2, 4, WND_UNIT_CHARS);
+	
+	// Menu window
 	vnWindowFrom(WND_TARGET_MENU, 1, (CHR_ROWS - 2) >> 1, WND_UNIT_CHARS);
+	vnWindowSize(WND_TARGET_MENU, CHR_COLS - 2, MENU_ENTRY_COUNT, WND_UNIT_CHARS);
+	
 	strcpy(characterName, "");
 }
 
@@ -269,6 +273,18 @@ void vnWindowFrom(char target, int x, int y, char unit) {
 	} else {
 		msgLines.x = x;
 		msgLines.y = y;
+	}
+}
+
+void vnWindowSize(char target, int width, int height, char unit) {
+	width = convertCoordinate(width, CHR_COLS, unit);
+	height = convertCoordinate(height, CHR_ROWS, unit);
+		
+	if (target == WND_TARGET_MENU) {
+		menuConfig.width = width;
+		menuConfig.height = height;
+	} else {
+		bufferResize(width, height);
 	}
 }
 
