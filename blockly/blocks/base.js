@@ -358,6 +358,17 @@ Blockly.Blocks['vn_window'] = {
 		.appendField(new Blockly.FieldDropdown(UNITS), 'UNIT');
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
-    this.setTooltip('Says something.');
+    this.setTooltip('Configures window coordinates.');
+  }
+};
+
+Blockly.Blocks['vn_window_reset'] = {
+  init: function() {
+    this.setColour(230);
+	this.appendDummyInput()
+		.appendField('Window reset');
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setTooltip('Resets window coordinates.');
   }
 };
