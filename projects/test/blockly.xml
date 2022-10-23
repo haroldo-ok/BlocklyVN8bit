@@ -92,12 +92,12 @@
                                               </block>
                                             </statement>
                                             <next>
-                                              <block type="menu_option" id="67">
+                                              <block type="menu_option" id="25">
                                                 <field name="TEXT">Test resizing</field>
                                                 <statement name="DO">
-                                                  <block type="vn_jump" id="77">
+                                                  <block type="vn_jump" id="26">
                                                     <value name="TARGET">
-                                                      <block type="procedures_callreturn" id="129">
+                                                      <block type="procedures_callreturn" id="27">
                                                         <mutation name="test resize"></mutation>
                                                       </block>
                                                     </value>
@@ -110,9 +110,9 @@
                                       </block>
                                     </statement>
                                     <next>
-                                      <block type="vn_jump" id="25">
+                                      <block type="vn_jump" id="28">
                                         <value name="TARGET">
-                                          <block type="procedures_callreturn" id="26">
+                                          <block type="procedures_callreturn" id="29">
                                             <mutation name="another scene"></mutation>
                                           </block>
                                         </value>
@@ -135,39 +135,93 @@
       </block>
     </next>
   </block>
-  <block type="vn_label" id="59" x="1312" y="-87">
+  <block type="vn_label" id="30" x="1312" y="-87">
     <mutation></mutation>
     <field name="NAME">test resize</field>
     <statement name="STACK">
-      <block type="vn_window" id="142">
+      <block type="vn_window" id="31">
         <field name="TARGET">TEXT</field>
         <field name="COMMAND">STARTING_AT</field>
         <field name="X">2</field>
         <field name="Y">3</field>
         <field name="UNIT">CHARS</field>
         <next>
-          <block type="vn_window" id="155">
+          <block type="vn_window" id="32">
             <field name="TARGET">TEXT</field>
             <field name="COMMAND">SIZE</field>
             <field name="X">50</field>
             <field name="Y">50</field>
             <field name="UNIT">PERCENT</field>
             <next>
-              <block type="vn_say" id="169">
+              <block type="vn_say" id="33">
                 <value name="CONTENT">
-                  <block type="text" id="170">
+                  <block type="text" id="34">
                     <field name="TEXT">Testing resized window.</field>
                   </block>
                 </value>
                 <next>
-                  <block type="vn_window_reset" id="180">
+                  <block type="vn_window" id="119">
+                    <field name="TARGET">TEXT</field>
+                    <field name="COMMAND">STARTING_AT</field>
+                    <field name="X">60</field>
+                    <field name="Y">20</field>
+                    <field name="UNIT">PERCENT</field>
                     <next>
-                      <block type="vn_say" id="193">
-                        <value name="CONTENT">
-                          <block type="text" id="194">
-                            <field name="TEXT">Back to normal.</field>
+                      <block type="vn_window" id="120">
+                        <field name="TARGET">TEXT</field>
+                        <field name="COMMAND">ENDING_AT</field>
+                        <field name="X">90</field>
+                        <field name="Y">50</field>
+                        <field name="UNIT">PERCENT</field>
+                        <next>
+                          <block type="vn_say" id="130">
+                            <value name="CONTENT">
+                              <block type="text" id="131">
+                                <field name="TEXT">Another resized window</field>
+                              </block>
+                            </value>
+                            <next>
+                              <block type="vn_window" id="70">
+                                <field name="TARGET">MENU</field>
+                                <field name="COMMAND">STARTING_AT</field>
+                                <field name="X">-20</field>
+                                <field name="Y">8</field>
+                                <field name="UNIT">CHARS</field>
+                                <next>
+                                  <block type="vn_window" id="97">
+                                    <field name="TARGET">MENU</field>
+                                    <field name="COMMAND">ENDING_AT</field>
+                                    <field name="X">-3</field>
+                                    <field name="Y">18</field>
+                                    <field name="UNIT">CHARS</field>
+                                    <next>
+                                      <block type="menu" id="101">
+                                        <statement name="DO">
+                                          <block type="menu_option" id="118">
+                                            <field name="TEXT">Resized menu</field>
+                                          </block>
+                                        </statement>
+                                        <next>
+                                          <block type="vn_window_reset" id="35">
+                                            <next>
+                                              <block type="vn_say" id="36">
+                                                <value name="CONTENT">
+                                                  <block type="text" id="37">
+                                                    <field name="TEXT">Back to normal.</field>
+                                                  </block>
+                                                </value>
+                                              </block>
+                                            </next>
+                                          </block>
+                                        </next>
+                                      </block>
+                                    </next>
+                                  </block>
+                                </next>
+                              </block>
+                            </next>
                           </block>
-                        </value>
+                        </next>
                       </block>
                     </next>
                   </block>
@@ -179,97 +233,97 @@
       </block>
     </statement>
   </block>
-  <block type="vn_label" id="27" x="838" y="-62">
+  <block type="vn_label" id="38" x="838" y="-62">
     <mutation></mutation>
     <field name="NAME">another scene</field>
     <statement name="STACK">
-      <block type="vn_character" id="28">
+      <block type="vn_character" id="39">
         <field name="CHARACTER_NAME">Someone else</field>
         <next>
-          <block type="background_image" id="29">
+          <block type="background_image" id="40">
             <field name="SOURCE">lecturehall</field>
             <field name="IMAGE">C:\Temp\blocklyvn32x-portable-0.4.0\projects\test\bg\lecturehall.png</field>
             <next>
-              <block type="portrait_image" id="30">
+              <block type="portrait_image" id="41">
                 <field name="SOURCE">sylvie_giggle</field>
                 <field name="IMAGE">C:\Temp\blocklyvn32x-portable-0.4.0\projects\test\portrait\sylvie_giggle.png</field>
                 <next>
-                  <block type="vn_say" id="31">
+                  <block type="vn_say" id="42">
                     <value name="CONTENT">
-                      <block type="text" id="32">
+                      <block type="text" id="43">
                         <field name="TEXT">Seems to be working.</field>
                       </block>
                     </value>
                     <next>
-                      <block type="controls_if" id="33">
+                      <block type="controls_if" id="44">
                         <mutation elseif="1"></mutation>
                         <value name="IF0">
-                          <block type="logic_compare" id="34">
+                          <block type="logic_compare" id="45">
                             <field name="OP">EQ</field>
                             <value name="A">
-                              <block type="variables_get" id="35">
+                              <block type="variables_get" id="46">
                                 <field name="VAR">variable</field>
                               </block>
                             </value>
                             <value name="B">
-                              <block type="math_number" id="36">
+                              <block type="math_number" id="47">
                                 <field name="NUM">1</field>
                               </block>
                             </value>
                           </block>
                         </value>
                         <statement name="DO0">
-                          <block type="vn_say" id="37">
+                          <block type="vn_say" id="48">
                             <value name="CONTENT">
-                              <block type="text" id="38">
+                              <block type="text" id="49">
                                 <field name="TEXT">You chose option 1 previously!</field>
                               </block>
                             </value>
                           </block>
                         </statement>
                         <value name="IF1">
-                          <block type="logic_compare" id="39">
+                          <block type="logic_compare" id="50">
                             <field name="OP">EQ</field>
                             <value name="A">
-                              <block type="variables_get" id="40">
+                              <block type="variables_get" id="51">
                                 <field name="VAR">variable</field>
                               </block>
                             </value>
                             <value name="B">
-                              <block type="math_number" id="41">
+                              <block type="math_number" id="52">
                                 <field name="NUM">2</field>
                               </block>
                             </value>
                           </block>
                         </value>
                         <statement name="DO1">
-                          <block type="vn_say" id="42">
+                          <block type="vn_say" id="53">
                             <value name="CONTENT">
-                              <block type="text" id="43">
+                              <block type="text" id="54">
                                 <field name="TEXT">You chose option 2 previously!</field>
                               </block>
                             </value>
                           </block>
                         </statement>
                         <next>
-                          <block type="menu" id="44">
+                          <block type="menu" id="55">
                             <statement name="DO">
-                              <block type="menu_option" id="45">
+                              <block type="menu_option" id="56">
                                 <field name="TEXT">One option</field>
                                 <next>
-                                  <block type="menu_option" id="46">
+                                  <block type="menu_option" id="57">
                                     <field name="TEXT">Another option</field>
                                   </block>
                                 </next>
                               </block>
                             </statement>
                             <next>
-                              <block type="menu" id="47">
+                              <block type="menu" id="58">
                                 <statement name="DO">
-                                  <block type="menu_option" id="48">
+                                  <block type="menu_option" id="59">
                                     <field name="TEXT">One more option</field>
                                     <next>
-                                      <block type="menu_option" id="49">
+                                      <block type="menu_option" id="60">
                                         <field name="TEXT">Yet another option</field>
                                       </block>
                                     </next>
