@@ -277,6 +277,24 @@ void vnWindowFrom(char target, int x, int y, char unit) {
 }
 
 void vnWindowSize(char target, int width, int height, char unit) {
+	if (width < 0) {
+		if (target == WND_TARGET_MENU) {
+			menuConfig.x -= width;
+		} else {
+			msgLines.x -= width;
+		}
+		width = -width;
+	}
+	
+	if (height < 0) {
+		if (target == WND_TARGET_MENU) {
+			menuConfig.y -= height;
+		} else {
+			msgLines.y -= height;
+		}
+		height = -height;
+	}
+	
 	width = convertCoordinate(width, CHR_COLS, unit);
 	height = convertCoordinate(height, CHR_ROWS, unit);
 		
