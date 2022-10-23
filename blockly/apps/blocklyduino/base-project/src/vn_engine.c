@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdarg.h>
 
 #include "unity.h"
@@ -13,11 +12,16 @@ typedef struct _menuEntry {
 	unsigned char idx;
 } menuEntry;
 
+typedef struct _lineConfig {
+	unsigned char width, height;
+	unsigned char** lines;
+} lineConfig;
+
 menuEntry menuEntries[MENU_ENTRY_COUNT];
 unsigned char usedMenuEntries;
 unsigned char menuCursor;
 
-unsigned char* msgLines[MSG_LINE_COUNT];
+lineConfig msgLines;
 char characterName[32];
 
 char *backgroundImage;
@@ -83,7 +87,7 @@ char *bufferWrappedTextLine(char *s, char x, char y, char w) {
 
 	// Skips initial spaces for current line
 	for (o = startOfLine; *o == ' '; o++) {
-		msgLines[y][tx] = ' ';
+		msgLines.lines[y][tx] = ' ';
 		tx++;
 		currW++;
 		bestW = currW;
@@ -91,7 +95,7 @@ char *bufferWrappedTextLine(char *s, char x, char y, char w) {
 	startOfLine = o;
 	
 	if (!*o || currW >= w) {
-		msgLines[y][tx] = 0;
+		msgLines.lines[y][tx] = 0;
 		return 0;
 	}
 
@@ -120,7 +124,7 @@ char *bufferWrappedTextLine(char *s, char x, char y, char w) {
 	for (o = startOfLine; o <= endOfLine; o++) {
 		ch = *o;
 		if (ch && ch != '\n') {
-			msgLines[y][tx] = ch;
+			msgLines.lines[y][tx] = ch;
 			tx++;
 		}
 	}
@@ -135,7 +139,7 @@ char *bufferWrappedTextLine(char *s, char x, char y, char w) {
 		endOfLine++;
 	}
 
-	msgLines[y][tx] = 0;
+	msgLines.lines[y][tx] = 0;
 	return *endOfLine ? endOfLine : 0;
 }
 
@@ -152,11 +156,23 @@ char *bufferWrappedText(char *s, char x, char y, char w, char h) {
 	return o;
 }
 
+void bufferResize() {
+	unsigned char i;
+
+	msgLines.width = MSG_COL_COUNT;
+	msgLines.height = MSG_LINE_COUNT;
+	msgLines.lines = calloc(msgLines.height, sizeof(char *));
+	
+	for (i = 0; i != msgLines.height; i++) {
+		msgLines.lines[i] = malloc(msgLines.width + 1);
+	}	
+}
+
 void bufferClear() {
 	unsigned char i;
 	
 	for (i = 0; i != MSG_LINE_COUNT; i++) {
-		msgLines[i][0] = 0;
+		msgLines.lines[i][0] = 0;
 	}
 }
 
@@ -199,9 +215,7 @@ void initGfx() {
 	
 	EnterBitmapMode();
 	
-	for (i = 0; i != MSG_LINE_COUNT; i++) {
-		msgLines[i] = malloc(MSG_COL_COUNT);
-	}
+	bufferResize();
 	bufferClear();	
 }
 
@@ -238,7 +252,7 @@ void vnText(char *text) {
 		bufferClear();
 		textToDisplay = bufferWrappedText(textToDisplay, 0, 0, MSG_COL_COUNT, MSG_LINE_COUNT);			
 		
-		ListBox(1, CHR_ROWS - MSG_LINE_COUNT - 4, MSG_COL_COUNT, MSG_LINE_COUNT + 2, characterName, msgLines, MSG_LINE_COUNT);	
+		ListBox(1, CHR_ROWS - MSG_LINE_COUNT - 4, MSG_COL_COUNT, MSG_LINE_COUNT + 2, characterName, msgLines.lines, MSG_LINE_COUNT);	
 
 		#ifdef __LYNX__
 			// Wait until the joystick button is pressed
