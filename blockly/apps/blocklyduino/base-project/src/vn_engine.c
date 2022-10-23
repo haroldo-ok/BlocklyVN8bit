@@ -64,7 +64,7 @@ unsigned char drawMenu() {
 	char selected;
 	
 	y = menuTop();
-	Panel(menuConfig.x, y - 1, CHR_COLS - 2, usedMenuEntries + 1, "");
+	Panel(menuConfig.x, y - 1, menuConfig.width, usedMenuEntries + 1, "");
 	
 	for (i = 1; i <= usedMenuEntries; i++) {
 		drawMenuLine(i);
