@@ -311,6 +311,23 @@ void vnWindowSize(char target, int width, int height, char unit) {
 	}
 }
 
+void vnWindowTo(char target, int x, int y, char unit) {
+	int width, height;
+	
+	x = convertCoordinate(x, CHR_COLS, unit);
+	y = convertCoordinate(y, CHR_ROWS, unit);		
+
+	if (target == WND_TARGET_MENU) {
+		width = x - menuConfig.x + 1;
+		height = y - menuConfig.y + 1;
+	} else {
+		width = x - msgLines.x + 1;
+		height = y - msgLines.y + 1;
+	}
+	
+	vnWindowSize(target, width, height, WND_UNIT_CHARS);
+}
+
 void vnWindowReset() {
 	// Text window
 	vnWindowFrom(WND_TARGET_TEXT, 1, -8, WND_UNIT_CHARS);

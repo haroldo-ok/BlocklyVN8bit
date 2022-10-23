@@ -10,6 +10,8 @@ extern void initVN();
 
 extern void vnWindowFrom(char target, int x, int y, char unit);
 extern void vnWindowSize(char target, int width, int height, char unit);
+extern void vnWindowTo(char target, int x, int y, char unit);
+extern void vnWindowTo(char target, int x, int y, char unit);
 extern void vnWindowReset();
 
 extern void vnScene(char *scene);
