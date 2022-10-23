@@ -10,12 +10,6 @@ typedef struct _menuEntry {
 	unsigned char idx;
 } menuEntry;
 
-typedef struct _lineConfig {
-	unsigned char x, y;
-	unsigned char width, height;
-	unsigned char** lines;
-} lineConfig;
-
 menuEntry menuEntries[MENU_ENTRY_COUNT];
 unsigned char usedMenuEntries;
 unsigned char menuCursor;
@@ -24,7 +18,12 @@ struct {
 	unsigned char width, height;
 } menuConfig;
 
-lineConfig msgLines;
+struct {
+	unsigned char x, y;
+	unsigned char width, height;
+	unsigned char** lines;
+} msgLines;
+
 char characterName[32];
 
 char *backgroundImage;
@@ -233,21 +232,6 @@ int convertCoordinate(int coord, int max, char unit) {
 	return coord;
 }
 
-int convertCoordinate2(int coord, int max, char unit) {
-	PrintNum(0, 12, -coord);
-
-	// Percent to chars
-	if (unit == WND_UNIT_PERCENT) coord = coord * max / 100;
-	PrintNum(0, 13, -coord);
-	
-	// Negative coordinates
-	if (coord < 0) coord = max + coord;
-	PrintNum(0, 14, coord);
-	PrintNum(5, 14, max);
-	
-	return coord;
-}
-
 void initVN() {
 	initGfx();
 	InitJoy();
@@ -297,13 +281,6 @@ void vnText(char *text) {
 		textToDisplay = bufferWrappedText(textToDisplay, 0, 0, msgLines.width, msgLines.height);			
 		
 		ListBox(msgLines.x, msgLines.y, msgLines.width, msgLines.height + 2, characterName, msgLines.lines, msgLines.height);	
-
-		/*
-		PrintNum(0, 12, msgLines.y);
-		PrintNum(0, 13, convertCoordinate(-8, CHR_ROWS, WND_UNIT_CHARS));
-		PrintNum(0, 14, CHR_ROWS - 8);
-		*/
-		convertCoordinate2(-8, CHR_ROWS, WND_UNIT_CHARS);
 
 		#ifdef __LYNX__
 			// Wait until the joystick button is pressed
