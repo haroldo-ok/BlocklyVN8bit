@@ -284,18 +284,18 @@ void vnWindowFrom(char target, int x, int y, char unit) {
 void vnWindowSize(char target, int width, int height, char unit) {
 	if (width < 0) {
 		if (target == WND_TARGET_MENU) {
-			menuConfig.x -= width;
+			menuConfig.x -= convertCoordinate(width, CHR_COLS, unit);
 		} else {
-			msgLines.x -= width;
+			msgLines.x -= convertCoordinate(width, CHR_COLS, unit);
 		}
 		width = -width;
 	}
 	
 	if (height < 0) {
 		if (target == WND_TARGET_MENU) {
-			menuConfig.y -= height;
+			menuConfig.y -= convertCoordinate(height, CHR_ROWS, unit);
 		} else {
-			msgLines.y -= height;
+			msgLines.y -= convertCoordinate(height, CHR_ROWS, unit);
 		}
 		height = -height;
 	}
