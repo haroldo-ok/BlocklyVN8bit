@@ -1,6 +1,6 @@
 {
   "name": "BlocklyVN8bit",
-  "version": "0.2.8",
+  "version": "0.3.0",
   "description": "Uses blockly to generate visual novels for 8bit-Unity",
   "main": "main.js",
   "scripts": {

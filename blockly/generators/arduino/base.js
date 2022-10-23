@@ -201,3 +201,29 @@ Blockly.Arduino.vn_character = function() {
   var code = 'vnChar(' + charName + ');\n';	  
   return code;
 }
+
+Blockly.Arduino.vn_window = function() {
+  var COMMAND_MAP = {
+	'STARTING_AT': 'vnWindowFrom', 
+	'ENDING_AT': 'vnWindowTo',
+	'SIZE': 'vnWindowSize'
+  };
+	
+  var target = this.getFieldValue('TARGET');
+  var command = this.getFieldValue('COMMAND');
+  var x = window.parseFloat(this.getFieldValue('X'));
+  var y = window.parseFloat(this.getFieldValue('Y'));
+  var unit = this.getFieldValue('UNIT');
+	
+  var code = COMMAND_MAP[command] + '(' +
+	'WND_TARGET_' + target + ',' +  
+	x + ',' + y + ',' +
+	'WND_UNIT_' + unit +
+	');\n';	  
+  return code;
+}
+
+Blockly.Arduino.vn_window_reset = function() {
+  var code = 'vnWindowReset();\n';	  
+  return code;
+}
