@@ -45,17 +45,17 @@ unsigned char addMenuItem(char *s) {
 }
 
 unsigned char menuTop() {
-	return (CHR_ROWS - usedMenuEntries - 2) >> 1;
+	return menuConfig.y - (usedMenuEntries >> 1);
 }
 
 void drawMenuLine(int number) {
 	int y = menuTop() + number - 1;
 	#ifdef __LYNX__
-		PrintStr(1, y, number == menuCursor ? "*" : " ");
+		PrintStr(menuConfig.x, y, number == menuCursor ? "*" : " ");
 	#else
-		PrintNum(1, y, number);
+		PrintNum(menuConfig.x, y, number);
 	#endif
-	PrintStr(3, y, menuEntries[number - 1].s);
+	PrintStr(menuConfig.x + 2, y, menuEntries[number - 1].s);
 }
 
 unsigned char drawMenu() {
@@ -64,7 +64,7 @@ unsigned char drawMenu() {
 	char selected;
 	
 	y = menuTop();
-	Panel(1, y - 1, CHR_COLS - 2, usedMenuEntries + 1, "");
+	Panel(menuConfig.x, y - 1, CHR_COLS - 2, usedMenuEntries + 1, "");
 	
 	for (i = 1; i <= usedMenuEntries; i++) {
 		drawMenuLine(i);
@@ -241,6 +241,7 @@ void initVN() {
 	actorImage = 0;
 	
 	vnWindowFrom(WND_TARGET_TEXT, 1, -8, WND_UNIT_CHARS);
+	vnWindowFrom(WND_TARGET_MENU, 1, (CHR_ROWS - 2) >> 1, WND_UNIT_CHARS);
 	strcpy(characterName, "");
 }
 
@@ -262,7 +263,7 @@ void vnWindowFrom(char target, int x, int y, char unit) {
 	x = convertCoordinate(x, CHR_COLS, unit);
 	y = convertCoordinate(y, CHR_ROWS, unit);
 		
-	if (unit == WND_TARGET_MENU) {
+	if (target == WND_TARGET_MENU) {
 		menuConfig.x = x;
 		menuConfig.y = y;
 	} else {
