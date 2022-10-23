@@ -326,3 +326,38 @@ Blockly.Blocks['vn_character'] = {
     }
   }
 };
+
+Blockly.Blocks['vn_window'] = {
+  init: function() {
+    var TARGETS = [
+		['text', 'TEXT'], 
+		['menu', 'MENU']
+	];
+
+    var COMMANDS = [
+		['starting at', 'STARTING_AT'], 
+		['ending at', 'ENDING_AT'],
+		['size', 'SIZE']
+	];
+	
+	var UNITS = [
+		['in chars', 'CHARS'], 
+		['%', 'PERCENT']
+	];
+
+    this.setColour(230);
+	this.appendDummyInput()
+		.appendField('Window for')
+		.appendField(new Blockly.FieldDropdown(TARGETS), 'TARGET')
+		.appendField(new Blockly.FieldDropdown(COMMANDS), 'COMMAND')
+		.appendField('(')
+		.appendField(new Blockly.FieldTextInput('0', Blockly.FieldTextInput.numberValidator), 'X')
+		.appendField(',')
+		.appendField(new Blockly.FieldTextInput('0', Blockly.FieldTextInput.numberValidator), 'Y')
+		.appendField(')')
+		.appendField(new Blockly.FieldDropdown(UNITS), 'UNIT');
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setTooltip('Says something.');
+  }
+};
